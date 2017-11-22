@@ -10,7 +10,7 @@ public class AppNetConfig {
 
     public static final String HOST = "192.168.0.120";
 
-    public static final String BASEURL = "http://"+ HOST +":8080/";
+    public static final String BASEURL = "http://"+ HOST +":8080/WarmLight/";
 
     public static final String LOGIN = BASEURL + "login";
 

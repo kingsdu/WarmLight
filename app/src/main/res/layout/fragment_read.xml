@@ -7,13 +7,24 @@
     <include layout="@layout/common_top"></include>
 
 
-    <TextView
-        android:id="@+id/tv_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="40dp"
-        android:textColor="@android:color/holo_red_dark"
-        android:text="有读"
-        />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_barner"
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+        </android.support.v4.view.ViewPager>
+
+        <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/btn_barner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:padding="10dp">
+        </com.viewpagerindicator.CirclePageIndicator>
+
+    </FrameLayout>
 
 </LinearLayout>

@@ -27,15 +27,14 @@
 
             <ImageView
                 android:id="@+id/iv_read"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:src="@drawable/read_off"/>
 
             <TextView
                 android:id="@+id/tv_read"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:text="有读"
                 android:textSize="14sp"
                 android:textColor="@color/home_back_unselected"/>
@@ -52,15 +51,14 @@
 
             <ImageView
                 android:id="@+id/iv_date"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:src="@drawable/date_off"/>
 
             <TextView
                 android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:text="友约"
                 android:textSize="14sp"
                 android:textColor="@color/home_back_unselected"/>
@@ -77,15 +75,14 @@
 
             <ImageView
                 android:id="@+id/iv_me"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:src="@drawable/me_off"/>
 
             <TextView
                 android:id="@+id/tv_me"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:text="我的"
                 android:textSize="14sp"
                 android:textColor="@color/home_back_unselected"/>
