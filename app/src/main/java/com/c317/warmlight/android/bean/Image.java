@@ -9,4 +9,5 @@ public class Image {
     public String ID;
     public String IMAPAURL;
     public String IMAURL;//图片地址
+    public String IMAGETOP;//图片地址
 }

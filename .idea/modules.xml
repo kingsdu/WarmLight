@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/SwipeCardlibrary/SwipeCardlibrary.iml" filepath="$PROJECT_DIR$/SwipeCardlibrary/SwipeCardlibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/ViewPagelibrary/ViewPagelibrary.iml" filepath="$PROJECT_DIR$/ViewPagelibrary/ViewPagelibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/WarmLight.iml" filepath="$PROJECT_DIR$/WarmLight.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />

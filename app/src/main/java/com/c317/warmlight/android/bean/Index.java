@@ -8,4 +8,5 @@ import java.util.List;
 
 public class Index {
     public List<Image> imageList;
+    public List<Image> imageListTop;
 }
