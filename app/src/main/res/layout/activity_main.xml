@@ -4,12 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/common_top"/>
+
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
     </FrameLayout>
-    <include layout="@layout/main_bottom"/>
 
+    <include layout="@layout/main_bottom"/>
 </LinearLayout>

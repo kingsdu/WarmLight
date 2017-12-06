@@ -1,19 +1,32 @@
 package com.c317.warmlight.android;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.c317.warmlight.android.bean.ReadData;
+import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.fragment.Date_Fragment;
 import com.c317.warmlight.android.fragment.Me_Fragment;
 import com.c317.warmlight.android.fragment.Read_Fragment;
+import com.c317.warmlight.android.utils.CacheUtils;
 import com.c317.warmlight.android.utils.UIUtils;
+import com.google.gson.Gson;
+
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,7 +34,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends FragmentActivity {
 
-
+    public Activity mActivity;
     @Bind(R.id.content)
     FrameLayout content;
     @Bind(R.id.iv_read)
@@ -46,6 +59,8 @@ public class MainActivity extends FragmentActivity {
     private Me_Fragment me_fragment;
     private Read_Fragment read_fragment;
     private FragmentTransaction ft;
+    private ReadData newsData;
+    private ArrayList<ReadData.ReadData_Children> onemodel_children;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +71,60 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void initDate() {
+
+        //先判断是否有缓存，有则加载,否则请求服务器数据
+//        String cache = CacheUtils.getCache(AppNetConfig.CATEGORY, mActivity);
+//        if(!TextUtils.isEmpty(cache)){
+//            processData(cache);
+//        }
+//        请求服务端数据（开源框架XUtils）
+        getDataFromServer();//快速加载
+    }
+
+    /**
+     * 从服务器获取数据
+     */
+    private void getDataFromServer(){
+        RequestParams params = new RequestParams(AppNetConfig.CATEGORY);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                processData(result);
+                //写缓存
+//                CacheUtils.setCache(AppNetConfig.CATEGORY, result, mActivity);
+            }
+            //请求异常后的回调方法
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Toast.makeText(mActivity, ex.toString(), Toast.LENGTH_SHORT).show();
+            }
+            //主动调用取消请求的回调方法
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
+            @Override
+            public void onFinished() {
+            }
+        });
+    }
+
+
+    /**
+     * @Description 解析数据
+     * @params
+     * @author Du
+     * @Date 2017/12/4 15:35
+     **/
+    private void processData(String result) {
+        Gson gson = new Gson();
+        newsData = gson.fromJson(result, ReadData.class);
+        ArrayList<ReadData.ReadDataMenuData> newsMenuDatas = newsData.data;
+        for (int i = 0; i < newsMenuDatas.size(); i++) {
+            //有读
+            if(newsMenuDatas.get(i).type == 1){
+                onemodel_children = newsMenuDatas.get(i).children;
+            }
+        }
         setSelect(0);//默认选中首页
     }
 
@@ -83,7 +152,7 @@ public class MainActivity extends FragmentActivity {
         switch (i) {
             case 0:
                 if (read_fragment == null) {
-                    read_fragment = new Read_Fragment();
+                    read_fragment = new Read_Fragment(onemodel_children);
                     ft.add(R.id.content, read_fragment);
                 }
                 ivRead.setImageResource(R.drawable.read_on);

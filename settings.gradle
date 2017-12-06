@@ -1,2 +1,2 @@
-include ':app', 'SwipeCardlibrary'
+include ':app', 'SwipeCardlibrary', ':xutils'
 include ':ViewPagelibrary'

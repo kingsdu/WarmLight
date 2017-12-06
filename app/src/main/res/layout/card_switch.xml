@@ -3,27 +3,27 @@
     xmlns:card="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_activity"
     android:layout_width="wrap_content"
-    android:layout_height="210dp"
+    android:layout_height="220dp"
     android:background="@drawable/radius_bg"
     android:padding="10dp">
 
     <com.huxq17.swipecardsview.SwipeCardsView
         android:id="@+id/swipCardsView"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="180dp"
         android:background="@color/white"
         card:alphaOffsetStep="40"
         card:scaleOffsetStep="0.08"
-        card:yOffsetStep="20dp">
-    </com.huxq17.swipecardsview.SwipeCardsView>
+        card:yOffsetStep="20dp"></com.huxq17.swipecardsview.SwipeCardsView>
 
-    <!--活动大图-->
+    <!-- 活动大图 -->
     <ImageView
         android:id="@+id/iv_pic1"
-        android:layout_width="140dp"
-        android:layout_height="160dp"
-        android:scaleType="fitXY"
-        android:layout_marginRight="10dp"/>
+        android:layout_width="120dp"
+        android:layout_height="140dp"
+        android:layout_marginRight="10dp"
+        android:scaleType="fitXY" />
+
 
     <!--活动标题-->
     <TextView
@@ -32,9 +32,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/iv_pic1"
+        android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/black"
-        android:ellipsize="end"
         android:textSize="20sp" />
 
     <!--活动内容-->
@@ -42,89 +42,101 @@
         android:id="@+id/tv_actContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/iv_pic1"
         android:layout_below="@+id/tv_actTitle"
-        android:textSize="16sp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/iv_pic1"
         android:textColor="@color/gray_gray"
-        android:layout_marginTop="5dp"/>
+        android:textSize="16sp" />
 
-    <!--活动类型图片-->
+
+    <!-- 活动类型图片 -->
     <ImageView
         android:id="@+id/iv_activityType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_pic1"
-        android:layout_marginTop="5dp"
-        android:scaleType="fitXY"/>
+        android:layout_marginTop="3dp"
+        android:scaleType="fitXY" />
 
-    <!--活动类型说明-->
+
+    <!-- 活动类型说明 -->
     <TextView
         android:id="@+id/tv_activityType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_below="@+id/iv_pic1"
-        android:layout_toRightOf="@+id/iv_activityType"/>
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/iv_activityType" />
 
-    <!--活动收藏图片-->
+
+    <!-- 活动收藏图片 -->
     <ImageView
         android:id="@+id/iv_activityStar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_pic1"
-        android:layout_toRightOf="@+id/tv_activityType"
-        android:layout_marginLeft="85dp"
+        android:layout_marginLeft="65dp"
         android:layout_marginTop="9dp"
-        android:scaleType="fitXY"/>
+        android:layout_toRightOf="@+id/tv_activityType"
+        android:scaleType="fitXY" />
 
-    <!--活动收藏文字-->
+
+
+    <!-- 活动收藏文字 -->
     <TextView
         android:id="@+id/tv_activityStar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_pic1"
         android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/iv_activityStar"/>
+        android:layout_toRightOf="@+id/iv_activityStar" />
 
-    <!--活动点赞图片-->
+
+
+    <!-- 活动点赞图片 -->
     <ImageView
         android:id="@+id/iv_activityCompliment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_pic1"
-        android:layout_toRightOf="@+id/tv_activityStar"
-        android:scaleType="fitXY"
+        android:layout_marginLeft="12dp"
         android:layout_marginTop="9dp"
-        android:layout_marginLeft="12dp"/>
+        android:layout_toRightOf="@+id/tv_activityStar"
+        android:scaleType="fitXY" />
 
-    <!--活动点赞文字-->
+
+    <!-- 活动点赞文字 -->
     <TextView
         android:id="@+id/tv_activityCompliment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_pic1"
         android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/iv_activityCompliment"/>
+        android:layout_toRightOf="@+id/iv_activityCompliment" />
 
-    <!--活动评论图片-->
+
+
+    <!-- 活动评论图片 -->
     <ImageView
         android:id="@+id/iv_activityComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_pic1"
+        android:layout_marginLeft="12dp"
         android:layout_marginTop="9dp"
         android:layout_toRightOf="@+id/tv_activityCompliment"
-        android:scaleType="fitXY"
-        android:layout_marginLeft="12dp"/>
+        android:scaleType="fitXY" />
 
-    <!--活动评论文字-->
+
+
+    <!-- 活动评论文字 -->
     <TextView
         android:id="@+id/tv_activityComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_pic1"
         android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/iv_activityComment"/>
+        android:layout_toRightOf="@+id/iv_activityComment" />
 
 
 </RelativeLayout>

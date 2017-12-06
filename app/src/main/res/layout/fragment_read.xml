@@ -1,68 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true">
 
-    <include layout="@layout/common_top"></include>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/vp_barner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </android.support.v4.view.ViewPager>
-
-
-        <com.viewpagerindicator.CirclePageIndicator
-            android:id="@+id/btn_barner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:padding="10dp"
-            app:fillColor="@color/main_orange"
-            app:pageColor="@color/white"
-            app:radius="3dp"
-            app:strokeWidth="0dp">
-        </com.viewpagerindicator.CirclePageIndicator>
-
-    </FrameLayout>
-
-
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_mainListView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="20dp"
-        android:paddingTop="15dp">
+        android:layout_height="wrap_content"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:maxHeight="24dp"
-            android:maxWidth="8dp"
-            android:paddingRight="3dp"
-            android:src="@drawable/vertical_bar" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="小桔鲜品"
-            android:textColor="@color/main_orange"
-            android:textSize="16sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_dateActivity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp"></LinearLayout>
-
-
-</LinearLayout>
+</RelativeLayout>

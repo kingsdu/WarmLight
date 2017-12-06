@@ -28,7 +28,7 @@
         <attr name="alphaOffsetStep" format="integer" />
         <!-- scale定义的取值范围是0-1，所以scale的步长也得在这个范围之内，
         举个例子，可见的卡片有3个，如果步长是0.08，那么最前面的alpha是1，后面一点的是0.92，最后面的是0.84
-        值得注意的是 x 和 y同时被缩放了(1 - scaleStep*index)
+        值得注意的是 x 和 y同时被缩放了(1 - scaleStep*newsData)
         如果不需要对卡片进行缩放处理，不设置这个属性或者设置为0就可以了-->
         <attr name="scaleOffsetStep" format="float" />
     </declare-styleable>

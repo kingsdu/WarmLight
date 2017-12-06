@@ -17,4 +17,9 @@ public class AppNetConfig {
     public static final String PRODUCT = BASEURL + "product";
 
     public static final String INDEX = BASEURL + "index";
+
+
+    public static final String WARMBASEURL = "http://"+ HOST +":8080/zhbj/";
+
+    public static final String CATEGORY = WARMBASEURL + "warmLight.json";
 }

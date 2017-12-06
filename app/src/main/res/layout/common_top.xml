@@ -17,7 +17,6 @@
         android:layout_weight="1"
         android:gravity="left"
         android:layout_height="match_parent"
-        android:text="有读"
         android:textColor="@color/title_text_color"
         android:textSize="20sp"/>
 
