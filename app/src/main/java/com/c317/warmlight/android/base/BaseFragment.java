@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 public abstract class BaseFragment extends Fragment {
 
     public Activity mActivity;
+    public int PAGESIZE = 1;
 
     //fragment创建
     @Override

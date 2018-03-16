@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp" >
+
+    <ImageView
+        android:id="@+id/iv_date_itemPic"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="#a000"
+        android:padding="1dp"
+        android:scaleType="fitXY"
+        android:layout_marginRight="5dp"/>
+
+    <TextView
+        android:id="@+id/tv_date_itemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:textColor="#f243"
+        android:layout_toRightOf="@+id/iv_date_itemPic"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textSize="18sp"/>
+
+    <ImageView
+        android:id="@+id/iv_date_clock"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="8dp"
+        android:paddingTop="2dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@+id/iv_date_itemPic"
+        android:layout_below="@+id/tv_date_itemTitle"/>
+
+    <TextView
+        android:id="@+id/tv_date_itemStartTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iv_date_clock"
+        android:layout_below="@+id/tv_date_itemTitle"
+        android:textSize="16sp"
+        android:textColor="#f243"
+        android:layout_marginTop="5dp"/>
+
+    <ImageView
+        android:id="@+id/iv_date_locate"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="4dp"
+        android:paddingTop="3dp"
+        android:layout_toRightOf="@+id/iv_date_itemPic"
+        android:layout_below="@+id/tv_date_itemStartTime"/>
+
+    <TextView
+        android:id="@+id/tv_date_itemPlace"
+        android:textColor="#f243"
+        android:textSize="13sp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/tv_date_itemStartTime"
+        android:layout_toRightOf="@+id/iv_date_locate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <ImageView
+        android:id="@+id/iv_date_joinpeople"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:paddingTop="2dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@+id/iv_date_itemPic"
+        android:layout_below="@+id/tv_date_itemPlace"/>
+
+
+    <TextView
+        android:id="@+id/tv_date_itemMembernum"
+        android:textColor="#f243"
+        android:textSize="10sp"
+        android:layout_marginTop="3dp"
+        android:layout_below="@+id/tv_date_itemPlace"
+        android:layout_toRightOf="@+id/iv_date_joinpeople"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

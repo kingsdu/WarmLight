@@ -9,13 +9,14 @@
     <color name="back_gray">#EDEDED</color>
     <color name="home_back_unselected">#878787</color>
     <color name="home_back_selected">#FC8557</color>
-    <color name="back_white">#ffffff</color>
+    <color name="back_white">#CCCCCC</color>
     <color name="back_orange">#F37843</color>
-    <color name="btn_gray">#929292</color>
+    <color name="btn_gray">#EBEBEB</color>
     <color name="back_gray_light">#E2E2E2</color>
     <color name="record_green">#19A278</color>
     <color name="renzhen_green">#99cc99</color>
     <color name="record_blue">#2582C5</color>
+    <color name="button_blue">#5CACEE</color>
     <color name="record_red">#D01C4B</color>
     <color name="bank_blue">#2f82c8</color>
     <color name="baise">#000000</color>

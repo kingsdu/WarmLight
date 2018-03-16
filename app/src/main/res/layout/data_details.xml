@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_datePicture"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scaleType="fitXY" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_weight="1">
+
+        <!-- 友约标题 -->
+        <TextView
+            android:id="@+id/tv_dateTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:maxLines="2"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/iv_sign"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_below="@+id/tv_dateTitle"
+            android:layout_marginTop="15dp"
+            android:scaleType="fitXY" />
+
+        <!-- 友约时间 -->
+        <TextView
+            android:id="@+id/tv_dateDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_dateTitle"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/iv_sign"
+            android:textColor="@color/gray_gray"
+            android:textSize="14sp" />
+
+        <!-- 浏览图片 -->
+        <ImageView
+            android:id="@+id/iv_browse"
+            android:layout_width="15dp"
+            android:layout_height="10dp"
+            android:layout_below="@+id/tv_dateTitle"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="15dp"
+            android:layout_toRightOf="@+id/tv_dateDate"
+            android:scaleType="fitXY" />
+
+
+        <!-- 浏览人数 -->
+        <TextView
+            android:id="@+id/tv_readNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_dateTitle"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/iv_browse"
+            android:textColor="@color/gray_gray"
+            android:textSize="14sp" />
+
+        <!-- 分享图片 -->
+        <ImageView
+            android:id="@+id/iv_share"
+            android:layout_width="15dp"
+            android:layout_height="10dp"
+            android:layout_below="@+id/tv_dateTitle"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_toRightOf="@+id/tv_readNum"
+            android:scaleType="fitXY" />
+
+
+        <!-- 分享人数 -->
+        <TextView
+            android:id="@+id/tv_shareNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_dateTitle"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/iv_share"
+            android:textColor="@color/gray_gray"
+            android:textSize="14sp" />
+
+
+        <!-- 友约详情 -->
+        <TextView
+            android:id="@+id/tv_dateContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_sign"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <LinearLayout
+            android:id="@+id/ll_dashLine"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/divide_shape"
+            android:orientation="horizontal" />
+
+        <!-- 时钟图片 + 时间信息 -->
+        <ImageView
+            android:id="@+id/iv_clock"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_below="@id/ll_dashLine"
+            android:layout_marginTop="15dp"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/tv_clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_dashLine"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="12dp"
+            android:layout_toRightOf="@+id/iv_clock"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <!-- 地点图片 + 地点信息 -->
+        <ImageView
+            android:id="@+id/iv_locate"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_below="@+id/iv_clock"
+            android:layout_marginTop="15dp"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/tv_locate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_clock"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="13dp"
+            android:layout_toRightOf="@+id/iv_locate"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+
+        <!-- 参加人数图片 + 参加人数信息 -->
+        <ImageView
+            android:id="@+id/iv_attend"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_below="@+id/iv_locate"
+            android:layout_marginTop="17dp"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/tv_attend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_locate"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="15dp"
+            android:layout_toRightOf="@+id/iv_attend"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <!-- 联系电话图片 + 联系电话信息 -->
+        <ImageView
+            android:id="@+id/iv_contact"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_below="@+id/iv_attend"
+            android:layout_marginTop="19dp"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/tv_contact_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_attend"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="15dp"
+            android:layout_toRightOf="@+id/iv_contact"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <!-- 底部分割线 -->
+    <LinearLayout
+        android:id="@+id/ll_bottomline"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@drawable/divide_wide_shape"
+        android:orientation="horizontal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ll_consult"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_consult"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="7dp"
+                android:paddingTop="4dp" />
+
+            <!-- 底部咨询 -->
+            <TextView
+                android:id="@+id/tv_consult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/back_blue"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="6px"
+            android:layout_height="match_parent"
+            android:background="@color/btn_gray" />
+
+        <!-- 收藏 -->
+        <LinearLayout
+            android:id="@+id/ll_data_collect"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_mark"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="7dp" />
+
+
+            <TextView
+                android:id="@+id/tv_mark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/back_blue"
+                android:textSize="22sp" />
+        </LinearLayout>
+
+        <!-- 报名参加 -->
+        <LinearLayout
+            android:id="@+id/ll_date_joinIn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/main_orange"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_joinIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

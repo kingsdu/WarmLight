@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pic"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/backimg"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_horizontal"
+
+        android:paddingBottom="100dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="小桔灯"
+            android:textColor="#ffffff"
+            android:textSize="50sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:orientation="horizontal" >
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
+            <EditText
+                android:id="@+id/account"
+                android:layout_width="200dp"
+                android:hint="@string/account"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="16dp"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="200dp"
+                android:hint="@string/password"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="16dp"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="10dp"
+            >
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="50dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="0dp"
+                android:background="@drawable/u47"
+                android:text="@string/login"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnRegister"
+                android:layout_width="50dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="50dp"
+                android:background="@drawable/u47"
+                android:text="@string/register"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

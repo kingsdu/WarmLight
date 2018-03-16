@@ -1,16 +1,16 @@
 package com.c317.warmlight.android.fragment;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +18,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.c317.warmlight.android.Activity.DateDetailActivity;
+import com.c317.warmlight.android.Activity.NewsDetailActivity;
+import com.c317.warmlight.android.Activity.TopDetailsActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.base.BaseFragment;
 import com.c317.warmlight.android.bean.Bignews;
-import com.c317.warmlight.android.bean.Cardnews;
-import com.c317.warmlight.android.bean.Horizontalnews;
-import com.c317.warmlight.android.bean.ReadData;
+import com.c317.warmlight.android.bean.DateNews;
+import com.c317.warmlight.android.bean.OrangeGuess;
 import com.c317.warmlight.android.bean.Smallnews;
 import com.c317.warmlight.android.bean.Topnews;
 import com.c317.warmlight.android.common.AppConstants;
 import com.c317.warmlight.android.common.AppNetConfig;
-import com.c317.warmlight.android.utils.CacheUtils;
+import com.c317.warmlight.android.utils.CommonUtils;
 import com.c317.warmlight.android.utils.UIUtils;
-import com.c317.warmlight.android.views.AutoCycleView;
+import com.c317.warmlight.android.views.BigNewsController;
+import com.c317.warmlight.android.views.BigNewsListView;
 import com.c317.warmlight.android.views.NestListView;
+import com.c317.warmlight.android.views.SmallNewsController;
+import com.c317.warmlight.android.views.SmallNewsListView;
 import com.c317.warmlight.android.views.SubAdapterController;
 import com.google.gson.Gson;
 import com.huxq17.swipecardsview.BaseCardAdapter;
@@ -44,11 +49,15 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.easydone.swiperefreshendless.EndlessRecyclerOnScrollListener;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 
 
 /**
@@ -59,12 +68,14 @@ public class Read_Fragment extends BaseFragment {
 
     @Bind(R.id.rv_mainListView)
     RecyclerView rvMainListView;
-    private ArrayList<ReadData.ReadData_Children> newsData;
     Handler mHandler;
+    @Bind(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
     //    private CardAdapter cardAdapter;
     private SwipeCardsView swipeCardsView;
-    private List<List<Object>> mAllDatas;
-    private List<Object> mDataType;//布局类型
+
+    private List<List<Object>> mAllDatas = new ArrayList();//初始化数据
+    private List<Object> mDataType = new ArrayList();//布局类型
 
     private List<View> mViewList;
     private CardAdapter cardAdapter;
@@ -72,20 +83,42 @@ public class Read_Fragment extends BaseFragment {
     private CirclePageIndicator btnBarner;
     //    //横向滑动布局
     private SubAdapterController mSubAdapterCrl;
+    private SmallNewsController smallNewsController;
+    private BigNewsController bigNewsController;
 
-    public Read_Fragment(ArrayList<ReadData.ReadData_Children> children) {
-        newsData = children;
-//        Log.e("Du----", "newsData" +  children.size());
-    }
+    private MainAdapter mainAdapter;
+
+    private static int PAGESIZE = 1;
+    private boolean first = true;//下拉刷新，判断是否为第一次
+    private boolean upFlag = false;//上拉加载更多，区分下拉刷新
 
     @Override
     public View initView() {
         View view = UIUtils.getXmlView(R.layout.fragment_read);
         ButterKnife.bind(this, view);
-//        rvMainListView.setHasFixedSize(true);
-//        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-//        rvMainListView.setLayoutManager(mLayoutManager);
-//        rvMainListView.setAdapter(new MainAdapter(mActivity));
+//        tvTopbarTitle.setText("友读");
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.main_orange
+        );
+        //设置页面刷新监听
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Observable
+                        .timer(2, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                        .map(new Func1<Long, Object>() {
+                            @Override
+                            public Object call(Long aLong) {
+                                upFlag = true;//下拉刷新
+                                mAllDatas.clear();
+                                mDataType.clear();
+                                initData();
+                                return null;
+                            }
+                        }).subscribe();
+            }
+        });//设置刷新监听
+
         return view;
     }
 
@@ -93,17 +126,19 @@ public class Read_Fragment extends BaseFragment {
     @Override
     public void initData() {
         List<String> urls = new ArrayList<>();
-        for (int i = 0; i < newsData.size(); i++) {
-            urls.add(newsData.get(i).url);
-        }
+        urls.add(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.TOPNEWS + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE);
+        urls.add(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITY + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE);
+        urls.add(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ARTICLE + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE);
+        urls.add(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.GUESS + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE);
+        urls.add(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ARTICLE + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE);
         getReadData(urls);
+        PAGESIZE++;
     }
 
-    private void getReadData(final List url) {
-        mAllDatas = new ArrayList();
-        mDataType = new ArrayList();
-        //1 TopNews
-        RequestParams params = new RequestParams(AppNetConfig.WARMBASEURL + url.get(0));
+
+    private void getReadData(final List<String> url) {
+        //1 头条
+        RequestParams params = new RequestParams(url.get(0));
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -111,73 +146,76 @@ public class Read_Fragment extends BaseFragment {
                 Topnews topnew = gson.fromJson(result, Topnews.class);
                 for (int i = 0; i < 1; i++) {
                     List<Object> mAllData = new ArrayList();
-                    for (int j = 0; j < topnew.topnews.size(); j++) {
-                        mAllData.add(topnew.topnews.get(j));
+                    for (int j = 0; j < topnew.data.size(); j++) {
+                        mAllData.add(topnew.data.get(j));
                     }
                     mDataType.add(AppConstants.RV_TOP_NEWS);
                     mAllDatas.add(mAllData);
                 }
-                //2 Cardnews
-                RequestParams params = new RequestParams(AppNetConfig.WARMBASEURL + url.get(1));
-                x.http().get(params, new Callback.CommonCallback<String>() {
+                //2 友约
+                RequestParams params = new RequestParams(url.get(1));
+                x.http().get(params, new CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
                         Gson gson = new Gson();
-                        Cardnews cardnews = gson.fromJson(result, Cardnews.class);
+                        DateNews dateNews = gson.fromJson(result, DateNews.class);
                         for (int i = 0; i < 1; i++) {
                             List<Object> mAllData = new ArrayList();
-                            for (int j = 0; j < cardnews.cardnews.size(); j++) {
-                                mAllData.add(cardnews.cardnews.get(j));
+                            for (int j = 0; j < dateNews.data.detail.size(); j++) {
+                                mAllData.add(dateNews.data.detail.get(j));
                             }
-                            mDataType.add(AppConstants.RV_CARD_NEWS);
+                            mDataType.add(AppConstants.RV_DATE_NEWS);
                             mAllDatas.add(mAllData);
                         }
-                        //3 Bignews
-                        RequestParams params = new RequestParams(AppNetConfig.WARMBASEURL + url.get(2));
-                        x.http().get(params, new Callback.CommonCallback<String>() {
+                        //3 小图新闻
+                        RequestParams params = new RequestParams(url.get(2));
+                        x.http().get(params, new CommonCallback<String>() {
                             @Override
                             public void onSuccess(String result) {
                                 Gson gson = new Gson();
                                 Smallnews smallnew = gson.fromJson(result, Smallnews.class);
-                                for (int i = 0; i < smallnew.smallnews.size(); i++) {
+                                for (int i = 0; i < smallnew.data.detail.size(); i++) {
                                     List<Object> mAllData = new ArrayList();
-                                    mAllData.add(smallnew.smallnews.get(i));
+                                    mAllData.add(smallnew.data.detail.get(i));
                                     mAllDatas.add(mAllData);
-                                    mDataType.add(AppConstants.RV_SMALL_NEWS);
+                                    mDataType.add(AppConstants.RV_ARTICLE_NEWS_SMALL);
                                 }
-                                //4 Horizontalnews
-                                RequestParams params = new RequestParams(AppNetConfig.WARMBASEURL + url.get(3));
-                                x.http().get(params, new Callback.CommonCallback<String>() {
+                                //4 小聚猜猜（横向书籍）
+                                RequestParams params = new RequestParams(url.get(3));
+                                x.http().get(params, new CommonCallback<String>() {
                                     @Override
                                     public void onSuccess(String result) {
                                         Gson gson = new Gson();
-                                        Horizontalnews horizontalnews = gson.fromJson(result, Horizontalnews.class);
+                                        OrangeGuess orangeGuess = gson.fromJson(result, OrangeGuess.class);
                                         for (int i = 0; i < 1; i++) {
                                             List<Object> mAllData = new ArrayList();
-                                            for (int j = 0; j < horizontalnews.Horizontalnews.size(); j++) {
-                                                mAllData.add(horizontalnews.Horizontalnews.get(j));
+                                            for (int j = 0; j < orangeGuess.data.detail.size(); j++) {
+                                                mAllData.add(orangeGuess.data.detail.get(j));
                                             }
-                                            mDataType.add(AppConstants.RV_HORIZONTAL_NEWS);
+                                            mDataType.add(AppConstants.RV_GUESS_NEWS);
                                             mAllDatas.add(mAllData);
                                         }
-                                        //5 Bignews
-                                        RequestParams params = new RequestParams(AppNetConfig.WARMBASEURL + url.get(4));
-                                        x.http().get(params, new Callback.CommonCallback<String>() {
+                                        //5 大图新闻
+                                        RequestParams params = new RequestParams(url.get(4));
+                                        x.http().get(params, new CommonCallback<String>() {
                                             @Override
                                             public void onSuccess(String result) {
                                                 Gson gson = new Gson();
                                                 Bignews bignews = gson.fromJson(result, Bignews.class);
                                                 for (int i = 0; i < 2; i++) {
                                                     List<Object> mAllData = new ArrayList();
-                                                    mAllData.add(bignews.bignews.get(i));
+                                                    mAllData.add(bignews.data.detail.get(i));
                                                     mAllDatas.add(mAllData);
-                                                    mDataType.add(AppConstants.RV_BIG_NEWS);
+                                                    mDataType.add(AppConstants.RV_ARTICLE_NEWS_BIG);
                                                 }
-                                                rvMainListView.setHasFixedSize(true);
-                                                LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                                                rvMainListView.setLayoutManager(mLayoutManager);
-                                                rvMainListView.setAdapter(new MainAdapter(mActivity, mAllDatas, mDataType));
-                                                rvMainListView.addItemDecoration(new SpaceItemDecoration(10));
+                                                if (upFlag) {
+                                                    //上拉加载更多
+                                                    upGetMoreData(mAllDatas, mDataType);
+                                                } else {
+                                                    //下拉刷新
+                                                    downGetMoreData(mAllDatas, mDataType);
+                                                }
+
                                             }
 
                                             //请求异常后的回调方法
@@ -266,10 +304,70 @@ public class Read_Fragment extends BaseFragment {
         });
     }
 
+    /**
+     * 上拉加载更多，使用新的数据重新覆盖就的数据
+     * 注意，此处需要重新设置addOnScrollListener，否则上拉加载更多无法监听
+     */
+    private void upGetMoreData(List<List<Object>> mAllDatas, List<Object> mDataType) {
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        rvMainListView.setLayoutManager(mLayoutManager);
+        mainAdapter = new MainAdapter(mActivity, mAllDatas, mDataType);
+        rvMainListView.setAdapter(mainAdapter);
+        rvMainListView.addItemDecoration(new SpaceItemDecoration(10));
+        rvMainListView.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
+            public void onLoadMore(int currentPage) {
+                simulateLoadMoreData();
+            }
+        });
+        swipeRefreshLayout.setRefreshing(false);//进度条消失
+        upFlag = false;
+    }
+
+
+    /**
+     * 下拉刷新，第一次调用会在调用initData时自动进行，之后走else
+     */
+    public void downGetMoreData(List<List<Object>> mAllDatas, List<Object> mDataType) {
+        //首次直接调用初始化布局
+        if (first) {
+            rvMainListView.setHasFixedSize(true);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+            rvMainListView.setLayoutManager(mLayoutManager);
+            mainAdapter = new MainAdapter(mActivity, mAllDatas, mDataType);
+            rvMainListView.setAdapter(mainAdapter);
+            rvMainListView.addItemDecoration(new SpaceItemDecoration(10));
+            rvMainListView.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
+                public void onLoadMore(int currentPage) {
+                    simulateLoadMoreData();//此处多刷新一次
+                }
+            });
+            first = false;
+        } else {
+            //非首次调用，直接刷新页面即可
+            mainAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void simulateLoadMoreData() {
+        Observable
+                .timer(1, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                .map(new Func1<Long, Object>() {
+                    @Override
+                    public Object call(Long aLong) {
+                        loadMoreData();
+                        return null;
+                    }
+                }).subscribe();
+    }
+
+
+    private void loadMoreData() {
+        initData();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, rootView);
         return rootView;
@@ -288,7 +386,6 @@ public class Read_Fragment extends BaseFragment {
         private final List<List<Object>> mAll_datas;
         private final List<Object> mData_type;
 
-
         public MainAdapter(Context context, List<List<Object>> mAllData, List<Object> mDataType) {
             mInflater = LayoutInflater.from(context);
             mContext = context;
@@ -296,35 +393,37 @@ public class Read_Fragment extends BaseFragment {
             mData_type = mDataType;
         }
 
-
         @Override
+        /**
+         * @Description
+         * @params
+         * @author Du
+         * @Date 2017/12/6 10:41
+         **/
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType == AppConstants.RV_TOP_NEWS) {
                 View view = mInflater.inflate(R.layout.top_news, parent, false);
                 return new TopNewsHolder(view);
-            } else if (viewType == AppConstants.RV_CARD_NEWS) {
+            } else if (viewType == AppConstants.RV_DATE_NEWS) {
                 View view = mInflater.inflate(R.layout.card_switch, parent, false);
                 return new CardNewsHolder(view);
-            } else if (viewType == AppConstants.RV_BIG_NEWS) {
-                View view = mInflater.inflate(R.layout.big_news, parent, false);
-                return new BigNewsHolder(view);
-            } else if (viewType == AppConstants.RV_SMALL_NEWS) {
+            } else if (viewType == AppConstants.RV_ARTICLE_NEWS_SMALL) {
                 View view = mInflater.inflate(R.layout.small_news, parent, false);
                 return new SmallNewsHolder(view);
-            } else if (viewType == AppConstants.RV_HORIZONTAL_NEWS) {
+            } else if (viewType == AppConstants.RV_GUESS_NEWS) {
                 View view = mInflater.inflate(R.layout.horizontal_news, parent, false);
                 return new HorizontalHolder(view);
+            } else if (viewType == AppConstants.RV_ARTICLE_NEWS_BIG) {
+                View view = mInflater.inflate(R.layout.big_news, parent, false);
+                return new BigNewsHolder(view);
             } else {
                 return null;
             }
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             if (getItemViewType(position) == AppConstants.RV_TOP_NEWS) {
-//                initCycleViewPager(topnew);
-//                ((TopNewsHolder) holder).cycleView.setViewList(mViewList);//设置数据
-//                ((TopNewsHolder) holder).cycleView.startCycle();//启动自动轮播
                 vpBarner.setAdapter(new TopImageAdapter(mAll_datas.get(position)));
                 btnBarner.setViewPager(vpBarner);
                 btnBarner.setSnap(true);
@@ -346,19 +445,17 @@ public class Read_Fragment extends BaseFragment {
                     //保证启动自动轮播只执行一次
                     mHandler.sendEmptyMessageDelayed(0, 3000);//发送延时3s的信息
                 }
-            } else if (getItemViewType(position) == AppConstants.RV_SMALL_NEWS) {
-                Smallnews.Smallnews_menu smallnews_menu = (Smallnews.Smallnews_menu) mAll_datas.get(position).get(0);
-                Picasso.with(getActivity()).load(smallnews_menu.imageurl).into(((SmallNewsHolder) holder).small_image);
-                ((SmallNewsHolder) holder).small_title.setText(smallnews_menu.title);
-                ((SmallNewsHolder) holder).small_user.setText(smallnews_menu.user);
-                ((SmallNewsHolder) holder).small_views.setText(String.valueOf(smallnews_menu.views));
-            } else if (getItemViewType(position) == AppConstants.RV_CARD_NEWS) {
+            } else if (getItemViewType(position) == AppConstants.RV_ARTICLE_NEWS_SMALL) {
+                smallNewsController = new SmallNewsController(mAllDatas.get(position), mContext);
+                ((SmallNewsHolder) holder).smallNewsView.setAdapter(smallNewsController.getAdapter());
+            } else if (getItemViewType(position) == AppConstants.RV_DATE_NEWS) {
                 cardAdapter = new CardAdapter(mAll_datas.get(position));
                 swipeCardsView.setAdapter(cardAdapter);
                 final List<Object> finalCardnew = mAll_datas.get(position);
                 swipeCardsView.setCardsSlideListener(new SwipeCardsView.CardsSlideListener() {
                     @Override
                     public void onShow(int count) {
+
                     }
 
                     @Override
@@ -378,11 +475,20 @@ public class Read_Fragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onItemClick(View cardImageView, int index) {
-
+                    public void onItemClick(View cardImageView, final int index) {
+                        Intent intent = new Intent(mActivity, DateDetailActivity.class);
+                        List<Object> cardData = mAll_datas.get(position);
+                        DateNews.DateNews_Detail dateNews_detail = (DateNews.DateNews_Detail) cardData.get(index);
+                        intent.putExtra("picUrl", dateNews_detail.picture);
+                        intent.putExtra("title", dateNews_detail.title);
+                        intent.putExtra("content", dateNews_detail.content);
+                        intent.putExtra("readNum", dateNews_detail.readNum);
+                        intent.putExtra("agreeNum", dateNews_detail.agreeNum);
+                        intent.putExtra("activity_id", dateNews_detail.activity_id);
+                        mActivity.startActivity(intent);
                     }
                 });
-            } else if (getItemViewType(position) == AppConstants.RV_HORIZONTAL_NEWS) {
+            } else if (getItemViewType(position) == AppConstants.RV_GUESS_NEWS) {
                 mSubAdapterCrl = new SubAdapterController(mAllDatas.get(position), mContext);
                 //holder = (MainViewHolder)holder;
                 //设置头标识
@@ -390,11 +496,9 @@ public class Read_Fragment extends BaseFragment {
                     ((HorizontalHolder) holder).nestListView.setNestViewHeaderText("小桔猜猜");
                 }
                 ((HorizontalHolder) holder).nestListView.setAdapter(mSubAdapterCrl.getAdapter());
-            } else if (getItemViewType(position) == AppConstants.RV_BIG_NEWS) {
-                Bignews.Bignews_menu bignews_menu = (Bignews.Bignews_menu) mAll_datas.get(position).get(0);
-                Picasso.with(getActivity()).load(bignews_menu.imageurl).into(((BigNewsHolder) holder).big_image);
-                ((BigNewsHolder) holder).big_title.setText(bignews_menu.title);
-                ((BigNewsHolder) holder).big_content.setText(bignews_menu.content);
+            } else if (getItemViewType(position) == AppConstants.RV_ARTICLE_NEWS_BIG) {
+                bigNewsController = new BigNewsController(mAllDatas.get(position), mContext);
+                ((BigNewsHolder) holder).bigNewsView.setAdapter(bigNewsController.getAdapter());
             }
         }
 
@@ -435,34 +539,22 @@ public class Read_Fragment extends BaseFragment {
         }
 
         class SmallNewsHolder extends RecyclerView.ViewHolder {
-            public ImageView small_image;
-            public TextView small_title;
-            public TextView small_user;
-            public TextView small_views;
+            public SmallNewsListView smallNewsView;//小图新闻
 
             public SmallNewsHolder(View itemView) {
                 super(itemView);
-                small_image = (ImageView) itemView.findViewById(R.id.iv_small_image);
-                small_title = (TextView) itemView.findViewById(R.id.tv_small_title);
-                small_user = (TextView) itemView.findViewById(R.id.tv_small_user);
-                small_views = (TextView) itemView.findViewById(R.id.tv_small_views);
+                smallNewsView = (SmallNewsListView) itemView.findViewById(R.id.rv_smallListView);
             }
         }
 
         class BigNewsHolder extends RecyclerView.ViewHolder {
-            public ImageView big_image;
-            public TextView big_title;
-            public TextView big_content;
+            public BigNewsListView bigNewsView;//小图新闻
 
             public BigNewsHolder(View itemView) {
                 super(itemView);
-                big_image = (ImageView) itemView.findViewById(R.id.iv_big_image);
-                big_title = (TextView) itemView.findViewById(R.id.iv_big_title);
-                big_content = (TextView) itemView.findViewById(R.id.iv_big_content);
+                bigNewsView = (BigNewsListView) itemView.findViewById(R.id.rv_bignewsListview);
             }
         }
-
-
     }
 
 
@@ -499,9 +591,9 @@ public class Read_Fragment extends BaseFragment {
 
         @Override
         public void onBindData(int position, View cardview) {
-            Cardnews.Cardnews_menu cardnews_menu = (Cardnews.Cardnews_menu) cardnew.get(position);
-            if (cardnews_menu.imageurl == null) {
-                return;
+            DateNews.DateNews_Detail dateNews_detail = (DateNews.DateNews_Detail) cardnew.get(position);
+            if (dateNews_detail.picture.equals(null) || dateNews_detail.picture.equals("")) {
+                dateNews_detail.picture = "activity/20171227210800.png";
             }
             ImageView imageView = (ImageView) cardview.findViewById(R.id.iv_pic1);
             TextView tv_actTitle = (TextView) cardview.findViewById(R.id.tv_actTitle);
@@ -519,15 +611,15 @@ public class Read_Fragment extends BaseFragment {
             iv_activityType.setImageResource(R.drawable.date_off);
             tv_activityType.setText("最新友约");
             iv_activityStar.setImageResource(R.drawable.star);
-            tv_activityStar.setText(cardnews_menu.star);
+            tv_activityStar.setText(String.valueOf(dateNews_detail.commentNum));
             iv_activityCompliment.setImageResource(R.drawable.compliment);
-            tv_activityCompliment.setText(cardnews_menu.compliment);
+            tv_activityCompliment.setText(String.valueOf(dateNews_detail.agreeNum));
             iv_activityComment.setImageResource(R.drawable.comment);
-            tv_activityComment.setText(cardnews_menu.user);
-            String imageUrl = cardnews_menu.imageurl;
+            tv_activityComment.setText(String.valueOf(dateNews_detail.readNum));
+            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + dateNews_detail.picture;
             Picasso.with(getActivity()).load(imageUrl).into(imageView);
-            tv_actTitle.setText(cardnews_menu.title);
-            tv_actContent.setText(cardnews_menu.content);
+            tv_actTitle.setText(dateNews_detail.title);
+            tv_actContent.setText(dateNews_detail.content);
         }
 
         @Override
@@ -557,12 +649,32 @@ public class Read_Fragment extends BaseFragment {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            Topnews.Topnews_menu topnews_menu = (Topnews.Topnews_menu) topnewsData.get(position);
-            String imageUrl = topnews_menu.imageurl;
+            final Topnews.Topnews_Info topnewsInfo = (Topnews.Topnews_Info) topnewsData.get(position);
+            String imageUrl = topnewsInfo.pictureURL;
             ImageView imageView = new ImageView(getActivity());
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             Picasso.with(getActivity()).load(imageUrl).into(imageView);
             container.addView(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                String url = "";
+
+                @Override
+                public void onClick(View v) {
+                    String search_id = topnewsInfo.search_id;
+                    if (CommonUtils.isLetter(search_id)) {
+                        url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + "getTopicInfo" + AppNetConfig.PARAMETER + "search_id=" + search_id;
+                        Intent intent = new Intent(mActivity, TopDetailsActivity.class);
+                        intent.putExtra("url", url);
+                        intent.putExtra("search_id", search_id);
+                        mActivity.startActivity(intent);
+                    } else {
+                        url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + "getArtCont" + AppNetConfig.SEPARATOR + search_id;
+                        Intent intent = new Intent(mActivity, NewsDetailActivity.class);
+                        intent.putExtra("url", url);
+                        mActivity.startActivity(intent);
+                    }
+                }
+            });
             return imageView;
         }
 
@@ -588,10 +700,10 @@ public class Read_Fragment extends BaseFragment {
 /*          outRect.left = space;
             outRect.right = space;*/
 
-            //       System.out.println("position"+parent.getChildPosition(view));
-            //       System.out.println("count"+parent.getChildCount());
+            //System.out.println("position"+parent.getChildPosition(view));
+            //System.out.println("count"+parent.getChildCount());
 
-            //         if(parent.getChildPosition(view) != parent.getChildCount() - 1)
+            //if(parent.getChildPosition(view) != parent.getChildCount() - 1)
             outRect.bottom = space;
 
             //改成使用上面的间隔来设置

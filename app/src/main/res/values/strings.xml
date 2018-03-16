@@ -1,3 +1,22 @@
 <resources>
-    <string name="app_name">WarmLight</string>
+    <string name="app_name">小桔灯</string>
+    <string name="invalid_token">you have not login,please login first</string>
+    <string name="generic_error">Network anomaly,please try later</string>
+    <string name="generic_server_down">Fail to connect server</string>
+    <string name="no_internet">No internet</string>
+    <string name="account">用户名：</string>
+    <string name="password">密码：</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="register_error">对不起，该用户已存在！</string>
+    <string name="account_can_not_be_empty">Account can\'t be empty</string>
+    <string name="password_can_not_be_empty">Password can\'t be empty</string>
+    <string name="connecting">Connecting</string>
+    <string name="connecting_to_server">Connecting to server,please wait</string>
+    <string name="fail_to_find_user">Account does not exist</string>
+    <string name="login_password_error">password error</string>
+    <string name="WarmLight">— WarmLight —</string>
+    <string name="fail_to_load_members_data">Fail to load members,please try later</string>
+
 </resources>
+

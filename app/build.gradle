@@ -3,6 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     buildToolsVersion "26.0.2"
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
     defaultConfig {
         applicationId "com.learn.p2pmoney.warmlight"
         minSdkVersion 17
@@ -31,7 +33,14 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'org.xutils:xutils:3.5.0'
+    compile 'com.github.userswlwork:pull-to-refresh:1.0.0'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
     testCompile 'junit:junit:4.12'
     compile project(':ViewPagelibrary')
     compile project(':SwipeCardlibrary')
+    compile files('libs/glide-3.6.0.jar')
+    compile files('libs/swiperefreshendless.jar')
+    compile files('libs/rxjava-1.1.0.jar')
+    compile files('libs/rxandroid-24.0.jar')
+    compile files('libs/BaiduLBS_Android.jar')
 }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 图片 -->
+    <ImageView
+        android:id="@+id/iv_small_image"
+        android:layout_width="170dp"
+        android:layout_height="120dp"
+        android:layout_marginRight="5dp"
+        android:paddingRight="12dp"
+        android:scaleType="fitXY" />
+
+    <!-- 标题 -->
+    <TextView
+        android:id="@+id/tv_small_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/iv_small_image"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <!-- 阅读数 -->
+    <TextView
+        android:id="@+id/tv_small_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_small_title"
+        android:layout_marginTop="60dp"
+        android:layout_toRightOf="@+id/iv_small_image"
+        android:textColor="@color/gray_gray"
+        android:textSize="16sp" />
+
+
+    <TextView
+        android:id="@+id/tv_small_views"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_small_title"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="60dp"
+        android:layout_toRightOf="@+id/tv_small_user"
+        android:textColor="@color/gray_gray"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_small_views_tail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_small_title"
+        android:layout_marginTop="60dp"
+        android:layout_toRightOf="@+id/tv_small_views"
+        android:textColor="@color/gray_gray"
+        android:textSize="16sp"
+        android:text="人阅读"/>
+
+
+</RelativeLayout>

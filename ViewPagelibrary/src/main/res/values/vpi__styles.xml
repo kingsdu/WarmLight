@@ -26,6 +26,7 @@
     <style name="Widget.TabPageIndicator" parent="Widget">
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/vpi__tab_indicator</item>
+        <item name="android:textColor">@drawable/vpi_title_textcolor</item>
         <item name="android:paddingLeft">22dip</item>
         <item name="android:paddingRight">22dip</item>
         <item name="android:paddingTop">12dp</item>

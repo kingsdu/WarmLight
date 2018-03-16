@@ -19,9 +19,9 @@
     <!-- 活动大图 -->
     <ImageView
         android:id="@+id/iv_pic1"
-        android:layout_width="120dp"
+        android:layout_width="135dp"
         android:layout_height="140dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="15dp"
         android:scaleType="fitXY" />
 
 
@@ -35,7 +35,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
     <!--活动内容-->
     <TextView
@@ -75,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_pic1"
-        android:layout_marginLeft="65dp"
+        android:layout_marginLeft="120dp"
         android:layout_marginTop="9dp"
         android:layout_toRightOf="@+id/tv_activityType"
         android:scaleType="fitXY" />

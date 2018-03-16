@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <TextView
+            android:layout_marginTop="15dp"
+            android:id="@+id/oldPassword"
+            android:text="请输入用户名："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:layout_marginBottom="5dp"
+            android:id="@+id/et_oldPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#D3D3D3"
+            android:background="@drawable/boder_06"
+            android:inputType="text"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            />
+
+        <TextView
+            android:layout_marginTop="15dp"
+            android:id="@+id/tv_newPassword"
+            android:text="请输入密码："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <EditText
+            android:layout_marginBottom="5dp"
+            android:id="@+id/et_newPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#D3D3D3"
+            android:background="@drawable/boder_06"
+            android:inputType="text"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            />
+        <TextView
+            android:layout_marginTop="15dp"
+            android:id="@+id/tv_newPassword2"
+            android:text="请再次确认密码："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:layout_marginBottom="5dp"
+            android:id="@+id/et_newPassword2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#D3D3D3"
+            android:inputType="text"
+            android:background="@drawable/boder_06"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/btn_send"
+                android:layout_width="65dp"
+                android:layout_height="40dp"
+                android:background="@drawable/u47"
+                android:text="确定"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

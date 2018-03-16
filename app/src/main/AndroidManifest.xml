@@ -3,21 +3,25 @@
     package="com.c317.warmlight.android">
 
     <!-- 配置所需权限-->
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <!--百度地图需要权限-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
     <application
         android:name="com.c317.warmlight.android.common.Application_my"
@@ -27,13 +31,49 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.c317.warmlight.android.MainActivity">
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="FNURfeiYUfq4noTqbbVjzHhAij817OcG"/>
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+        </service>
+
+        <activity android:name="com.c317.warmlight.android.Activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.c317.warmlight.android.Activity.LoginActivity"></activity>
+        <activity android:name="com.c317.warmlight.android.MainActivity"></activity>
+        <activity android:name="com.c317.warmlight.android.Activity.NewsDetailActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.DateDetailActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.BookDetailsActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.TopDetailsActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.SettingMeActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.PersonnalInfoActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.EditPersonnalinfoActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.PersonnalinfoChangepasswordAty"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.SettingMyDateActivity"
+            android:theme="@style/Theme.PageIndicatorDefaults"></activity>
+
+
+
+        <activity android:name="com.c317.warmlight.android.Activity.MapActivity"></activity>
+        <activity android:name="com.c317.warmlight.android.Activity.AddDateActivity"></activity>
+        <activity android:name="com.c317.warmlight.android.Activity.JoinSettingActivity"></activity>
     </application>
 
 </manifest>

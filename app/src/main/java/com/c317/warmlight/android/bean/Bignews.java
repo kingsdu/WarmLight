@@ -1,22 +1,32 @@
 package com.c317.warmlight.android.bean;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Administrator on 2017/12/2.
+ *
+ * 大图新闻
  */
 
 public class Bignews {
 
-    public ArrayList<Bignews_menu> bignews;
+    public Bignews_Info data;
 
-    public class Bignews_menu{
-        public int id;
-        public String type;
+    public static class Bignews_Info {
+        public int total;
+        public int page;
+        public ArrayList<Bignews_Detail> detail;
+    }
+
+    public static class Bignews_Detail{
+        public int article_id;
         public String title;
-        public String content;
-        public String star;
-        public String compliment;
-        public String imageurl;
+        public Date pub_date;
+        public String source;
+        public String introduce;
+        public String pictureURL;
+        public int read_num;
+        public int agree_num;
     }
 }

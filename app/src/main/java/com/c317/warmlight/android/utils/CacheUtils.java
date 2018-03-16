@@ -1,6 +1,9 @@
 package com.c317.warmlight.android.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+
+import static android.provider.UserDictionary.Words.APP_ID;
 
 /**
  * Created by Administrator on 2017/12/4.
@@ -29,4 +32,22 @@ public class CacheUtils {
         return PrefUtils.getString(ctx, url, null);
     }
 
+
+
+    /**
+    * 清空缓存
+    * @params
+    * @author Du
+    * @Date 2018/3/16 8:57
+    **/
+    public static void cleanCache(Context ctx,String url){
+        PrefUtils.cleanString(ctx,url);
+    }
+
+
+    public static void cacheToken(Context context,String token){
+        SharedPreferences.Editor e = context.getSharedPreferences(APP_ID, Context.MODE_PRIVATE).edit();
+        e.putString("token", token);
+        e.commit();
+    }
 }

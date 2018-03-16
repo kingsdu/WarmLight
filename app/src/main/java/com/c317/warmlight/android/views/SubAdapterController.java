@@ -1,20 +1,19 @@
 package com.c317.warmlight.android.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.c317.warmlight.android.Activity.BookDetailsActivity;
 import com.c317.warmlight.android.R;
-import com.c317.warmlight.android.bean.Horizontalnews;
+import com.c317.warmlight.android.bean.OrangeGuess;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,6 +24,7 @@ public class SubAdapterController {
     private List<Object> mData;
     private Context mContext;
     private SubAdapter mAdapter;
+    private OnItemClickListener mOnItemClickListener = null;
 
     public SubAdapterController(List<Object> data, Context context) {
         //若初始化数据为空，则重新New数据
@@ -37,6 +37,20 @@ public class SubAdapterController {
         if (!mData.isEmpty()) {
             if (null == mAdapter) {
                 mAdapter = new SubAdapter(mContext);
+                mAdapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        //新建页面，解析数据，填充页面
+                        OrangeGuess.OrangeGuess_details orangeGuessInfo = (OrangeGuess.OrangeGuess_details) mData.get(position);
+                        String book_id = String.valueOf(orangeGuessInfo.book_id);
+                        Intent intent = new Intent(mContext, BookDetailsActivity.class);
+                        intent.putExtra("book_id",book_id);
+                        intent.putExtra("pictureURL",orangeGuessInfo.pictureURL);
+                        intent.putExtra("author",orangeGuessInfo.author);
+                        intent.putExtra("title",orangeGuessInfo.title);
+                        mContext.startActivity(intent);
+                    }
+                });
             }
             return mAdapter;
         } else {
@@ -45,7 +59,12 @@ public class SubAdapterController {
 
     }
 
-    class SubAdapter extends RecyclerView.Adapter<SubAdapter.SubViewHolder> {
+    public static interface OnItemClickListener {
+        void onItemClick(View view , int position);
+    }
+
+
+    class SubAdapter extends RecyclerView.Adapter<SubAdapter.SubViewHolder> implements View.OnClickListener{
         private LayoutInflater mInflater;
 
         public SubAdapter(Context context) {
@@ -56,22 +75,38 @@ public class SubAdapterController {
         @Override
         public SubViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = mInflater.inflate(R.layout.sub_horizontal, parent, false);
+            view.setOnClickListener(this);
             return new SubViewHolder(view);
         }
 
         //设置数据
         @Override
         public void onBindViewHolder(SubViewHolder holder, int position) {
-            Horizontalnews.Horizontalnews_menu horizontalnews_menu = (Horizontalnews.Horizontalnews_menu) mData.get(position);
-            Picasso.with(mContext).load(horizontalnews_menu.imageurl).into(holder.image);
-            holder.title.setText(horizontalnews_menu.title);
-            holder.author.setText(horizontalnews_menu.author);
+            OrangeGuess.OrangeGuess_details orangeGuessInfo = (OrangeGuess.OrangeGuess_details) mData.get(position);
+            String imageUrl = orangeGuessInfo.pictureURL;
+            Picasso.with(mContext).load(imageUrl).into(holder.image);
+            holder.title.setText(orangeGuessInfo.title);
+            holder.author.setText(orangeGuessInfo.author);
+            holder.itemView.setTag(position);
         }
 
         @Override
         public int getItemCount() {
             return mData.size();
         }
+
+        @Override
+        public void onClick(View v) {
+            if (mOnItemClickListener != null) {
+                //注意这里使用getTag方法获取position
+                mOnItemClickListener.onItemClick(v,(int)v.getTag());
+            }
+        }
+
+        public void setOnItemClickListener(OnItemClickListener listener) {
+            mOnItemClickListener = listener;
+        }
+
 
         //Holder类
         public class SubViewHolder extends RecyclerView.ViewHolder {
@@ -88,10 +123,9 @@ public class SubAdapterController {
 //                    @Override
 //                    public void onClick(View v) {
 //                        //启动一个ACTIVITY
-//                        Toast.makeText(mContext, ((TextView)v.findViewById(R.id.main_title)).getText(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mContext, "SubViewHolder on button", Toast.LENGTH_SHORT).show();
 //                    }
 //                });
-////                image = (ImageView) findViewById(R.id.image);
             }
         }
     }

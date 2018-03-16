@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efefef">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/common_top" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="4"
+            android:background="@color/white"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="3dp"
+                android:layout_weight="1"
+                android:divider="@drawable/divide_shape"
+                android:orientation="vertical"
+                android:showDividers="end">
+
+                <EditText
+                    android:id="@+id/et_date_inTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="center|left"
+                    android:hint="输入友约的主题"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray_gray" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/et_date_inContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="top|left"
+                    android:hint="主题详细内容描述\n(请勿发布不实、不雅等内容，否则可能会被删除)"
+                    android:paddingTop="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray_gray" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+
+                <Button
+                    android:id="@+id/btn_date_uploadpho"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:paddingTop="10dp"
+                    android:layout_marginBottom="30dp"
+                    android:background="@drawable/upload_date_photos" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:background="@color/white"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rl_date_starttime"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shadow">
+
+                <TextView
+                    android:id="@+id/tv_date_instarttime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="15dp"
+                    android:text="开始时间 "
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/tv_date_showtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv_date_instarttime"
+                    android:paddingBottom="15dp"
+                    android:paddingTop="15dp"
+                    android:textColor="@color/gray_gray"
+                    android:textSize="17sp"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/iv_date_instarttime"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="160dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@+id/tv_date_instarttime"
+                    android:src="@drawable/icon_right" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_date_inendtime"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/shadow">
+
+                <TextView
+                    android:id="@+id/tv_date_inendtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="15dp"
+                    android:text="结束时间"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/tv_date_showendtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv_date_inendtime"
+                    android:paddingBottom="15dp"
+                    android:paddingTop="15dp"
+                    android:textColor="@color/gray_gray"
+                    android:textSize="17sp"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/iv_date_inendtime"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="165dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@+id/tv_date_inendtime"
+                    android:src="@drawable/icon_right" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_date_selplace"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/shadow">
+
+                <TextView
+                    android:id="@+id/tv_date_selplace"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="15dp"
+                    android:text="友约地点"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/tv_date_showplace"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_toRightOf="@+id/tv_date_selplace"
+                    android:paddingBottom="15dp"
+                    android:paddingTop="15dp"
+                    android:text="在地图上选择"
+                    android:textColor="@color/gray_gray"
+                    android:textSize="17sp" />
+
+                <ImageView
+                    android:id="@+id/iv_date_inplace"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="165dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@+id/tv_date_selplace"
+                    android:src="@drawable/icon_right" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_date_inplace"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/shadow">
+
+                <EditText
+                    android:id="@+id/et_date_inplace"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:hint="或在此处输入地址"
+                    android:paddingLeft="35dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray_gray" />
+
+            </RelativeLayout>
+
+            <!--报名设置-->
+            <RelativeLayout
+                android:id="@+id/rl_date_joinsetting"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/shadow">
+
+                <TextView
+                    android:id="@+id/tv_date_joinsetting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="15dp"
+                    android:text="报名设置"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <ImageView
+                    android:id="@+id/iv_date_joinsetting"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="165dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@+id/tv_date_joinsetting"
+                    android:src="@drawable/icon_right" />
+
+            </RelativeLayout>
+
+            <!-- 活动类型设置 -->
+            <RelativeLayout
+                android:id="@+id/rl_date_jointype"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/shadow">
+
+                <TextView
+                    android:id="@+id/tv_date_jointype"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="15dp"
+                    android:text="活动类型设置"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/tv_date_joinshowtype"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv_date_jointype"
+                    android:paddingBottom="15dp"
+                    android:paddingTop="15dp"
+                    android:paddingLeft="20dp"
+                    android:textColor="@color/gray_gray"
+                    android:textSize="17sp"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/iv_date_jointype"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="135dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@+id/tv_date_jointype"
+                    android:src="@drawable/icon_right" />
+            </RelativeLayout>
+
+            <!-- 活动名额设置 -->
+            <RelativeLayout
+                android:id="@+id/rl_date_joinnum"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/shadow">
+
+                <TextView
+                    android:id="@+id/tv_date_joinnum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="15dp"
+                    android:text="活动名额设置"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <EditText
+                    android:id="@+id/et_date_joinnum"
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/tv_date_joinnum"
+                    android:background="@null"
+                    android:gravity="center|right"
+                    android:hint="输入参加人数"
+                    android:paddingRight="30dp"
+                    android:src="@drawable/icon_right"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray_gray" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingTop="15dp">
+
+            <RelativeLayout
+                android:id="@+id/rl_date_release"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_date_release"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/date_saveset_bg"
+                    android:text="发布"
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</ScrollView>

@@ -1,44 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="46dp">
-    
+    android:layout_width="match_parent"
+    android:layout_height="46dp"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:layout_height="45dp"
         android:background="@color/main_orange"
-        android:padding="10dp"
-        android:layout_height="45dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:gravity="left"
-        android:layout_height="match_parent"
-        android:textColor="@color/title_text_color"
-        android:textSize="20sp"/>
+        <ImageView
+            android:id="@+id/iv_add_date"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/add_date"
+            android:visibility="gone"/>
 
-    <ImageView
-        android:id="@+id/iv_search"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:src="@drawable/search"/>
+        <ImageView
+            android:id="@+id/iv_back_me"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/back"
+            android:visibility="gone"/>
 
+        <TextView
+            android:id="@+id/tv_topbar_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/title_text_color"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_date_publicate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textColor="@color/title_text_color"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/search"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/iv_locate_date"
+            android:layout_width="28dp"
+            android:layout_height="29dp"
+            android:src="@drawable/datamap"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/iv_menu"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:src="@drawable/menu"/>
+            android:src="@drawable/menu"
+            android:visibility="gone"/>
 
+        <ImageView
+            android:id="@+id/iv_me_setting"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/setting"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/iv_read_collect"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/read_collect0"
+            android:visibility="gone"/>
+
+
+        <ImageView
+            android:id="@+id/iv_read_uncollect"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/unread_collect0"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_personnalinfo_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:gravity="right"
+            android:textColor="@color/title_text_color"
+            android:textSize="20sp" />
     </LinearLayout>
-    
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/main_orange">
-    </View>
+        android:background="@color/main_orange"></View>
 
 </LinearLayout>
