@@ -57,8 +57,6 @@ public class AddDateActivity extends Activity {
     EditText etDateInTitle;//标题
     @Bind(R.id.et_date_inContent)
     EditText etDateInContent;//内容
-    @Bind(R.id.ib_date_uploadpho)
-    ImageButton ibDateUploadpho;
     @Bind(R.id.iv_add_date)
     ImageView ivAddDate;
     @Bind(R.id.iv_search)
@@ -99,6 +97,8 @@ public class AddDateActivity extends Activity {
     TextView tvDateJoinshowtype;//类型设置
     @Bind(R.id.btn_date_release)
     Button btnDateRelease;
+    @Bind(R.id.btn_date_uploadpho)
+    Button btnDateUploadpho;
 
     StringBuilder selectTime = null;//用户设置时间设置
     int mDateType = 10;
