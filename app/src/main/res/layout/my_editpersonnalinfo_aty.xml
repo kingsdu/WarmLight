@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FAFAFA"
+        android:orientation="vertical">
+
+        <include layout="@layout/common_top"></include>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/bg">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civ_editpersonnalinfo_circleImageView"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:src="@drawable/musi01"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:divider="@drawable/divide_shape"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:showDividers="middle|end">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:id="@+id/tv_editpersonnalinfo_username"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:background="#00000000"
+                    android:gravity="center"
+                    android:paddingLeft="8dp"
+                    android:text="昵称: "
+                    android:textColor="#99CCFF"
+                    android:textSize="17sp" />
+
+                <EditText
+                    android:id="@+id/et_editpersonnalinfo_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@+id/tv_editpersonnalinfo_username"
+                    android:gravity="center"
+                    android:text="XXX"
+                    android:textColor="#646464"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:id="@+id/tv_editpersonnalinfo_sex"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:background="#00000000"
+                    android:gravity="center"
+                    android:paddingLeft="8dp"
+                    android:text="性别: "
+                    android:textColor="#99CCFF"
+                    android:textSize="17sp" />
+
+                <EditText
+                    android:id="@+id/et_editpersonnalinfo_sex"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@+id/tv_editpersonnalinfo_sex"
+                    android:gravity="center"
+                    android:hint="请点击选择性别"
+                    android:textColor="#646464"
+                    android:textColorHint="@color/gray_gray"
+                    android:textSize="17sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:id="@+id/tv_editpersonnalinfo_birthday"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:background="#00000000"
+                    android:gravity="center"
+                    android:paddingLeft="8dp"
+                    android:text="生日: "
+                    android:textColor="#99CCFF"
+                    android:textSize="17sp" />
+
+                <EditText
+                    android:id="@+id/et_editpersonnalinfo_birthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@+id/tv_editpersonnalinfo_birthday"
+                    android:gravity="center"
+                    android:text="XXX"
+                    android:textColor="#646464"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:id="@+id/tv_editpersonnalinfo_sig"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:background="#00000000"
+                    android:gravity="center"
+                    android:paddingLeft="8dp"
+                    android:text="个性签名: "
+                    android:textColor="#99CCFF"
+                    android:textSize="17sp" />
+
+                <EditText
+                    android:id="@+id/et_editpersonnalinfo_sig"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@+id/tv_editpersonnalinfo_sig"
+                    android:gravity="center"
+                    android:text="XXX"
+                    android:textColor="#646464"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:id="@+id/tv_editpersonnalinfo_email"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:background="#00000000"
+                    android:gravity="center"
+                    android:paddingLeft="8dp"
+                    android:text="邮箱: "
+                    android:textColor="#99CCFF"
+                    android:textSize="17sp" />
+
+                <EditText
+                    android:id="@+id/et_editpersonnalinfo_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@+id/tv_editpersonnalinfo_email"
+                    android:gravity="center"
+                    android:text="XXX"
+                    android:textColor="#646464"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn_editpersonnalinfo_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/date_saveset_bg"
+                android:text="保存"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+</ScrollView>

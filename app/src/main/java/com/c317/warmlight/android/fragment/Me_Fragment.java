@@ -28,6 +28,7 @@ import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.tabpager.MyDataTabPager;
 import com.c317.warmlight.android.utils.CacheUtils;
 import com.c317.warmlight.android.utils.UIUtils;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -99,7 +100,7 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
     public void initPhotoData(String account) {
         String picname = "icon/" + account + ".jpg";
         String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + picname;
-        Picasso.with(mActivity).load(imageUrl).into(circleImageView);
+        Picasso.with(mActivity).load(imageUrl).memoryPolicy(MemoryPolicy.NO_CACHE).into(circleImageView);
     }
 
     @Override
