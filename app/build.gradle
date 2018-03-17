@@ -35,6 +35,7 @@ dependencies {
     compile 'org.xutils:xutils:3.5.0'
     compile 'com.github.userswlwork:pull-to-refresh:1.0.0'
     compile 'de.hdodenhof:circleimageview:2.2.0'
+    compile 'com.zhy:okhttputils:2.6.2'
     testCompile 'junit:junit:4.12'
     compile project(':ViewPagelibrary')
     compile project(':SwipeCardlibrary')

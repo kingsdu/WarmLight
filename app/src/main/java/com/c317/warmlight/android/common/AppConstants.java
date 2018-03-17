@@ -29,4 +29,9 @@ public class AppConstants {
     public final static String ENROLLSETTING = "enrollSetting";//报名设置缓存
 
 
+    public final static String ACCOUNT = "account";//用户名
+    public final static String UPLOADPIC = "uploadpic";//上传图片
+
+
+
 }

@@ -22,6 +22,12 @@ public class AppNetConfig {
     //友约
     public static final String DATE = "youyue";
 
+    //我的
+    public static final String MY = "my";
+
+    //所有图片
+    public static final String PICTURE = "picture";
+
     //头条新闻
     public static final String TOPNEWS = "getTopics";
 
@@ -46,20 +52,18 @@ public class AppNetConfig {
     //创建友约
     public static final String CREATEACTIVITY = "createActivity";
 
+    //上传图片
+    public static final String UPLOADICON = "uploadIcon";
+
 
     /*********************************基本操作符定义***************************************/
     public static final String SEPARATOR = File.separator;
-
-    public static final String PICTURE = "picture";
 
     public static final String PARAMETER = "?";
 
     public static final String PAGE = "page";
 
     public static final String EQUAL = "=";
-
-
-    public static final String MY = "my";
 //    public static final String HOST = "14g97976j3.51mypc.cn";
 //
 //    public static final String BASEURL = "http://"+ HOST +":8080/WarmLight/";
