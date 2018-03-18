@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/common_top"></include>
+    <!-- 性别设置 -->
+
+
+
+
+        <TextView
+            android:id="@+id/tv_editsex_personnalinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_sex_personnalinfo"
+
+            android:textSize="17sp"
+            android:visibility="gone" />
+
+
+</LinearLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+    <include layout="@layout/common_top"></include>
+    <LinearLayout
+        android:id="@+id/ll_me_editsigure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp">
+        <EditText
+            android:id="@+id/et_editsigure_personnalinfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="left"
+            android:text="XXX"
+            android:textColor="#646464"
+            android:textSize="17sp" />
+        <TextView
+            android:layout_marginTop="15dp"
+            android:text="好的个性签名可以让朋友更容易记住你。"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textColor="@color/bg_text"/>
+    </LinearLayout>
+        </LinearLayout>
+</LinearLayout>

@@ -62,6 +62,12 @@
 
         <activity android:name="com.c317.warmlight.android.Activity.PersonnalInfoActivity"></activity>
 
+        <activity android:name="com.c317.warmlight.android.Activity.PersonnalinfoEditnameAty"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.PersonnalinfoEditsexAty"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.PersonnalinfoEditsigureAty"></activity>
+
         <activity android:name="com.c317.warmlight.android.Activity.EditPersonnalinfoActivity"></activity>
 
         <activity android:name="com.c317.warmlight.android.Activity.PersonnalinfoChangepasswordAty"></activity>
