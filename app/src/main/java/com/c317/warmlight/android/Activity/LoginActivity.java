@@ -16,10 +16,12 @@ import com.c317.warmlight.android.MainActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.bean.Result;
 import com.c317.warmlight.android.bean.UserInfo;
+import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.fragment.Read_Fragment;
 import com.c317.warmlight.android.utils.MD5utils;
 import com.c317.warmlight.android.utils.PrefUtils;
+import com.c317.warmlight.android.utils.SharedPrefUtility;
 import com.google.gson.Gson;
 
 import org.xutils.common.Callback;
@@ -49,6 +51,7 @@ public class LoginActivity extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Application_my.getInstance().addActivity(this);
         setContentView(R.layout.login_aty);
         ButterKnife.bind(this);
         btnRegister.getBackground().setAlpha(150);
@@ -84,7 +87,6 @@ public class LoginActivity extends Activity {
     }
 
 
-
     private void login(final String account, final String password) {
         RequestParams params = new RequestParams("http://14g97976j3.51mypc.cn:10759/my/userLogin");
         params.addParameter("account", account);
@@ -94,12 +96,17 @@ public class LoginActivity extends Activity {
             public void onSuccess(String result) {
                 Gson gson = new Gson();
                 Result resultInfo = gson.fromJson(result, Result.class);
-                if(resultInfo.code == 200){
+                if (resultInfo.code == 200) {
                     UserManage.getInstance().saveUserInfo(LoginActivity.this, account, password);
+                    //保存登录状态
+                    SharedPrefUtility.setParam(LoginActivity.this, SharedPrefUtility.IS_LOGIN, true);
+                    //保存登录个人信息
+                    SharedPrefUtility.setParam(LoginActivity.this, SharedPrefUtility.LOGIN_DATA, result);
                     Toast.makeText(LoginActivity.this, "登陆成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
-                }else{
+
+                } else {
                     Toast.makeText(LoginActivity.this, resultInfo.desc, Toast.LENGTH_SHORT).show();
                 }
             }

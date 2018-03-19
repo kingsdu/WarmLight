@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.bean.Topnews_details;
+import com.c317.warmlight.android.common.Application_my;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -69,6 +70,7 @@ public class TopDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Application_my.getInstance().addActivity(this);
         setContentView(R.layout.book_details);
         ButterKnife.bind(this);
         url = getIntent().getStringExtra("url");

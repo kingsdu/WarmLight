@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -31,8 +32,11 @@ import com.c317.warmlight.android.bean.Result;
 import com.c317.warmlight.android.bean.UserInfo;
 import com.c317.warmlight.android.common.AppConstants;
 import com.c317.warmlight.android.common.AppNetConfig;
+import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.common.UserManage;
+import com.c317.warmlight.android.utils.CacheUtils;
 import com.c317.warmlight.android.utils.CommonUtils;
+import com.c317.warmlight.android.utils.SharedPrefUtility;
 import com.c317.warmlight.android.utils.UtilImags;
 import com.google.gson.Gson;
 import com.squareup.picasso.MemoryPolicy;
@@ -99,24 +103,39 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
     private static final int SHOW_PICTURE = 2;//显示图片
     private static final int RESULT_CODE = 3;//返回码
 
-    int mSexType = 2;
+    private static final int EDIT_NAME = 4;//编辑昵称
+    private static final int EDIT_SEX = 5;//编辑性别
+    private static final int EDIT_SINGUURE = 6;//编辑个性签名
+
+    private int mSexType = 0;//性别选择
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Application_my.getInstance().addActivity(this);
         setContentView(R.layout.my_personnalinfo_aty);
         ButterKnife.bind(this);
         //顶部图标
         ivBackMe.setVisibility(View.VISIBLE);
         tvTopbarTitle.setText("个人信息");
         account = UserManage.getInstance().getUserInfo(PersonnalInfoActivity.this).account;
-        initPhotoData();
-        getDataFromServer();
+        initData();
         ivBackMe.setOnClickListener(this);
         civPersonnalinfoCircleImageView.setOnClickListener(this);
-        llMeEditname.setOnClickListener(this);
-        llMeEditsex.setOnClickListener(this);
-        llMeEditsigure.setOnClickListener(this);
         llMeEditpassward.setOnClickListener(this);
+        tvPersonnalinfoUsername1.setOnClickListener(this);
+    }
+
+
+
+    private void initData(){
+        initPhotoData();
+        String param = (String) SharedPrefUtility.getParam(this, AppConstants.USERNAME, AppConstants.USERNAME);
+        if(!TextUtils.isEmpty(param)){
+            tvPersonnalinfoUsername1.setText(param);
+        }else{
+            getDataFromServer();
+        }
     }
 
     /**
@@ -138,9 +157,6 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.iv_back_me:
-//                finish();
-//                break;
             //上传图片
             case R.id.civ_personnalinfo_circleImageView:
                 showPopupWindow();
@@ -149,30 +165,25 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
                 pop.showAtLocation(v, Gravity.BOTTOM, 0, 0);
                 break;
             //编辑姓名
-            case R.id.ll_me_editname:
-                Intent intent = new Intent(PersonnalInfoActivity.this, PersonnalinfoEditnameAty.class);
-                startActivity(intent);
+            case R.id.tv_personnalinfo_username1:
+                startActivityForResult(new Intent(PersonnalInfoActivity.this, PersonnalinfoEditnameAty.class),EDIT_NAME);
                 break;
             //编辑性别
-            case R.id.ll_me_editsex:
+            case R.id.tv_personnalinfo_sex1:
                 editsex();
-//                onClickListener();
                 break;
             //编辑个性签名
-            case R.id.ll_me_editsigure:
-                intent = new Intent(PersonnalInfoActivity.this, PersonnalinfoEditsigureAty.class);
-                startActivity(intent);
+            case R.id.tv_personnalinfo_sig1:
+//                intent = new Intent(PersonnalInfoActivity.this, PersonnalinfoEditsigureAty.class);
+//                startActivity(intent);
                 break;
             //修改密码
             case R.id.ll_me_editpassward:
-                intent = new Intent(PersonnalInfoActivity.this, PersonnalinfoChangepasswordAty.class);
-                startActivity(intent);
+//                intent = new Intent(PersonnalInfoActivity.this, PersonnalinfoChangepasswordAty.class);
+//                startActivity(intent);
                 break;
-
             case R.id.iv_back_me:
-                Editname(UserManage.getInstance().getUserInfo(PersonnalInfoActivity.this).account,
-                        mSexType);
-//                finish();
+                finish();
                 break;
         }
     }
@@ -180,7 +191,7 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == PersonnalInfoActivity.RESULT_OK) {
+        if ((resultCode == PersonnalInfoActivity.RESULT_OK)||(resultCode == 0)) {
             switch (requestCode) {
                 case TAKE_PICTURE:
                     takePicture(data);
@@ -188,8 +199,13 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
                 case CHOOSE_PICTURE:
                     selectMobPhotos(data);
                     break;
-                case SHOW_PICTURE:
-
+                case EDIT_NAME:
+                    String param = (String)SharedPrefUtility.getParam(this, AppConstants.USERNAME, AppConstants.USERNAME);
+                    if(!TextUtils.isEmpty(param)){
+                        tvPersonnalinfoUsername1.setText(param);
+                    }else{
+                        CommonUtils.showToastShort(this,"缓存用户名为空");
+                    }
                     break;
             }
         }
@@ -330,7 +346,6 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
             params.addBodyParameter("picture", file);
         }
         x.http().post(params, new Callback.CommonCallback<String>() {
-
             @Override
             public void onSuccess(String result) {
                 Gson gson = new Gson();
@@ -362,9 +377,9 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
 
 
     private void getDataFromServer() {
-        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.MY + AppNetConfig.SEPARATOR + "getUserInfo";
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.MY + AppNetConfig.SEPARATOR + AppNetConfig.GETUSERINFO;
         RequestParams params = new RequestParams(url);
-        params.addParameter("account", account);
+        params.addParameter(AppConstants.ACCOUNT, account);
         x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
@@ -403,63 +418,37 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
         tvPersonnalinfoSex1.setText(sex1);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 
     private void editsex() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final String items[] = {"男", "女"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, 2);
-        // 设置列表显示，注意设置了列表显示就不要设置builder.setMessage()了，否则列表不起作用。
         builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                tvPersonnalinfoSex1.setVisibility(View.VISIBLE);
-                tvPersonnalinfoSex1.setText(items[which]);
                 mSexType = which;
             }
-        });
-        builder.create().show();
+        }).setCancelable(false).create().show();
+        Editname(UserManage.getInstance().getUserInfo(PersonnalInfoActivity.this).account,
+                mSexType);
+
     }
 
-    private void onClickListener() {
-        ivBackMe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Editname(UserManage.getInstance().getUserInfo(PersonnalInfoActivity.this).account,
-                        mSexType);
-            }
-        });
-    }
 
     public void Editname(final String account, final int sex){
-        RequestParams params = new RequestParams("http://14g97976j3.51mypc.cn:10759/my/modifyUser");
-        params.addParameter("account", account);
-        params.addParameter("sex", sex);
-        x.http().request(HttpMethod.PUT, params, new Callback.CacheCallback<String>() {
+        RequestParams params = new RequestParams(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.MY + AppNetConfig.SEPARATOR +AppNetConfig.MODIFYUSER);
+        params.addParameter(AppConstants.ACCOUNT, account);
+        params.addParameter(AppConstants.SEX, sex);
+        x.http().request(HttpMethod.PUT, params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 //成功
-//                Toast.makeText(
-//                        PersonnalinfoEditnameAty.this,
-//                        "保存成功",
-//                        Toast.LENGTH_LONG)
-//                        .show();
-                finish();
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 //失败
-//                Toast.makeText(
-//                        PersonnalinfoEditnameAty.this,
-//                        "保存失败",
-//                        Toast.LENGTH_LONG)
-//                        .show();
-                finish();
             }
 
             @Override
@@ -471,19 +460,6 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
             public void onFinished() {
 
             }
-
-            @Override
-            public boolean onCache(String result) {
-                return false;
-            }
         });
-    }
-
-    //返回键
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Editname(UserManage.getInstance().getUserInfo(PersonnalInfoActivity.this).account,
-                mSexType);
-        return super.onKeyDown(keyCode, event);
     }
 }

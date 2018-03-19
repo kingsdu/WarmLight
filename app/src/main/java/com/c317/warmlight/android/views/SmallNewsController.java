@@ -21,6 +21,7 @@ import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -51,10 +52,18 @@ public class SmallNewsController {
                     @Override
                     public void onItemClick(View view, int position) {
                         Smallnews.Smallnews_Detail smallnews_detail = (Smallnews.Smallnews_Detail) mData.get(position);
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         String article_id = String.valueOf(smallnews_detail.article_id);
                         Intent intent = new Intent(mContext, NewsDetailActivity.class);
                         intent.putExtra("url","http://14g97976j3.51mypc.cn:10759/youdu/getArtCont/"+article_id);
                         intent.putExtra("article_id",article_id);
+                        intent.putExtra("title",smallnews_detail.title);
+                        intent.putExtra("introduce",smallnews_detail.introduce);
+                        intent.putExtra("pubDate",sdf.format(smallnews_detail.pubDate));
+                        intent.putExtra("pictureURL",smallnews_detail.pictureURL);
+                        intent.putExtra("readNum",smallnews_detail.readNum+"");
+                        intent.putExtra("agreeNum",smallnews_detail.agreeNum+"");
+                        intent.putExtra("source",smallnews_detail.source);
                         mContext.startActivity(intent);
                         //自增阅读数
                         addReadNum(article_id);

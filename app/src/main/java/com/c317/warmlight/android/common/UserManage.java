@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.c317.warmlight.android.bean.UserInfo;
+import com.c317.warmlight.android.utils.CacheUtils;
 
 import static android.provider.UserDictionary.Words.APP_ID;
 
@@ -62,7 +63,7 @@ public class UserManage {
      */
     public boolean hasUserInfo(Context context) {
         UserInfo.UserInfo_content  userInfo_content = getUserInfo(context);
-        if (userInfo_content != null) {
+        if (userInfo_content.account != null) {
             if ((!TextUtils.isEmpty(userInfo_content.getAccount())) && (!TextUtils.isEmpty(userInfo_content.getPassword()))) {//有数据
                 return true;
             } else {
@@ -71,5 +72,16 @@ public class UserManage {
         }
         return false;
     }
+
+
+
+    /**
+     * 删除用户存储信息
+     * */
+    public void deleteUserInfo(Context context,String url) {
+//        instance.saveUserInfo();
+        CacheUtils.cleanCache(context,url);
+    }
+
 
 }

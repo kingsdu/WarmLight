@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.bean.OrangeGuess_detail;
 import com.c317.warmlight.android.common.AppNetConfig;
+import com.c317.warmlight.android.common.Application_my;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -78,6 +79,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Application_my.getInstance().addActivity(this);
         setContentView(R.layout.book_details);
         ButterKnife.bind(this);
         book_id = getIntent().getStringExtra("book_id");

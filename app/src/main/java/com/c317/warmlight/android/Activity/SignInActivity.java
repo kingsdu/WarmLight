@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.c317.warmlight.android.R;
+import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.utils.MD5utils;
 import com.google.gson.Gson;
 
@@ -43,6 +44,7 @@ public class SignInActivity extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Application_my.getInstance().addActivity(this);
         setContentView(R.layout.signin_aty);
         ButterKnife.bind(this);
         btnSend.setOnClickListener(new View.OnClickListener() {

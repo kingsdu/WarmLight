@@ -11,6 +11,13 @@ import android.content.SharedPreferences;
 
 public class PrefUtils {
 
+
+    private static final String FILE_NAME = "share_date";
+
+    public static final String INDEX="index";
+    public static final String LOGIN_DATA="loginData";
+    public static final String IS_LOGIN="isLogin";
+
     public static boolean getBoolean(Context ctx, String key, boolean defValue){
         SharedPreferences sp =
                 ctx.getSharedPreferences("config", Context.MODE_PRIVATE);
@@ -56,6 +63,8 @@ public class PrefUtils {
                 ctx.getSharedPreferences("config", Context.MODE_PRIVATE);
         sp.edit().putInt(key,defValue).commit();
     }
+
+
 
 
 

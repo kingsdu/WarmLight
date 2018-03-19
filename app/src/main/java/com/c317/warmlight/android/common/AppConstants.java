@@ -30,8 +30,12 @@ public class AppConstants {
 
 
     public final static String ACCOUNT = "account";//用户名
+    public final static String SEX = "sex";//性别
+    public final static String USERNAME = "username";
     public final static String UPLOADPIC = "uploadpic";//上传图片
 
 
 
+
+    public final static String EXIT_APP = "exit_app";//退出所有应用
 }

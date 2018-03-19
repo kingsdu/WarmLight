@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.common.AppConstants;
+import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.utils.CacheUtils;
 
 import java.util.Calendar;
@@ -54,6 +55,7 @@ public class JoinSettingActivity extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Application_my.getInstance().addActivity(this);
         setContentView(R.layout.join_setting_aty);
         ButterKnife.bind(this);
         CacheUtils.cleanCache(JoinSettingActivity.this, AppConstants.ENROLLSETTING);//清除页面缓存

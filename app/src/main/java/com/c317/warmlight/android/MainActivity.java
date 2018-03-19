@@ -63,46 +63,7 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSelect(0);
-//        initDate();
     }
-
-//    private void initDate() {
-//
-//        //先判断是否有缓存，有则加载,否则请求服务器数据
-////        String cache = CacheUtils.getCache(AppNetConfig.CATEGORY, mActivity);
-////        if(!TextUtils.isEmpty(cache)){
-////            processData(cache);
-////        }
-////        请求服务端数据（开源框架XUtils）
-//        getDataFromServer();//快速加载
-//    }
-
-//    /**
-//     * 从服务器获取数据
-//     */
-//    private void getDataFromServer(){
-//        RequestParams params = new RequestParams(AppNetConfig.BASEURL);
-//        x.http().get(params, new Callback.CommonCallback<String>() {
-//            @Override
-//            public void onSuccess(String result) {
-//                processData(result);
-//                //写缓存
-////                CacheUtils.setCache(AppNetConfig.CATEGORY, result, mActivity);
-//            }
-//            //请求异常后的回调方法
-//            @Override
-//            public void onError(Throwable ex, boolean isOnCallback) {
-//                Toast.makeText(mActivity, ex.toString(), Toast.LENGTH_SHORT).show();
-//            }
-//            //主动调用取消请求的回调方法
-//            @Override
-//            public void onCancelled(CancelledException cex) {
-//            }
-//            @Override
-//            public void onFinished() {
-//            }
-//        });
-//    }
 
 
     @OnClick({R.id.ll_read,R.id.ll_date,R.id.ll_me})

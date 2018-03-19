@@ -34,8 +34,6 @@ public class DateNews_detalis {
         public String coordinate;
         public String telephone;
         public int type;
-        //是否收藏
-        public int isCollect;
     }
 
 }

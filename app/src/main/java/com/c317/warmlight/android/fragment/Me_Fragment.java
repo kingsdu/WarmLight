@@ -24,9 +24,8 @@ import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.base.BaseFragment;
 import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.common.AppNetConfig;
+import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.common.UserManage;
-import com.c317.warmlight.android.tabpager.MyDataTabPager;
-import com.c317.warmlight.android.utils.CacheUtils;
 import com.c317.warmlight.android.utils.UIUtils;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -72,6 +71,7 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
     public View initView() {
         View view = UIUtils.getXmlView(R.layout.fragment_me);
         ButterKnife.bind(this, view);
+        Application_my.getInstance().addActivity(mActivity);
         //顶部图标
         ivBackMe.setVisibility(View.VISIBLE);
         ivMeSetting.setVisibility(View.VISIBLE);
@@ -86,6 +86,7 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
         circleImageView.setOnClickListener(this);
         //我的友约监听
         rlMydate.setOnClickListener(this);
+        rlMyread.setOnClickListener(this);
         return view;
     }
 
@@ -157,12 +158,16 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.circleImageView:
                 Intent PersonnalIntent = new Intent(mActivity, PersonnalInfoActivity.class);
-//                PersonnalIntent.putExtra("Bitmap",bmp);
                 startActivityForResult(PersonnalIntent, SHOW_PICTURE);
-
                 break;
             case R.id.rl_mydate:
                 intent = new Intent(mActivity, SettingMyDateActivity.class);
+                intent.putExtra("TAG","TAG_DATE");
+                startActivity(intent);
+                break;
+            case R.id.rl_myread:
+                intent = new Intent(mActivity, SettingMyDateActivity.class);
+                intent.putExtra("TAG","TAG_READ");
                 startActivity(intent);
                 break;
         }

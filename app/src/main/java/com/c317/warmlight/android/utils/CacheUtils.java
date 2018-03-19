@@ -44,10 +44,4 @@ public class CacheUtils {
         PrefUtils.cleanString(ctx,url);
     }
 
-
-    public static void cacheToken(Context context,String token){
-        SharedPreferences.Editor e = context.getSharedPreferences(APP_ID, Context.MODE_PRIVATE).edit();
-        e.putString("token", token);
-        e.commit();
-    }
 }

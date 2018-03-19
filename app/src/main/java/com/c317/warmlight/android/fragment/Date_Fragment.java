@@ -83,12 +83,18 @@ public class Date_Fragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(mActivity, DateDetailActivity.class);
                 DateNews.DateNews_Detail dateNews_detail = mDateNews.data.detail.get(position-1);
+                intent.putExtra("activity_id", dateNews_detail.activity_id);
                 intent.putExtra("picUrl", dateNews_detail.picture);
                 intent.putExtra("title", dateNews_detail.title);
                 intent.putExtra("content", dateNews_detail.content);
-                intent.putExtra("readNum", dateNews_detail.readNum);
-                intent.putExtra("agreeNum", dateNews_detail.agreeNum);
-                intent.putExtra("activity_id", dateNews_detail.activity_id);
+                intent.putExtra("readNum", dateNews_detail.readNum+"");
+                intent.putExtra("agreeNum", dateNews_detail.agreeNum+"");
+                intent.putExtra("commentNum", dateNews_detail.commentNum+"");
+                intent.putExtra("endTime", dateNews_detail.endTime);
+                intent.putExtra("startTime", dateNews_detail.startTime);
+                intent.putExtra("memberNum", dateNews_detail.memberNum+"");
+                intent.putExtra("type", dateNews_detail.type+"");
+                intent.putExtra("place", dateNews_detail.place);
                 mActivity.startActivity(intent);
             }
         });

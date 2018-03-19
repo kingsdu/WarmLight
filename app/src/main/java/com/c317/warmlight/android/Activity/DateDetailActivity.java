@@ -16,8 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.c317.warmlight.android.R;
+import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.bean.DateNews_detalis;
 import com.c317.warmlight.android.common.AppNetConfig;
+import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.utils.WarmLightDataBaseHelper;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -93,32 +95,36 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
     LinearLayout llDateJoinIn;
     private Activity mActivity;
     private String picUrl;
-    private String title;
-    private String content;
-    private String readNum;
-    private String agreeNum;
-    private String activity_id;
+    private String mActivityid;
     private String url;
     private boolean iscollect;
 
     private WarmLightDataBaseHelper dataBaseHelper;
+    private DateNews_detalis dateNews_detalis;
+    private String mPicture;
+    private String mTitle;
+    private String mContent;
+    private String mReadNum;
+    private String mAgreeNum;
+    private String mCommentNum;
+    private String mEndTime;
+    private String mStartTime;
+    private String mMemberNum;
+    private String mType;
+    private String mPlace;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Application_my.getInstance().addActivity(this);
         setContentView(R.layout.data_details);
         ButterKnife.bind(this);
         picUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + getIntent().getStringExtra("picUrl");
-        title = getIntent().getStringExtra("title");
-        content = getIntent().getStringExtra("content");
-        readNum = getIntent().getStringExtra("readNum");
-        agreeNum = getIntent().getStringExtra("agreeNum");
-        activity_id = getIntent().getStringExtra("activity_id");
-        url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + "getActivity" + AppNetConfig.PARAMETER + "activity_id=" + activity_id;
+        ectractPutEra();
+        url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + "getActivity" + AppNetConfig.PARAMETER + "activity_id=" + mActivityid;
         dataBaseHelper = WarmLightDataBaseHelper.getDatebaseHelper(this);
+        iscollect = getIsCollect();
         getDataFromServer();
-        //查询当前用户是否收藏
-        iscollect = getIsCollect(activity_id);
         llConsult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,12 +142,12 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 if(!iscollect){
-                    dataBaseHelper.updateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME,activity_id,WarmLightDataBaseHelper.DATE_ID,WarmLightDataBaseHelper.DATE_ISCOLLECT);
+                    dataBaseHelper.updateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME,mActivityid,WarmLightDataBaseHelper.DATE_ID,WarmLightDataBaseHelper.DATE_ISCOLLECT);
                     tvMark.setText("已收藏");
                     Toast.makeText(DateDetailActivity.this, "已收藏", Toast.LENGTH_SHORT).show();
                     iscollect = true;
                 }else{
-                    dataBaseHelper.unUpdateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME,activity_id,WarmLightDataBaseHelper.DATE_ID,WarmLightDataBaseHelper.DATE_ISCOLLECT);
+                    dataBaseHelper.unUpdateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME,mActivityid,WarmLightDataBaseHelper.DATE_ID,WarmLightDataBaseHelper.DATE_ISCOLLECT);
                     tvMark.setText("收藏");
                     Toast.makeText(DateDetailActivity.this, "取消收藏", Toast.LENGTH_SHORT).show();
                     iscollect = false;
@@ -150,16 +156,45 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         });
     }
 
+    private void ectractPutEra() {
+        mActivityid = getIntent().getStringExtra("activity_id");
+        mPicture = getIntent().getStringExtra("picture");
+        mTitle = getIntent().getStringExtra("title");
+        mContent = getIntent().getStringExtra("content");
+        mReadNum = getIntent().getStringExtra("readNum");
+        mAgreeNum = getIntent().getStringExtra("agreeNum");
+        mCommentNum = getIntent().getStringExtra("commentNum");
+        mEndTime = getIntent().getStringExtra("endTime");
+        mStartTime = getIntent().getStringExtra("startTime");
+        mMemberNum = getIntent().getStringExtra("memberNum");
+        mType = getIntent().getStringExtra("type");
+        mPlace = getIntent().getStringExtra("place");
+    }
+
     /**
-    * 获取当前用户是否收藏的信息
-    * @params
-    * @author Du
-    * @Date 2018/3/13 22:22
-    **/
-    private boolean getIsCollect(String activity_id) {
-        String isCollect = dataBaseHelper.queryIsCollect(WarmLightDataBaseHelper.DATE_TABLENAME, activity_id, WarmLightDataBaseHelper.DATE_ID);
+     * 获取当前用户是否收藏的信息
+     * @params
+     * @author Du
+     * @Date 2018/3/13 22:22
+     **/
+    private boolean getIsCollect() {
+        String isCollect = dataBaseHelper.queryIsCollectDate(mActivityid);
         if(TextUtils.isEmpty(isCollect)){
-            dataBaseHelper.InsertCollectInfo(WarmLightDataBaseHelper.DATE_TABLENAME,activity_id,"0",WarmLightDataBaseHelper.DATE_ID,WarmLightDataBaseHelper.DATE_ISCOLLECT);
+            DateNews.DateNews_Detail dateNews_detail = new DateNews.DateNews_Detail();
+            dateNews_detail.activity_id = mActivityid;
+            dateNews_detail.picture = mPicture;
+            dateNews_detail.agreeNum = Integer.valueOf(mAgreeNum);
+            dateNews_detail.commentNum = Integer.valueOf(mCommentNum);
+            dateNews_detail.memberNum = Integer.valueOf(mMemberNum);
+            dateNews_detail.content = mContent;
+            dateNews_detail.title = mTitle;
+            dateNews_detail.type = Integer.valueOf(mType);
+            dateNews_detail.startTime = mStartTime;
+            dateNews_detail.endTime = mEndTime;
+            dateNews_detail.place = mPlace;
+            dateNews_detail.readNum = Integer.valueOf(mReadNum);
+            dateNews_detail.isCollect = 0;
+            dataBaseHelper.InsertCollectInfoDate(dateNews_detail);
         }else{
             if(isCollect.equals("1")){
                 return true;
@@ -176,7 +211,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
             @Override
             public void onSuccess(String result) {
                 Gson gson = new Gson();
-                DateNews_detalis dateNews_detalis = gson.fromJson(result, DateNews_detalis.class);
+                dateNews_detalis = gson.fromJson(result, DateNews_detalis.class);
                 setDataView(dateNews_detalis.data);
             }
 
@@ -203,14 +238,14 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         String joinTime = "报名时间：" + dateNewsContent.beginTime + " - " + dateNewsContent.deadline.substring(dateNewsContent.deadline.indexOf(" ") + 1, dateNewsContent.deadline.length());
         String joinPeople = "已报名：" + dateNewsContent.memberNum + "/" + dateNewsContent.memberTotalNum + "人";
         Picasso.with(mActivity).load(picUrl).into(ivDatePicture);
-        tvDateTitle.setText(title);
+        tvDateTitle.setText(dateNewsContent.title);
         ivSign.setImageResource(R.drawable.sign);
         tvDateDate.setText(dataTime);
         ivBrowse.setImageResource(R.drawable.read_num);
         tvReadNum.setText(String.valueOf(dateNewsContent.readNum));
         ivShare.setImageResource(R.drawable.share);
         tvShareNum.setText(String.valueOf(dateNewsContent.commentNum));
-        tvDateContent.setText(content);
+        tvDateContent.setText(dateNewsContent.content);
         ivClock.setImageResource(R.drawable.time);
         tvClock.setText(joinTime);
         ivLocate.setImageResource(R.drawable.locate);

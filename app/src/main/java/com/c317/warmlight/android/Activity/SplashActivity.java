@@ -10,7 +10,9 @@ import android.widget.RelativeLayout;
 
 import com.c317.warmlight.android.MainActivity;
 import com.c317.warmlight.android.R;
+import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.common.UserManage;
+import com.c317.warmlight.android.utils.SharedPrefUtility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,15 +52,16 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Application_my.getInstance().addActivity(this);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         //渐变动画
         AlphaAnimation animAlpha = new AlphaAnimation(0, 1);
         animAlpha.setDuration(2000);
         animAlpha.setFillAfter(true);
-        rlRoot.startAnimation(animAlpha);
-
-        if (UserManage.getInstance().hasUserInfo(this))//自动登录判断，SharePrefences中有数据，则跳转到主页，没数据则跳转到登录页
+        rlRoot.startAnimation(animAlpha);//
+        boolean isLogin = (Boolean) SharedPrefUtility.getParam(this, SharedPrefUtility.IS_LOGIN, false);
+        if (isLogin)//自动登录判断，SharePrefences中有数据，则跳转到主页，没数据则跳转到登录页
         {
             mHandler.sendEmptyMessageDelayed(GO_HOME, 2000);
         } else {

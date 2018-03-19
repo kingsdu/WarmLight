@@ -34,6 +34,7 @@ public class DateNews {
         public int memberNum;
         public String place;
         public int type;
+        public int isCollect;
     }
 
 

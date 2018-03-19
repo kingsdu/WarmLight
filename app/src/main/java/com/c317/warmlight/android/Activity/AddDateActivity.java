@@ -26,6 +26,7 @@ import com.c317.warmlight.android.bean.Result;
 import com.c317.warmlight.android.bean.UserInfo;
 import com.c317.warmlight.android.common.AppConstants;
 import com.c317.warmlight.android.common.AppNetConfig;
+import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.utils.CacheUtils;
 import com.google.gson.Gson;
@@ -105,6 +106,7 @@ public class AddDateActivity extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Application_my.getInstance().addActivity(this);
         setContentView(R.layout.adddate_date_aty);
         ButterKnife.bind(this);
         //初始化顶部

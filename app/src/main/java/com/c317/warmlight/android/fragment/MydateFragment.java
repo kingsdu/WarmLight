@@ -13,6 +13,7 @@ import com.c317.warmlight.android.Activity.SettingMyDateActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.base.BaseFragment;
 import com.c317.warmlight.android.tabpager.MyDateTabDetails;
+import com.c317.warmlight.android.tabpager.MyReadTabDetails;
 import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
@@ -34,8 +35,18 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
     TabPageIndicator tpMyIndicator;
     @Bind(R.id.vp_my_viewpager)
     ViewPager vpMyViewpager;
-    private String[] tabInfo = {"发起","待约","已约"};
-    private ArrayList<MyDateTabDetails> mPagers;
+    private String[] tabInfoDate = {"发起","待约","已约","收藏"};
+    private String[] tabInfoRead = {"收藏","评论"};
+
+    private ArrayList<MyDateTabDetails> mDatePagers;//有读页面
+    private ArrayList<MyReadTabDetails> mReadPagers;//友约页面
+    private String mType;
+    private static final String TAG_READ = "TAG_READ";
+    private static final String TAG_DATE = "TAG_DATE";
+
+    public MydateFragment(String type){
+        mType = type;
+    }
 
     @Override
     public View initView() {
@@ -43,11 +54,9 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
         ButterKnife.bind(this, view);
         //顶部按钮初始化
         ivBackMe.setVisibility(View.VISIBLE);
-        tvTopbarTitle.setText("我的友约");
         //结束Fragment
         return view;
     }
-
 
     /**
      * 1 初始化页面
@@ -60,15 +69,29 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
      **/
     @Override
     public void initData() {
-        mPagers = new ArrayList<>();
-        for(int i=0;i<tabInfo.length;i++){
-            MyDateTabDetails myPager = new MyDateTabDetails(mActivity,"http://14g97976j3.51mypc.cn:10759/youyue/getMyActivityList",i+1);
-            mPagers.add(myPager);
+        if(mType.equals(TAG_DATE)){
+            tvTopbarTitle.setText("我的友约");
+            mDatePagers = new ArrayList<>();
+            for(int i=0;i<tabInfoDate.length;i++){
+                MyDateTabDetails myPager = new MyDateTabDetails(mActivity,"http://14g97976j3.51mypc.cn:10759/youyue/getMyActivityList",i+1);
+                mDatePagers.add(myPager);
+            }
+            vpMyViewpager.setAdapter(new MyDataPageAdapter());
+            tpMyIndicator.setVisibility(View.VISIBLE);
+            tpMyIndicator.setViewPager(vpMyViewpager);
+            tpMyIndicator.setOnPageChangeListener(this);//此处必须给指示器设置监听，而不是mViewPager
+        }else if(mType.equals(TAG_READ)){
+            tvTopbarTitle.setText("我的有读");
+            mReadPagers = new ArrayList<>();
+            for(int i=0;i<tabInfoRead.length;i++){
+                MyReadTabDetails myPager = new MyReadTabDetails(mActivity,"http://14g97976j3.51mypc.cn:10759/youyue/getMyActivityList",i+1);
+                mReadPagers.add(myPager);
+            }
+            vpMyViewpager.setAdapter(new MyReadPageAdapter());
+            tpMyIndicator.setVisibility(View.VISIBLE);
+            tpMyIndicator.setViewPager(vpMyViewpager);
+            tpMyIndicator.setOnPageChangeListener(this);//此处必须给指示器设置监听，而不是mViewPager
         }
-        vpMyViewpager.setAdapter(new MyDataPageAdapter());
-        tpMyIndicator.setVisibility(View.VISIBLE);
-        tpMyIndicator.setViewPager(vpMyViewpager);
-        tpMyIndicator.setOnPageChangeListener(this);//此处必须给指示器设置监听，而不是mViewPager
     }
 
     @Override
@@ -87,17 +110,20 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
     }
 
 
+    /**
+     * 我的友约
+     * */
     private class MyDataPageAdapter extends PagerAdapter {
 
         //指定指示器的标题
         @Override
         public CharSequence getPageTitle(int position) {
-            return tabInfo[position];
+            return tabInfoDate[position];
         }
 
         @Override
         public int getCount() {
-            return tabInfo.length;
+            return tabInfoDate.length;
         }
 
         @Override
@@ -107,10 +133,48 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            final MyDateTabDetails pager = mPagers.get(position);
+            final MyDateTabDetails pager = mDatePagers.get(position);
             View view = pager.mRootView;
             container.addView(view);
             pager.initData();
+            return view;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
+    }
+
+
+    /**
+     * 我的友读
+     * */
+
+    private class MyReadPageAdapter extends PagerAdapter {
+
+        //指定指示器的标题
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabInfoRead[position];
+        }
+
+        @Override
+        public int getCount() {
+            return tabInfoRead.length;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            final MyReadTabDetails myReadTabDetails = mReadPagers.get(position);
+            View view = myReadTabDetails.mRootView;
+            container.addView(view);
+            myReadTabDetails.initData();
             return view;
         }
 

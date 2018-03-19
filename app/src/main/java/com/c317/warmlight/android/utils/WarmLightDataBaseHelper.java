@@ -8,7 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.c317.warmlight.android.bean.DateNews;
+import com.c317.warmlight.android.bean.DateNews_detalis;
+import com.c317.warmlight.android.bean.Smallnews;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
@@ -29,14 +36,31 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
      */
     public static final String DATE_TABLENAME = "date";
     public static final String DATE_ID = "activity_id";
+    private static final String DATE_TITLE = "title";
+    private static final String DATE_CONTENT = "content";
+    private static final String DATE_PICTURE = "picture";
+    private static final String DATE_READNUM = "readNum";
+    private static final String DATE_AGREENUM = "agreeNum";
+    private static final String DATE_COMMENTNUM = "commentNum";
+    private static final String DATE_ENDTIME = "endTime";
+    private static final String DATE_STARTTIME = "startTime";
+    private static final String DATE_MEMBERNUM = "memberNum";
+    private static final String DATE_PLACE = "place";
+    private static final String DATE_TYPE = "type";
     public static final String DATE_ISCOLLECT = "iscollect";
-
 
     /**
      * 有读表及字段
      */
     public static final String READ_TABLENAME = "read";
     public static final String READ_ID = "article_id";
+    public static final String READ_TITLE = "title";
+    public static final String READ_PICTUREURL = "pictureURL";
+    public static final String READ_INTRODUCE = "introduce";
+    public static final String READ_SOURCE = "source";
+    public static final String READ_PUBDATE = "pubDate";
+    public static final String READ_READNUM = "readNum";
+    public static final String READ_AGREENUM = "agreeNum";
     public static final String READ_ISCOLLECT = "iscollect";
 
 
@@ -61,7 +85,18 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
          * */
         String sql = "create table " + DATE_TABLENAME + "("
                 + DATE_ID + " integer primary key autoincrement, "
-                + DATE_ISCOLLECT + " text)";
+                + DATE_TITLE + " text, "
+                + DATE_CONTENT + " text, "
+                + DATE_PICTURE + " text, "
+                + DATE_READNUM + " integer, "
+                + DATE_AGREENUM + " integer, "
+                + DATE_COMMENTNUM + " integer, "
+                + DATE_ENDTIME + " text, "
+                + DATE_STARTTIME + " text, "
+                + DATE_MEMBERNUM + " integer, "
+                + DATE_PLACE + " text, "
+                + DATE_TYPE + " text, "
+                + DATE_ISCOLLECT + " integer)";
         db.execSQL(sql);
 
         /**
@@ -69,26 +104,66 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
          * */
         sql = "create table " + READ_TABLENAME + "("
                 + READ_ID + " integer primary key autoincrement, "
-                + READ_ISCOLLECT + " text)";
+                + READ_TITLE + " text, "
+                + READ_PICTUREURL + " text, "
+                + READ_INTRODUCE + " text, "
+                + READ_SOURCE + " text, "
+                + READ_PUBDATE + " text, "
+                + READ_READNUM + " integer, "
+                + READ_AGREENUM + " integer, "
+                + READ_ISCOLLECT + " integer)";
         db.execSQL(sql);
-
     }
 
 
     /**
-     * 插入是否收藏数据至数据库
+     * 友约是否收藏数据至数据库
      *
-     * @params  table:数据库名称（read）、id：传入的id值、isCollect：isCollect的值、isCollectName：isCollect的名称（创建是存储变量不同，值相同）
+     * @params table:数据库名称（read）、id：传入的id值、isCollect：isCollect的值、isCollectName：isCollect的名称（创建是存储变量不同，值相同）
      * @author Du
      * @Date 2018/3/13 21:10
      **/
-    public void InsertCollectInfo(String table,String id,String isCollect,String idName,String isCollectName) {
+    public void InsertCollectInfoDate(DateNews.DateNews_Detail dateNews_detail) {
         try {
             db.beginTransaction();
             ContentValues cv = new ContentValues();
-            cv.put(idName, id);
-            cv.put(isCollectName, isCollect);
-            db.insert(table, null, cv);
+            cv.put(DATE_ID, dateNews_detail.activity_id);
+            cv.put(DATE_TITLE, dateNews_detail.title);
+            cv.put(DATE_CONTENT, dateNews_detail.content);
+            cv.put(DATE_PICTURE, dateNews_detail.picture);
+            cv.put(DATE_READNUM, dateNews_detail.readNum);
+            cv.put(DATE_AGREENUM, dateNews_detail.agreeNum);
+            cv.put(DATE_COMMENTNUM, dateNews_detail.commentNum);
+            cv.put(DATE_ENDTIME, dateNews_detail.endTime);
+            cv.put(DATE_STARTTIME, dateNews_detail.startTime);
+            cv.put(DATE_MEMBERNUM, dateNews_detail.memberNum);
+            cv.put(DATE_PLACE, dateNews_detail.place);
+            cv.put(DATE_TYPE, dateNews_detail.type);
+            cv.put(DATE_ISCOLLECT, dateNews_detail.isCollect);
+            db.insert(DATE_TABLENAME, null, cv);
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.e(TAG, "", e);
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+
+    public void InsertCollectInfoRead(Smallnews.Smallnews_Detail smallnews_detail) {
+        try {
+            db.beginTransaction();
+            ContentValues cv = new ContentValues();
+            cv.put(READ_ID, smallnews_detail.article_id);
+            cv.put(READ_TITLE, smallnews_detail.title);
+            cv.put(READ_PICTUREURL, smallnews_detail.pictureURL);
+            cv.put(READ_INTRODUCE, smallnews_detail.introduce);
+            cv.put(READ_SOURCE, smallnews_detail.source);
+            cv.put(READ_PUBDATE, sdf.format(smallnews_detail.pubDate));
+            cv.put(READ_READNUM, smallnews_detail.readNum);
+            cv.put(READ_AGREENUM, smallnews_detail.agreeNum);
+            cv.put(READ_ISCOLLECT, smallnews_detail.isCollect);
+            db.insert(READ_TABLENAME, null, cv);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e(TAG, "", e);
@@ -98,58 +173,163 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-    * 根据列名、id，更新已收藏
-    * @params tableName：数据库名称  id：id值、idName：id名称、isCollectName：isCollect名称
-    * @author Du
-    * @Date 2018/3/14 22:33
-    **/
+     * 根据列名、id，更新已收藏
+     *
+     * @params tableName：数据库名称  id：id值、idName：id名称、isCollectName：isCollect名称
+     * @author Du
+     * @Date 2018/3/14 22:33
+     **/
     public int updateCollectState(String tableName, String id, String idName, String isCollectName) {
         String where = idName + " = ? ";
-        String[] whereValue = {id+ ""};
+        String[] whereValue = {id + ""};
         ContentValues cv = new ContentValues();
         cv.put(isCollectName, "1");
         return db.update(tableName, cv, where, whereValue);
     }
 
     /**
-    * 根据列名、id，取消已收藏
-    * @params tableName：数据库名称  id：id值、idName：id名称、isCollectName：isCollect名称
-    * @author Du
-    * @Date 2018/3/14 22:34
-    **/
-    public int unUpdateCollectState(String tableName, String id, String idName,String isCollectName) {
+     * 根据列名、id，取消已收藏
+     *
+     * @params tableName：数据库名称  id：id值、idName：id名称、isCollectName：isCollect名称
+     * @author Du
+     * @Date 2018/3/14 22:34
+     **/
+    public int unUpdateCollectState(String tableName, String id, String idName, String isCollectName) {
         String where = idName + " = ? ";
-        String[] whereValue = {id+ ""};
+        String[] whereValue = {id + ""};
         ContentValues cv = new ContentValues();
         cv.put(isCollectName, "0");
         return db.update(tableName, cv, where, whereValue);
     }
 
     /**
-     * 根据tableName、id、dateName,查询是否收藏
+     * 根据tableName、id、dateName,查询是否收藏  -- 有读
      *
-     * @params  tableName：数据库名称  id：id值、idName：id名称
+     * @params tableName：数据库名称  id：id值、idName：id名称
      * @author Du
      * @Date 2018/3/13 22:15
      **/
-    public String queryIsCollect(String tableName, String id, String idName) {
+    public String queryIsCollectRead(String id) {
         String isCollect = null;
-        String where = idName + " = ? ";
+        String where = READ_ID + " = ? ";
         String[] whereValue = {id + ""};
-        Cursor cursor = db.query(tableName, null, where, whereValue,
+        Cursor cursor = db.query(READ_TABLENAME, null, where, whereValue,
                 null, null, null);
         if (cursor.getCount() == 0) {
             cursor.close();
         }
         cursor.moveToFirst();
         if (!cursor.isAfterLast()) {
-            isCollect = cursor.getString(1);
+            isCollect = cursor.getString(8);
         }
         cursor.close();
         return isCollect;
     }
 
 
+    /**
+     * 根据tableName、id、dateName,查询是否收藏  -- 友约
+     *
+     * @params tableName：数据库名称  id：id值、idName：id名称
+     * @author Du
+     * @Date 2018/3/13 22:15
+     **/
+    public String queryIsCollectDate(String id) {
+        String isCollect = null;
+        String where = DATE_ID + " = ? ";
+        String[] whereValue = {id + ""};
+        Cursor cursor = db.query(DATE_TABLENAME, null, where, whereValue,
+                null, null, null);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+        }
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            isCollect = cursor.getString(12);
+        }
+        cursor.close();
+        return isCollect;
+    }
+
+
+    /**
+     * 查询所有收藏多条数据  --  友约
+     *
+     * @params
+     * @author Du
+     * @Date 2018/3/17 22:24
+     **/
+    public List<DateNews.DateNews_Detail> queryMultiIsCollectDate(String id) {
+        List<DateNews.DateNews_Detail> dateNews_details = new ArrayList<>();
+        String where = DATE_ISCOLLECT + " = ? ";
+        String[] whereValue = {id + ""};
+        Cursor cursor = db.query(DATE_TABLENAME, null, where, whereValue,
+                null, null, null);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+        }
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            DateNews.DateNews_Detail dateNews_detail = new DateNews.DateNews_Detail();
+            dateNews_detail.activity_id = cursor.getString(0);
+            dateNews_detail.title = cursor.getString(1);
+            dateNews_detail.content = cursor.getString(2);
+            dateNews_detail.picture = cursor.getString(3);
+            dateNews_detail.readNum = cursor.getInt(4);
+            dateNews_detail.agreeNum = cursor.getInt(5);
+            dateNews_detail.commentNum = cursor.getInt(6);
+            dateNews_detail.endTime = cursor.getString(7);
+            dateNews_detail.startTime = cursor.getString(8);
+            dateNews_detail.memberNum = cursor.getInt(9);
+            dateNews_detail.place = cursor.getString(10);
+            dateNews_detail.isCollect = cursor.getInt(11);
+            dateNews_details.add(dateNews_detail);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return dateNews_details;
+    }
+
+
+
+    /**
+     * 查询所有收藏多条数据   --  有读
+     *
+     * @params
+     * @author Du
+     * @Date 2018/3/17 22:24
+     **/
+    public List<Smallnews.Smallnews_Detail> queryMultiIsCollectRead(String id) {
+        List<Smallnews.Smallnews_Detail> smallnews_details = new ArrayList<>();
+        String where = READ_ISCOLLECT + " = ? ";
+        String[] whereValue = {id + ""};
+        Cursor cursor = db.query(READ_TABLENAME, null, where, whereValue,
+                null, null, null);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+        }
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            try {
+                Smallnews.Smallnews_Detail smallnews_detail = new Smallnews.Smallnews_Detail();
+                smallnews_detail.article_id = cursor.getInt(0);
+                smallnews_detail.title = cursor.getString(1);
+                smallnews_detail.pictureURL = cursor.getString(2);
+                smallnews_detail.introduce = cursor.getString(3);
+                smallnews_detail.source = cursor.getString(4);
+                smallnews_detail.pubDate = sdf.parse(cursor.getString(5));
+                smallnews_detail.readNum = cursor.getInt(6);
+                smallnews_detail.agreeNum = cursor.getInt(7);
+                smallnews_detail.isCollect = cursor.getInt(8);
+                smallnews_details.add(smallnews_detail);
+                cursor.moveToNext();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        cursor.close();
+        return smallnews_details;
+    }
 
 
     @Override

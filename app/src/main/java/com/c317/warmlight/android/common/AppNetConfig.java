@@ -55,6 +55,12 @@ public class AppNetConfig {
     //上传图片
     public static final String UPLOADICON = "uploadIcon";
 
+    //修改用户信息
+    public static final String MODIFYUSER = "modifyUser";
+
+    //获取用户信息
+    public static final String GETUSERINFO = "getUserInfo";
+
 
     /*********************************基本操作符定义***************************************/
     public static final String SEPARATOR = File.separator;
