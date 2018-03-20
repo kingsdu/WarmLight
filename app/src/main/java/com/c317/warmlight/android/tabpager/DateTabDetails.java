@@ -151,7 +151,7 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
         if (isMore) {
             mDatadetail = dateNews.data.detail;
             pullMydateRefresh.setAdapter(new DateAdapter());
-            PAGESIZE++;//页数增加
+            PAGESIZE++;//页数增加啊啊
         } else {
             Toast.makeText(mActivity, "没有数据了", Toast.LENGTH_SHORT).show();
             try {
