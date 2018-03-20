@@ -154,7 +154,7 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
     }
 
     /**
-     * 初始化相片
+     * 初始化照片
      * myimg 用户拍照产生的图片
      * stscimage 相册选择产生的图片
      * 如果myimg为空,加载stscimage字段图片
