@@ -48,6 +48,7 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -68,10 +69,11 @@ public class Read_Fragment extends BaseFragment {
 
     @Bind(R.id.rv_mainListView)
     RecyclerView rvMainListView;
-    Handler mHandler;
     @Bind(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
-    //    private CardAdapter cardAdapter;
+    @Bind(R.id.tv_topbar_title)
+    TextView tvTopbarTitle;
+    Handler mHandler;
     private SwipeCardsView swipeCardsView;
 
     private List<List<Object>> mAllDatas = new ArrayList();//初始化数据
@@ -96,11 +98,11 @@ public class Read_Fragment extends BaseFragment {
     public View initView() {
         View view = UIUtils.getXmlView(R.layout.fragment_read);
         ButterKnife.bind(this, view);
-//        tvTopbarTitle.setText("友读");
+        tvTopbarTitle.setText("有读");
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.main_orange
         );
-        //设置页面刷新监听
+//        设置页面刷新监听
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -208,6 +210,12 @@ public class Read_Fragment extends BaseFragment {
                                                     mAllDatas.add(mAllData);
                                                     mDataType.add(AppConstants.RV_ARTICLE_NEWS_BIG);
                                                 }
+                                                rvMainListView.setHasFixedSize(true);
+                                                LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                                                rvMainListView.setLayoutManager(mLayoutManager);
+                                                mainAdapter = new MainAdapter(mActivity, mAllDatas, mDataType);
+                                                rvMainListView.setAdapter(mainAdapter);
+                                                rvMainListView.addItemDecoration(new SpaceItemDecoration(30));
                                                 if (upFlag) {
                                                     //上拉加载更多
                                                     upGetMoreData(mAllDatas, mDataType);
@@ -215,7 +223,6 @@ public class Read_Fragment extends BaseFragment {
                                                     //下拉刷新
                                                     downGetMoreData(mAllDatas, mDataType);
                                                 }
-
                                             }
 
                                             //请求异常后的回调方法
@@ -457,7 +464,6 @@ public class Read_Fragment extends BaseFragment {
                     public void onShow(int count) {
 
                     }
-
                     @Override
                     public void onCardVanish(int count, SwipeCardsView.SlideType type) {
                         switch (type) {
@@ -473,7 +479,6 @@ public class Read_Fragment extends BaseFragment {
                                 break;
                         }
                     }
-
                     @Override
                     public void onItemClick(View cardImageView, final int index) {
                         Intent intent = new Intent(mActivity, DateDetailActivity.class);
@@ -490,9 +495,8 @@ public class Read_Fragment extends BaseFragment {
                 });
             } else if (getItemViewType(position) == AppConstants.RV_GUESS_NEWS) {
                 mSubAdapterCrl = new SubAdapterController(mAllDatas.get(position), mContext);
-                //holder = (MainViewHolder)holder;
                 //设置头标识
-                if (position == 5) {
+                if (position == 4) {
                     ((HorizontalHolder) holder).nestListView.setNestViewHeaderText("小桔猜猜");
                 }
                 ((HorizontalHolder) holder).nestListView.setAdapter(mSubAdapterCrl.getAdapter());
@@ -513,10 +517,8 @@ public class Read_Fragment extends BaseFragment {
         }
 
         class TopNewsHolder extends RecyclerView.ViewHolder {
-            //            public AutoCycleView cycleView;
             public TopNewsHolder(View itemView) {
                 super(itemView);
-//                cycleView = (AutoCycleView) itemView.findViewById(R.id.cycle_view);
                 vpBarner = (ViewPager) itemView.findViewById(R.id.vp_barner);
                 btnBarner = (CirclePageIndicator) itemView.findViewById(R.id.btn_barner);
             }
@@ -651,26 +653,35 @@ public class Read_Fragment extends BaseFragment {
         public Object instantiateItem(ViewGroup container, int position) {
             final Topnews.Topnews_Info topnewsInfo = (Topnews.Topnews_Info) topnewsData.get(position);
             String imageUrl = topnewsInfo.pictureURL;
-            ImageView imageView = new ImageView(getActivity());
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            Picasso.with(getActivity()).load(imageUrl).into(imageView);
+            ImageView imageView = new ImageView(mActivity);
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            Picasso.with(mActivity).load(imageUrl).into(imageView);
             container.addView(imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 String url = "";
-
                 @Override
                 public void onClick(View v) {
                     String search_id = topnewsInfo.search_id;
                     if (CommonUtils.isLetter(search_id)) {
-                        url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + "getTopicInfo" + AppNetConfig.PARAMETER + "search_id=" + search_id;
+                        url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.GETTOPICINFO + AppNetConfig.PARAMETER + AppNetConfig.SEARCH_ID + AppNetConfig.EQUAL + search_id;
                         Intent intent = new Intent(mActivity, TopDetailsActivity.class);
                         intent.putExtra("url", url);
                         intent.putExtra("search_id", search_id);
                         mActivity.startActivity(intent);
                     } else {
-                        url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + "getArtCont" + AppNetConfig.SEPARATOR + search_id;
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.GETARTCONT + AppNetConfig.SEPARATOR + search_id;
                         Intent intent = new Intent(mActivity, NewsDetailActivity.class);
                         intent.putExtra("url", url);
+                        intent.putExtra("title", topnewsInfo.title);
+                        intent.putExtra("introduce", topnewsInfo.introduce);
+                        intent.putExtra("pictureURL", topnewsInfo.pictureURL);
+                        intent.putExtra("pubDate", sdf.format(topnewsInfo.pubDate));
+                        intent.putExtra("source", topnewsInfo.source);
+                        intent.putExtra("readNum", topnewsInfo.readNum+"");
+                        intent.putExtra("agreeNum", topnewsInfo.agreeNum+"");
+                        intent.putExtra("article_id", topnewsInfo.search_id);
                         mActivity.startActivity(intent);
                     }
                 }

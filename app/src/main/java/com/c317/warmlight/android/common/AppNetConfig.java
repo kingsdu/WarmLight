@@ -14,6 +14,8 @@ public class AppNetConfig {
 
     public static final String BASEURL = "http://"+ HOST +":10759";
 
+    public static final String TESTURL = "http://192.168.0.106:8000";
+
 
     /*******************************分模块信息*************************************/
     //有读
@@ -43,6 +45,9 @@ public class AppNetConfig {
     //文章列表
     public static final String ARTICLE = "getArtsList";
 
+    //获取文章详情
+    public static final String GETARTCONT = "getArtCont";
+
     //每日一问
     public static final String QUESTION = "getQuestionList";
 
@@ -61,6 +66,9 @@ public class AppNetConfig {
     //获取用户信息
     public static final String GETUSERINFO = "getUserInfo";
 
+    //头条信息
+    public static final String GETTOPICINFO = "getTopicInfo";
+
 
     /*********************************基本操作符定义***************************************/
     public static final String SEPARATOR = File.separator;
@@ -70,6 +78,10 @@ public class AppNetConfig {
     public static final String PAGE = "page";
 
     public static final String EQUAL = "=";
+
+    public static final String SEARCH_ID ="search_id";
+
+    public static final String ARTICLE_ID ="article_id";
 //    public static final String HOST = "14g97976j3.51mypc.cn";
 //
 //    public static final String BASEURL = "http://"+ HOST +":8080/WarmLight/";

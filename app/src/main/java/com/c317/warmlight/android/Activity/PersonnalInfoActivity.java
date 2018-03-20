@@ -32,11 +32,13 @@ import com.c317.warmlight.android.common.AppConstants;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.common.UserManage;
+import com.c317.warmlight.android.utils.CacheUtils;
 import com.c317.warmlight.android.utils.CommonUtils;
 import com.c317.warmlight.android.utils.SharedPrefUtility;
 import com.c317.warmlight.android.utils.UtilImags;
 import com.google.gson.Gson;
 import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.xutils.common.Callback;
@@ -82,7 +84,6 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
     TextView tvPersonnalinfoSig1;
     @Bind(R.id.iv_add_date)
     ImageView ivAddDate;
-
     @Bind(R.id.ll_me_editpassward)
     RelativeLayout llMeEditpassward;
     @Bind(R.id.rl_me_editname)
@@ -105,7 +106,7 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
     private static final int EDIT_SEX = 5;//编辑性别
     private static final int EDIT_SINGUURE = 6;//编辑个性签名
     private static final int EDIT_CHANGPASSWORD = 6;//编辑个性签名
-    private int mSexType = 1;//性别选择
+    private int mSexType;//性别选择
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,25 +131,25 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
 
     private void initData() {
         initPhotoData();
-        String param = (String) SharedPrefUtility.getParam(this, AppConstants.USERNAME, AppConstants.USERNAME);
-        String param1 = (String) SharedPrefUtility.getParam(this, AppConstants.SIGNATURE, AppConstants.SIGNATURE);
-        if (!TextUtils.isEmpty(param) && param.equals(AppConstants.USERNAME)) {
-            getDataFromServer();//快速加载
-        }
-        if (!TextUtils.isEmpty(param)) {
-            tvPersonnalinfoUsername1.setText(param);
-        }
-//        else {
-//            getDataFromServer();//快速加载
-//        }
-        if (!TextUtils.isEmpty(param1) && param1.equals(AppConstants.SIGNATURE)) {
-            getDataFromServer();//快速加载
-        }
-        if (!TextUtils.isEmpty(param1)) {
-            tvPersonnalinfoSig1.setText(param1);
-        }
-        else {
-            getDataFromServer();//快速加载
+        String username = (String) SharedPrefUtility.getParam(this, AppConstants.USERNAME, AppConstants.USERNAME);
+        mSexType = (int) SharedPrefUtility.getParam(this, AppConstants.SEX, 10);
+        String signature = (String) SharedPrefUtility.getParam(this, AppConstants.SIGNATURE, AppConstants.SIGNATURE);
+        if((username.equals(AppConstants.USERNAME)) || mSexType == 10 || (signature.equals(AppConstants.SIGNATURE))){
+            getDataFromServer();
+        }else{
+            if (!(username.equals(AppConstants.USERNAME))) {
+                tvPersonnalinfoUsername1.setText(username);
+            }
+            if(mSexType != 10){
+                if(mSexType == 0){
+                    tvPersonnalinfoSex1.setText("男");
+                }else{
+                    tvPersonnalinfoSex1.setText("女");
+                }
+            }
+            if(!(signature.equals(AppConstants.SIGNATURE))){
+                tvPersonnalinfoSig1.setText(signature);
+            }
         }
     }
 
@@ -163,9 +164,11 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
      * @Date 2018/3/16 19:49
      **/
     private void initPhotoData() {
-        String picname = "icon/" + account + ".jpg";
+        String picname = "icon/" + account + "_thumbnail.jpg";
         String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + picname;
-        Picasso.with(PersonnalInfoActivity.this).load(imageUrl).memoryPolicy(MemoryPolicy.NO_CACHE).into(civPersonnalinfoCircleImageView);
+        Uri uri = Uri.parse(imageUrl);
+        Picasso.with(PersonnalInfoActivity.this).invalidate(uri);
+        Picasso.with(PersonnalInfoActivity.this).load(uri).networkPolicy(NetworkPolicy.NO_CACHE).into(civPersonnalinfoCircleImageView);
     }
 
     @Override
@@ -185,8 +188,6 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
             //编辑性别
             case R.id.rl_me_editsex:
                 editsex();
-                Editsex(UserManage.getInstance().getUserInfo(PersonnalInfoActivity.this).account,
-                        mSexType);
                 break;
             //编辑个性签名
             case R.id.rl_me_editsigure:
@@ -195,8 +196,6 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
             //修改密码
             case R.id.ll_me_editpassward:
                 startActivityForResult(new Intent(PersonnalInfoActivity.this, PersonnalinfoChangepasswordAty.class), EDIT_CHANGPASSWORD);
-//                intent = new Intent(PersonnalInfoActivity.this, PersonnalinfoChangepasswordAty.class);
-//                startActivity(intent);
                 break;
             case R.id.iv_back_me:
                 finish();
@@ -216,9 +215,17 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
                     selectMobPhotos(data);
                     break;
                 case EDIT_NAME:
-                    String param = (String) SharedPrefUtility.getParam(this, AppConstants.USERNAME, AppConstants.USERNAME);
-                    if (!TextUtils.isEmpty(param)) {
-                        tvPersonnalinfoUsername1.setText(param);
+                    String username = (String) SharedPrefUtility.getParam(this, AppConstants.USERNAME, AppConstants.USERNAME);
+                    if (!(username.equals(AppConstants.USERNAME))){
+                        tvPersonnalinfoUsername1.setText(username);
+                    } else {
+                        CommonUtils.showToastShort(this, "缓存用户名为空");
+                    }
+                    break;
+                case EDIT_SINGUURE:
+                    String signature = (String) SharedPrefUtility.getParam(this, AppConstants.SIGNATURE, AppConstants.SIGNATURE);
+                    if (!(signature.equals(AppConstants.SIGNATURE))) {
+                        tvPersonnalinfoSig1.setText(signature);
                     } else {
                         CommonUtils.showToastShort(this, "缓存用户名为空");
                     }
@@ -422,6 +429,9 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
     }
 
     private void setUserInfoView(UserInfo.UserInfo_content userInfo_content) {
+        SharedPrefUtility.setParam(this, AppConstants.USERNAME, userInfo_content.username);
+        SharedPrefUtility.setParam(this, AppConstants.SEX, userInfo_content.sex);
+        SharedPrefUtility.setParam(this, AppConstants.SIGNATURE, userInfo_content.signature);
         if (userInfo_content.sex == 0) {
             sex1 = "男";
         } else {
@@ -437,21 +447,29 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final String items[] = {"男", "女"};
 
-        builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(items, mSexType, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 mSexType = which;
                 tvPersonnalinfoSex1.setText(items[which]);
+                updateSexState();
             }
         }).setCancelable(false).create().show();
-//        Editsex(UserManage.getInstance().getUserInfo(PersonnalInfoActivity.this).account,
-//                mSexType);
 
+    }
+
+
+    //修改性别状态
+    private void updateSexState() {
+        SharedPrefUtility.setParam(this,AppConstants.SEX,mSexType);
+        Editsex(UserManage.getInstance().getUserInfo(PersonnalInfoActivity.this).account,
+                mSexType);
     }
 
     /**
      * 服务器端修改性别
+     *
      * @param account
      * @param sex
      */
@@ -463,6 +481,7 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
             @Override
             public void onSuccess(String result) {
                 //成功
+
             }
 
             @Override

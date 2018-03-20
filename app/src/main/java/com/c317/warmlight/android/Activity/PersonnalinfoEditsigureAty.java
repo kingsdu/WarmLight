@@ -86,14 +86,15 @@ public class PersonnalinfoEditsigureAty extends Activity implements View.OnClick
         }
         finish();
     }
-    private void getUserSigure(){
+
+    private void getUserSigure() {
         String param = (String) SharedPrefUtility.getParam(this, AppConstants.SIGNATURE, AppConstants.SIGNATURE);
         if (!TextUtils.isEmpty(param) && param.equals(AppConstants.SIGNATURE)) {
             getSigureFromServer();//快速加载
         }
         if (!TextUtils.isEmpty(param)) {
             etEditsigurePersonnalinfo.setText(param);
-        }else{
+        } else {
             String cache = CacheUtils.getCache(url, PersonnalinfoEditsigureAty.this);
             if (!TextUtils.isEmpty(cache)) {
                 processData(cache);
@@ -105,6 +106,7 @@ public class PersonnalinfoEditsigureAty extends Activity implements View.OnClick
 
     /**
      * 处理数据
+     *
      * @param cache
      */
     private void processData(String cache) {

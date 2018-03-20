@@ -78,8 +78,6 @@
         <activity android:name="com.c317.warmlight.android.Activity.SettingMyDateActivity"
             android:theme="@style/Theme.PageIndicatorDefaults"></activity>
 
-
-
         <activity android:name="com.c317.warmlight.android.Activity.MapActivity"></activity>
         <activity android:name="com.c317.warmlight.android.Activity.AddDateActivity"></activity>
         <activity android:name="com.c317.warmlight.android.Activity.JoinSettingActivity"></activity>

@@ -60,7 +60,6 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
                 mActivity.finish();
             }
         });
-
         //结束Fragment
         return view;
     }

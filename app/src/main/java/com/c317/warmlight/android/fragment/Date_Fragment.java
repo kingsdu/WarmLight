@@ -1,9 +1,11 @@
 package com.c317.warmlight.android.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +50,6 @@ public class Date_Fragment extends BaseFragment implements ViewPager.OnPageChang
 
     @Bind(R.id.tv_topbar_title)
     TextView tvTopbarTitle;
-
     @Bind(R.id.iv_menu)
     ImageView ivMenu;
     @Bind(R.id.iv_add_date)
@@ -63,9 +64,13 @@ public class Date_Fragment extends BaseFragment implements ViewPager.OnPageChang
 
     private ArrayList<DateTabDetails> mDatePagers;//友约页面
 
+
     @Override
     public View initView() {
-        View view = View.inflate(mActivity,R.layout.fragment_date,null);
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
+        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.Theme_PageIndicatorDefaults);
+        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+        View view = localInflater.inflate(R.layout.fragment_date,null);
         ButterKnife.bind(this, view);
         ivAddDate.setVisibility(View.VISIBLE);
         ivLocateDate.setVisibility(View.VISIBLE);
@@ -92,9 +97,8 @@ public class Date_Fragment extends BaseFragment implements ViewPager.OnPageChang
 
     @Override
     public void initData() {
-
         mDatePagers = new ArrayList<>();
-        for (int i = -1; i < tabInfoDateType.length; i++) {
+        for (int i = 0; i < tabInfoDateType.length; i++) {
             DateTabDetails myPager = new DateTabDetails(mActivity, "http://14g97976j3.51mypc.cn:10759/youyue/getActivityList", i);
             mDatePagers.add(myPager);
         }
@@ -102,16 +106,6 @@ public class Date_Fragment extends BaseFragment implements ViewPager.OnPageChang
         tpMyIndicator.setVisibility(View.VISIBLE);
         tpMyIndicator.setViewPager(vpMyViewpager);
         tpMyIndicator.setOnPageChangeListener(this);//此处必须给指示器设置监听，而不是mViewPager
-
-//        //先判断是否有缓存，有则加载,否则请求服务器数据
-//        String cache = CacheUtils.getCache(url, mActivity);
-//        if (!TextUtils.isEmpty(cache)) {
-//            processData(cache, true);
-//        } else {
-//            //请求服务端数据（开源框架XUtils）
-//            getDataFromServer();//快速加载
-//        }
-
     }
 
 
