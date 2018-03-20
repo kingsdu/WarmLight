@@ -27,7 +27,7 @@
     <application
         android:name="com.c317.warmlight.android.common.Application_my"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -78,7 +78,7 @@
         <activity android:name="com.c317.warmlight.android.Activity.SettingMyDateActivity"
             android:theme="@style/Theme.PageIndicatorDefaults"></activity>
 
-
+        <activity android:name="com.c317.warmlight.android.Activity.SignInActivity"></activity>
 
         <activity android:name="com.c317.warmlight.android.Activity.MapActivity"></activity>
         <activity android:name="com.c317.warmlight.android.Activity.AddDateActivity"></activity>

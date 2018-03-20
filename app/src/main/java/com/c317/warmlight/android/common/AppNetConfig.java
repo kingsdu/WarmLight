@@ -70,6 +70,11 @@ public class AppNetConfig {
     public static final String PAGE = "page";
 
     public static final String EQUAL = "=";
+
+
+
+
+    public static final String APP_SERVICE_PHONE = "15871466310";
 //    public static final String HOST = "14g97976j3.51mypc.cn";
 //
 //    public static final String BASEURL = "http://"+ HOST +":8080/WarmLight/";
