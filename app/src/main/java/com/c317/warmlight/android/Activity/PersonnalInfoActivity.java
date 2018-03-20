@@ -15,7 +15,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -25,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.bean.Result;
@@ -34,7 +32,6 @@ import com.c317.warmlight.android.common.AppConstants;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.common.UserManage;
-import com.c317.warmlight.android.utils.CacheUtils;
 import com.c317.warmlight.android.utils.CommonUtils;
 import com.c317.warmlight.android.utils.SharedPrefUtility;
 import com.c317.warmlight.android.utils.UtilImags;
@@ -85,14 +82,15 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
     TextView tvPersonnalinfoSig1;
     @Bind(R.id.iv_add_date)
     ImageView ivAddDate;
-    @Bind(R.id.ll_me_editname)
-    RelativeLayout llMeEditname;
-    @Bind(R.id.ll_me_editsex)
-    RelativeLayout llMeEditsex;
-    @Bind(R.id.ll_me_editsigure)
-    RelativeLayout llMeEditsigure;
+
     @Bind(R.id.ll_me_editpassward)
     RelativeLayout llMeEditpassward;
+    @Bind(R.id.rl_me_editname)
+    RelativeLayout rlMeEditname;
+    @Bind(R.id.rl_me_editsigure)
+    RelativeLayout rlMeEditsigure;
+    @Bind(R.id.rl_me_editsex)
+    RelativeLayout rlMeEditsex;
 
     private String sex1;
     private String account;
@@ -106,8 +104,8 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
     private static final int EDIT_NAME = 4;//编辑昵称
     private static final int EDIT_SEX = 5;//编辑性别
     private static final int EDIT_SINGUURE = 6;//编辑个性签名
-
-    private int mSexType = 0;//性别选择
+    private static final int EDIT_CHANGPASSWORD = 6;//编辑个性签名
+    private int mSexType = 1;//性别选择
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,18 +121,34 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
         ivBackMe.setOnClickListener(this);
         civPersonnalinfoCircleImageView.setOnClickListener(this);
         llMeEditpassward.setOnClickListener(this);
-        tvPersonnalinfoUsername1.setOnClickListener(this);
+        rlMeEditname.setOnClickListener(this);
+        rlMeEditsex.setOnClickListener(this);
+        rlMeEditsigure.setOnClickListener(this);
+        llMeEditpassward.setOnClickListener(this);
     }
 
 
-
-    private void initData(){
+    private void initData() {
         initPhotoData();
         String param = (String) SharedPrefUtility.getParam(this, AppConstants.USERNAME, AppConstants.USERNAME);
-        if(!TextUtils.isEmpty(param)){
+        String param1 = (String) SharedPrefUtility.getParam(this, AppConstants.SIGNATURE, AppConstants.SIGNATURE);
+        if (!TextUtils.isEmpty(param) && param.equals(AppConstants.USERNAME)) {
+            getDataFromServer();//快速加载
+        }
+        if (!TextUtils.isEmpty(param)) {
             tvPersonnalinfoUsername1.setText(param);
-        }else{
-            getDataFromServer();
+        }
+//        else {
+//            getDataFromServer();//快速加载
+//        }
+        if (!TextUtils.isEmpty(param1) && param1.equals(AppConstants.SIGNATURE)) {
+            getDataFromServer();//快速加载
+        }
+        if (!TextUtils.isEmpty(param1)) {
+            tvPersonnalinfoSig1.setText(param1);
+        }
+        else {
+            getDataFromServer();//快速加载
         }
     }
 
@@ -165,20 +179,22 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
                 pop.showAtLocation(v, Gravity.BOTTOM, 0, 0);
                 break;
             //编辑姓名
-            case R.id.tv_personnalinfo_username1:
-                startActivityForResult(new Intent(PersonnalInfoActivity.this, PersonnalinfoEditnameAty.class),EDIT_NAME);
+            case R.id.rl_me_editname:
+                startActivityForResult(new Intent(PersonnalInfoActivity.this, PersonnalinfoEditnameAty.class), EDIT_NAME);
                 break;
             //编辑性别
-            case R.id.tv_personnalinfo_sex1:
+            case R.id.rl_me_editsex:
                 editsex();
+                Editsex(UserManage.getInstance().getUserInfo(PersonnalInfoActivity.this).account,
+                        mSexType);
                 break;
             //编辑个性签名
-            case R.id.tv_personnalinfo_sig1:
-//                intent = new Intent(PersonnalInfoActivity.this, PersonnalinfoEditsigureAty.class);
-//                startActivity(intent);
+            case R.id.rl_me_editsigure:
+                startActivityForResult(new Intent(PersonnalInfoActivity.this, PersonnalinfoEditsigureAty.class), EDIT_SINGUURE);
                 break;
             //修改密码
             case R.id.ll_me_editpassward:
+                startActivityForResult(new Intent(PersonnalInfoActivity.this, PersonnalinfoChangepasswordAty.class), EDIT_CHANGPASSWORD);
 //                intent = new Intent(PersonnalInfoActivity.this, PersonnalinfoChangepasswordAty.class);
 //                startActivity(intent);
                 break;
@@ -191,7 +207,7 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if ((resultCode == PersonnalInfoActivity.RESULT_OK)||(resultCode == 0)) {
+        if ((resultCode == PersonnalInfoActivity.RESULT_OK) || (resultCode == 0)) {
             switch (requestCode) {
                 case TAKE_PICTURE:
                     takePicture(data);
@@ -200,17 +216,16 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
                     selectMobPhotos(data);
                     break;
                 case EDIT_NAME:
-                    String param = (String)SharedPrefUtility.getParam(this, AppConstants.USERNAME, AppConstants.USERNAME);
-                    if(!TextUtils.isEmpty(param)){
+                    String param = (String) SharedPrefUtility.getParam(this, AppConstants.USERNAME, AppConstants.USERNAME);
+                    if (!TextUtils.isEmpty(param)) {
                         tvPersonnalinfoUsername1.setText(param);
-                    }else{
-                        CommonUtils.showToastShort(this,"缓存用户名为空");
+                    } else {
+                        CommonUtils.showToastShort(this, "缓存用户名为空");
                     }
                     break;
             }
         }
     }
-
 
 
     /****
@@ -249,7 +264,7 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
             public void onClick(View v) {
                 Intent picture = new Intent(
                         Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);//从相册选择
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);//从相册选择
                 startActivityForResult(picture, CHOOSE_PICTURE);
                 pop.dismiss();
                 ll_popup.clearAnimation();
@@ -280,7 +295,7 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
             civPersonnalinfoCircleImageView.setImageBitmap(bmp);
             saveBitmapFile(UtilImags.compressScale(bmp), UtilImags.SHOWFILEURL(PersonnalInfoActivity.this) + "/stscname.jpg");
             staffFileupload(new File(UtilImags.SHOWFILEURL(PersonnalInfoActivity.this) + "/stscname.jpg"));
-            setResult(RESULT_CODE,data);
+            setResult(RESULT_CODE, data);
         } catch (Exception e) {
             CommonUtils.showToastShort(this, "上传失败");
         }
@@ -319,7 +334,7 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
         }
         civPersonnalinfoCircleImageView.setImageBitmap(bmp);//显示拍照图片
         staffFileupload(new File(filename));//上传图片至服务端
-        setResult(RESULT_CODE,data);
+        setResult(RESULT_CODE, data);
     }
 
 
@@ -334,7 +349,6 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
             e.printStackTrace();
         }
     }
-
 
 
     public void staffFileupload(File file) {
@@ -428,16 +442,21 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 mSexType = which;
+                tvPersonnalinfoSex1.setText(items[which]);
             }
         }).setCancelable(false).create().show();
-        Editname(UserManage.getInstance().getUserInfo(PersonnalInfoActivity.this).account,
-                mSexType);
+//        Editsex(UserManage.getInstance().getUserInfo(PersonnalInfoActivity.this).account,
+//                mSexType);
 
     }
 
-
-    public void Editname(final String account, final int sex){
-        RequestParams params = new RequestParams(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.MY + AppNetConfig.SEPARATOR +AppNetConfig.MODIFYUSER);
+    /**
+     * 服务器端修改性别
+     * @param account
+     * @param sex
+     */
+    public void Editsex(final String account, final int sex) {
+        RequestParams params = new RequestParams(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.MY + AppNetConfig.SEPARATOR + AppNetConfig.MODIFYUSER);
         params.addParameter(AppConstants.ACCOUNT, account);
         params.addParameter(AppConstants.SEX, sex);
         x.http().request(HttpMethod.PUT, params, new Callback.CommonCallback<String>() {

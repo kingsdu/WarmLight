@@ -1,20 +1,24 @@
 package com.c317.warmlight.android.tabpager;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.c317.warmlight.android.Activity.NewsDetailActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.base.BaseMenuDetailPager;
 import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.bean.Smallnews;
+import com.c317.warmlight.android.bean.Topnews;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.utils.CacheUtils;
@@ -25,6 +29,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +61,7 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
         View view = View.inflate(mActivity, R.layout.pager_mydate_detail, null);
         ButterKnife.bind(this, view);
         account = UserManage.getInstance().getUserInfo(mActivity).account;
+
         pullMydateRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
@@ -68,6 +74,38 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
             }
         });
         pullMydateRefresh.setMode(PullToRefreshBase.Mode.BOTH);//上拉下拉都支持
+
+        pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Smallnews.Smallnews_Detail smallnews_detail =  smallnews_details.get(position-1);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String article_id = String.valueOf(smallnews_detail.article_id);
+                Intent intent = new Intent(mActivity, NewsDetailActivity.class);
+                intent.putExtra("url","http://14g97976j3.51mypc.cn:10759/youdu/getArtCont/"+article_id);
+                intent.putExtra("article_id",article_id);
+                intent.putExtra("title",smallnews_detail.title);
+                intent.putExtra("introduce",smallnews_detail.introduce);
+                intent.putExtra("pubDate",sdf.format(smallnews_detail.pubDate));
+                intent.putExtra("pictureURL",smallnews_detail.pictureURL);
+                intent.putExtra("readNum",smallnews_detail.readNum+"");
+                intent.putExtra("agreeNum",smallnews_detail.agreeNum+"");
+                intent.putExtra("source",smallnews_detail.source);
+                mActivity.startActivity(intent);
+            }
+        });
+            String url = "";
+
+////            final Topnews.Topnews_Info topnewsInfo = (Topnews.Topnews_Info) topnewsData.get(position);
+//            @Override
+//            public void onClick(View v) {
+////                String search_id = topnewsInfo.search_id;
+//                url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + "getArtCont" + AppNetConfig.SEPARATOR + search_id;
+//                Intent intent = new Intent(mActivity, NewsDetailActivity.class);
+//                intent.putExtra("url", url);
+//                mActivity.startActivity(intent);
+//            }
+//        });
         return view;
     }
 
@@ -109,6 +147,7 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
             String isCollect = 1 + "";
             dataBaseHelper = WarmLightDataBaseHelper.getDatebaseHelper(mActivity);
             smallnews_details = dataBaseHelper.queryMultiIsCollectRead(isCollect);
+
             pullMydateRefresh.setAdapter(new MyReadCollectAdapter());
         }
     }
@@ -162,7 +201,7 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
             Smallnews.Smallnews_Detail smallnews_detail = smallnews_details.get(position);
             Picasso.with(mActivity).load(smallnews_detail.pictureURL).into(holder.ivPic);
             holder.tvTitle.setText(smallnews_detail.title);
-            holder.tvTitle.setTextColor(UIUtils.getcolor(R.color.back_blue));
+            holder.tvTitle.setTextColor(UIUtils.getcolor(R.color.back_orange));
             holder.tvIntro.setText(smallnews_detail.introduce);
             holder.tvIntro.setTextColor(UIUtils.getcolor(R.color.back_orange));
             return convertView;

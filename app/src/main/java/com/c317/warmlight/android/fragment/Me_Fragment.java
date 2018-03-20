@@ -40,8 +40,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Me_Fragment extends BaseFragment implements View.OnClickListener {
 
-    @Bind(R.id.iv_back_me)
-    ImageView ivBackMe;
     @Bind(R.id.tv_topbar_title)
     TextView tvTopbarTitle;
     @Bind(R.id.iv_me_setting)
@@ -73,7 +71,6 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
         ButterKnife.bind(this, view);
         Application_my.getInstance().addActivity(mActivity);
         //顶部图标
-        ivBackMe.setVisibility(View.VISIBLE);
         ivMeSetting.setVisibility(View.VISIBLE);
         tvTopbarTitle.setText("我的");
         //个人资料初始化

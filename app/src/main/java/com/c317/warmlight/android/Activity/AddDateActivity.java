@@ -180,6 +180,15 @@ public class AddDateActivity extends Activity {
             }
         });
 
+        //友约地点地图选择
+        rlDateSelplace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddDateActivity.this, DateSelplaceActivity.class);
+                startActivity(intent);
+            }
+        });
+
         //报名设置
         rlDateJoinsetting.setOnClickListener(new View.OnClickListener() {
             @Override

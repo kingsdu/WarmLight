@@ -54,6 +54,13 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
         ButterKnife.bind(this, view);
         //顶部按钮初始化
         ivBackMe.setVisibility(View.VISIBLE);
+        ivBackMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.finish();
+            }
+        });
+
         //结束Fragment
         return view;
     }

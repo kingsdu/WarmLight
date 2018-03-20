@@ -39,7 +39,7 @@
             android:showDividers="middle|end">
 
             <RelativeLayout
-                android:id="@+id/ll_me_editname"
+                android:id="@+id/rl_me_editname"
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
 
@@ -67,7 +67,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/ll_me_editsex"
+                android:id="@+id/rl_me_editsex"
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
 
@@ -97,7 +97,7 @@
 
 
             <RelativeLayout
-                android:id="@+id/ll_me_editsigure"
+                android:id="@+id/rl_me_editsigure"
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
 
