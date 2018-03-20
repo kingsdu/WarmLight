@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.utils.MD5utils;
-import com.google.gson.Gson;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -41,12 +40,15 @@ public class SignInActivity extends Activity {
     EditText et_password2;
     @Bind(R.id.btn_send)
     Button btnSend;
+    @Bind(R.id.tv_topbar_title)
+    TextView tvTopbarTitle;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Application_my.getInstance().addActivity(this);
         setContentView(R.layout.signin_aty);
         ButterKnife.bind(this);
+        tvTopbarTitle.setText("注册新用户");
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

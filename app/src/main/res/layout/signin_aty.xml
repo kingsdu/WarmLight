@@ -7,20 +7,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp" >
+        >
+    <include layout="@layout/common_top"></include>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp" >
 
         <TextView
             android:layout_marginTop="15dp"
             android:id="@+id/oldPassword"
-            android:text="请输入用户名："
+            android:text="请输入帐户名："
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textColor="@color/bg_text"/>
         <EditText
             android:layout_marginBottom="5dp"
             android:id="@+id/et_oldPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="#D3D3D3"
+            android:textColor="@color/black"
             android:background="@drawable/boder_06"
             android:inputType="text"
             android:paddingTop="5dp"
@@ -34,7 +42,9 @@
             android:id="@+id/tv_newPassword"
             android:text="请输入密码："
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textColor="@color/bg_text"/>
 
 
         <EditText
@@ -42,7 +52,7 @@
             android:id="@+id/et_newPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="#D3D3D3"
+            android:textColor="@color/black"
             android:background="@drawable/boder_06"
             android:inputType="text"
             android:paddingTop="5dp"
@@ -55,14 +65,16 @@
             android:id="@+id/tv_newPassword2"
             android:text="请再次确认密码："
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textColor="@color/bg_text"/>
 
         <EditText
             android:layout_marginBottom="5dp"
             android:id="@+id/et_newPassword2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="#D3D3D3"
+            android:textColor="@color/black"
             android:inputType="text"
             android:background="@drawable/boder_06"
             android:paddingTop="5dp"
@@ -75,18 +87,19 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
             android:orientation="vertical" >
 
             <Button
                 android:id="@+id/btn_send"
-                android:layout_width="65dp"
-                android:layout_height="40dp"
-                android:background="@drawable/u47"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="确定"
-                android:textColor="#FFFFFF" />
+                android:textColor="@color/white"
+                android:background="@color/main_orange" />
 
         </LinearLayout>
     </LinearLayout>
-
+</LinearLayout>
 </ScrollView>

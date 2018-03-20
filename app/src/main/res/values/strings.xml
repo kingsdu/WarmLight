@@ -17,6 +17,6 @@
     <string name="login_password_error">password error</string>
     <string name="WarmLight">— WarmLight —</string>
     <string name="fail_to_load_members_data">Fail to load members,please try later</string>
-
+    <string name="send_contactme">您好！我的意见或建议为：</string>
 </resources>
 
