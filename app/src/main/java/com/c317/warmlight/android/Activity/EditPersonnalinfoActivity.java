@@ -210,7 +210,7 @@ public class EditPersonnalinfoActivity extends Activity implements View.OnClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //拍照的返回码
+        //拍照的返回码a
         if (requestCode == 1 && resultCode == Activity.RESULT_OK
                 && null != data) {
             if (takePicture(data)) return;
