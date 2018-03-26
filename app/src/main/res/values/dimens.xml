@@ -28,4 +28,7 @@
 
   <dimen name="view_pager_parallax_drawer_layout">256dp</dimen>
   <dimen name="view_pager_parallax_drawer_layout_fitsSystemWindows">256dp</dimen>
+
+  <dimen name="spacing_medium_width">50dp</dimen>
+  <dimen name="spacing_medium_height">5dp</dimen>
 </resources>

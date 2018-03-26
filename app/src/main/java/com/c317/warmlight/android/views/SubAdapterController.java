@@ -18,6 +18,8 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2017/12/5.
+ *
+ * 书籍部分信息
  */
 
 public class SubAdapterController {
@@ -119,13 +121,6 @@ public class SubAdapterController {
                 image = (ImageView) view.findViewById(R.id.iv_horizontal_image);
                 author = (TextView) view.findViewById(R.id.tv_horizontal_author);
                 title = (TextView) view.findViewById(R.id.tv_horizontal_title);
-//                view.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        //启动一个ACTIVITY
-//                        Toast.makeText(mContext, "SubViewHolder on button", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
             }
         }
     }

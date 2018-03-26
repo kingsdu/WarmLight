@@ -9,6 +9,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.bean.Topnews_details;
 import com.c317.warmlight.android.common.Application_my;
+import com.c317.warmlight.android.utils.CacheUtils;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -35,7 +37,6 @@ import butterknife.ButterKnife;
  */
 
 public class TopDetailsActivity extends AppCompatActivity {
-
 
     @Bind(R.id.iv_bookPicture)
     ImageView ivBookPicture;
@@ -63,7 +64,6 @@ public class TopDetailsActivity extends AppCompatActivity {
     ImageView ivBooksign4;
     @Bind(R.id.tv_bookintro)
     TextView tvBookintro;
-    private Activity mActivity;
     private String url;
     private String search_id;
 
@@ -75,9 +75,25 @@ public class TopDetailsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         url = getIntent().getStringExtra("url");
         search_id = getIntent().getStringExtra("search_id");
-        getDataFromServer();
         initToolBar();
         setToolBarLayout();
+        initData();
+    }
+
+    private void initData() {
+        String cache = CacheUtils.getCache(url, this);
+        if (!TextUtils.isEmpty(cache)) {
+            processData(cache);
+        } else {
+            getDataFromServer();//快速加载
+        }
+    }
+
+    private void processData(String cache) {
+        Gson gson = new Gson();
+        Topnews_details topnews_details = gson.fromJson(cache, Topnews_details.class);
+        Topnews_details.Topnews_content topnews_content = topnews_details.data;
+        setTopNewView(topnews_content);
     }
 
     private void getDataFromServer() {
@@ -90,6 +106,7 @@ public class TopDetailsActivity extends AppCompatActivity {
                 Topnews_details topnews_details = gson.fromJson(result, Topnews_details.class);
                 Topnews_details.Topnews_content topnews_content = topnews_details.data;
                 setTopNewView(topnews_content);
+                CacheUtils.setCache(url, result, TopDetailsActivity.this);
             }
 
             @Override
@@ -112,11 +129,10 @@ public class TopDetailsActivity extends AppCompatActivity {
 
     private void setTopNewView(Topnews_details.Topnews_content topnews_content) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String author_intro = "作者：" + topnews_content.authorIntr;
         String pubCompany = "出版社：" + topnews_content.pubCompany;
         String pubDate = "出版时间：" + formatter.format(topnews_content.pubDate);
         String bookIntr = "书籍简介：" + topnews_content.bookIntr;
-        Picasso.with(mActivity).load(topnews_content.pictureURL).into(ivBookPicture);
+        Picasso.with(this).load(topnews_content.pictureURL).into(ivBookPicture);
         tvBookTitle.setText(topnews_content.title);
         ivBooksign1.setImageResource(R.drawable.sign);
         tvBookauthor.setText(topnews_content.author);

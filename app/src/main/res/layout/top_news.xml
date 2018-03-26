@@ -3,25 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_barner"
         android:layout_width="match_parent"
-        android:layout_height="150dp">
-
-    </android.support.v4.view.ViewPager>
+        android:layout_height="150dp"
+        android:layout_weight="1"/>
 
     <com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/btn_barner"
+        android:paddingTop="5dip"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
+        android:layout_height="wrap_content"
+        android:paddingLeft="250dp"
         app:fillColor="@color/main_orange"
-        app:pageColor="@color/white"
-        app:radius="3dp"
-        app:strokeWidth="0dp">
-
-    </com.viewpagerindicator.CirclePageIndicator>
-
+        app:pageColor="@color/gray_gray"
+        app:radius="5dp"
+        app:strokeWidth="0dp"/>
 </LinearLayout>

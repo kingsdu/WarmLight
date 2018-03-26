@@ -7,14 +7,6 @@
     android:background="@drawable/radius_bg"
     android:padding="10dp">
 
-    <com.huxq17.swipecardsview.SwipeCardsView
-        android:id="@+id/swipCardsView"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:background="@color/white"
-        card:alphaOffsetStep="40"
-        card:scaleOffsetStep="0.08"
-        card:yOffsetStep="20dp"></com.huxq17.swipecardsview.SwipeCardsView>
 
     <!-- 活动大图 -->
     <ImageView

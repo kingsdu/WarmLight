@@ -11,7 +11,6 @@
             <option value="$PROJECT_DIR$/SwipeCardlibrary" />
             <option value="$PROJECT_DIR$/ViewPagelibrary" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/xutils" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

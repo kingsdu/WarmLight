@@ -94,7 +94,6 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
             dateNews_details = dataBaseHelper.queryMultiIsCollectDate(isCollect);
             pullMydateRefresh.setAdapter(new MyCollectAdapter());
         }
-
     }
 
     private void processData(String cache, boolean isMore) {

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swipe="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="240dp">
+
+    <ImageView
+        android:id="@+id/lv_read_tagimage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="12dp"
+        android:paddingRight="3dp"
+        android:src="@drawable/datetag" />
+
+    <TextView
+        android:id="@+id/tv_read_tagname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/lv_read_tagimage"
+        android:layout_toRightOf="@id/lv_read_tagimage"
+        android:text="最新友约"
+        android:textColor="@color/main_orange"
+        android:textSize="14dp" />
+
+    <com.c317.warmlight.android.flingSwipe.SwipeFlingAdapterView
+        android:id="@+id/swipe_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv_read_tagname"
+        swipe:max_visible="4"
+        swipe:min_adapter_stack="4"
+        swipe:y_offset_step="12dp" />
+
+</RelativeLayout>

@@ -6,8 +6,9 @@
 
     <com.c317.warmlight.android.views.NestListView
         android:id="@+id/nestlistview"
-        android:layout_margin="5dp"
+        android:layout_marginRight="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
 
 </LinearLayout>

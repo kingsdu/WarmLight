@@ -227,7 +227,6 @@ public class Date_Fragment extends BaseFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             //重用ListView
             ViewHolder holder;
-            //重用ListView
             if (convertView == null) {
                 convertView = View.inflate(mActivity, R.layout.list_item_dates, null);
                 holder = new ViewHolder();

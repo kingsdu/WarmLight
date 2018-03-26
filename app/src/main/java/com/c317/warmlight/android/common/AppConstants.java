@@ -14,7 +14,8 @@ public class AppConstants {
     public final static int RV_ARTICLE_NEWS_SMALL= 2;
     public final static int RV_QUESTION_NEWS= 3;
     public final static int RV_GUESS_NEWS = 4;
-    public final static int RV_ARTICLE_NEWS_BIG = 5;
+    public final static int RV_DAILYASK = 5;//问问
+    public final static int RV_DIVIDER = 6;//分隔符
 
     //标识数据内容
     public final static String TITLE = "title";

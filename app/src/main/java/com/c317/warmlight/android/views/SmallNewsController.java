@@ -115,13 +115,41 @@ public class SmallNewsController {
     public class SmallNewsAdapter extends RecyclerView.Adapter<SmallNewsAdapter.SmallNewsViewHolder> implements View.OnClickListener{
         private LayoutInflater mInflater;
 
+        public static final int TYPE_HEADER = 0;
+        public static final int TYPE_NORMAL = 1;
+
+        private View mHeaderView;
 
         public SmallNewsAdapter (Context context){
             mInflater = LayoutInflater.from(context);
         }
 
+        public void setHeaderView(View headerView) {
+            mHeaderView = headerView;
+            notifyItemInserted(0);
+        }
+
+
+        public View getHeaderView() {
+            return mHeaderView;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if(mHeaderView == null) return TYPE_NORMAL;
+            if(position == 0) return TYPE_HEADER;
+            return TYPE_NORMAL;
+        }
+
+        public int getRealPosition(RecyclerView.ViewHolder holder) {
+            int position = holder.getLayoutPosition();
+            return mHeaderView == null ? position : position - 1;
+        }
+
         @Override
         public SmallNewsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            if(mHeaderView != null && viewType == TYPE_HEADER)
+                return new SmallNewsViewHolder(mHeaderView);
             View view = mInflater.inflate(R.layout.smallnews_details, parent, false);
             view.setOnClickListener(this);
             return new SmallNewsViewHolder(view);
@@ -129,28 +157,33 @@ public class SmallNewsController {
 
         @Override
         public void onBindViewHolder(SmallNewsViewHolder holder, int position) {
-            Smallnews.Smallnews_Detail smallnews_detail = (Smallnews.Smallnews_Detail) mData.get(position);
-            if(smallnews_detail.pictureURL == null){
-                return;
+            if(getItemViewType(position) == TYPE_HEADER) return;
+
+            final int pos = getRealPosition(holder);
+            Smallnews.Smallnews_Detail smallnews_detail = (Smallnews.Smallnews_Detail) mData.get(pos);
+            if(holder instanceof SmallNewsViewHolder) {
+                if(smallnews_detail.pictureURL == null){
+                    return;
+                }
+                String imageUrl = "";
+                String gif = smallnews_detail.pictureURL.substring(smallnews_detail.pictureURL.lastIndexOf(".")+1, smallnews_detail.pictureURL.length());
+                if (gif.equals("gif")) {
+                    imageUrl = smallnews_detail.pictureURL;
+                    Glide.with(mContext).load(imageUrl).asGif().error(R.drawable.book1).into(((SmallNewsViewHolder) holder).small_image);
+                }else{
+                    imageUrl = smallnews_detail.pictureURL;
+                    Picasso.with(mContext).load(imageUrl).into(((SmallNewsViewHolder) holder).small_image);
+                }
+                holder.small_title.setText(smallnews_detail.title);
+                holder.small_user.setText(String.valueOf(smallnews_detail.readNum));
+                holder.small_views.setText(String.valueOf(smallnews_detail.agreeNum));
+                holder.itemView.setTag(position);
             }
-            String imageUrl = "";
-            String gif = smallnews_detail.pictureURL.substring(smallnews_detail.pictureURL.lastIndexOf(".")+1, smallnews_detail.pictureURL.length());
-            if (gif.equals("gif")) {
-                imageUrl = smallnews_detail.pictureURL;
-                Glide.with(mContext).load(imageUrl).asGif().error(R.drawable.book1).into(((SmallNewsViewHolder) holder).small_image);
-            }else{
-                imageUrl = smallnews_detail.pictureURL;
-                Picasso.with(mContext).load(imageUrl).into(((SmallNewsViewHolder) holder).small_image);
-            }
-            holder.small_title.setText(smallnews_detail.title);
-            holder.small_user.setText(String.valueOf(smallnews_detail.readNum));
-            holder.small_views.setText(String.valueOf(smallnews_detail.agreeNum));
-            holder.itemView.setTag(position);
         }
 
         @Override
         public int getItemCount() {
-            return  mData.size();
+            return  mHeaderView == null ? mData.size() : mData.size() + 1;
         }
 
         @Override

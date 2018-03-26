@@ -5,8 +5,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.c317.warmlight.android.R;
 
 /**
  * Created by Administrator on 2018/1/5.
@@ -46,7 +50,7 @@ public class SmallNewsListView extends LinearLayout {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(context);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mSmallNewsListView.setLayoutManager(mLayoutManager);
-        addView(mSmallNewsListView);
+        this.addView(mSmallNewsListView);
     }
 
 
@@ -55,4 +59,11 @@ public class SmallNewsListView extends LinearLayout {
             mSmallNewsListView.setAdapter(adapter);
         }
     }
+
+
+    public void setHeader(SmallNewsController.SmallNewsAdapter adapter) {
+        View header = LayoutInflater.from(getContext()).inflate(R.layout.read_recy_header, mSmallNewsListView, false);
+        adapter.setHeaderView(header);
+    }
+
 }

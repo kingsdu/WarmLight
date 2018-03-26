@@ -63,24 +63,15 @@ public class NewsDetailActivity extends Activity {
         setContentView(R.layout.news_details);
         ButterKnife.bind(this);
         ivBackMe.setVisibility(View.VISIBLE);
-        mUrl = getIntent().getStringExtra("url");
-        mArticleId = getIntent().getStringExtra("article_id");
-        mTitle = getIntent().getStringExtra("title");
-        mIntroduce = getIntent().getStringExtra("introduce");
-        mPubDate = getIntent().getStringExtra("pubDate");
-        mPictureURL = getIntent().getStringExtra("pictureURL");
-        mReadNum = getIntent().getStringExtra("readNum");
-        mAgreeNum = getIntent().getStringExtra("agreeNum");
-        mSource = getIntent().getStringExtra("source");
         //初始化已收藏，未收藏
         dataBaseHelper = WarmLightDataBaseHelper.getDatebaseHelper(this);
+        initData();
         iscollect = queryIsCollect();
         if (iscollect) {
             ivReadCollect.setVisibility(View.VISIBLE);
         } else {
             ivReadUncollect.setVisibility(View.VISIBLE);
         }
-
         ivReadCollect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,6 +141,36 @@ public class NewsDetailActivity extends Activity {
                 finish();
             }
         });
+    }
+
+    public void initData(){
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("url"))){
+            mUrl = getIntent().getStringExtra("url");
+        }
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("article_id"))){
+            mArticleId = getIntent().getStringExtra("article_id");
+        }
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("title"))){
+            mTitle = getIntent().getStringExtra("title");
+        }
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("introduce"))){
+            mIntroduce = getIntent().getStringExtra("introduce");
+        }
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("pubDate"))){
+            mPubDate = getIntent().getStringExtra("pubDate");
+        }
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("pictureURL"))){
+            mPictureURL = getIntent().getStringExtra("pictureURL");
+        }
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("readNum"))){
+            mReadNum = getIntent().getStringExtra("readNum");
+        }
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("agreeNum"))){
+            mAgreeNum = getIntent().getStringExtra("agreeNum");
+        }
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("source"))){
+            mSource = getIntent().getStringExtra("source");
+        }
     }
 
     /**

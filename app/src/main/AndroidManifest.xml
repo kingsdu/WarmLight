@@ -20,9 +20,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <!--百度地图需要权限-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.RESTART_PACKAGES"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
 
     <application
         android:name="com.c317.warmlight.android.common.Application_my"
@@ -35,22 +35,21 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="FNURfeiYUfq4noTqbbVjzHhAij817OcG"/>
+            android:value="FNURfeiYUfq4noTqbbVjzHhAij817OcG" />
 
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" >
-        </service>
+            android:process=":remote"></service>
 
-        <activity android:name="com.c317.warmlight.android.Activity.SplashActivity">
+        <activity android:name="com.c317.warmlight.android.Activity.SplashActivity"></activity>
+        <activity android:name="com.c317.warmlight.android.Activity.LoginActivity"></activity>
+        <activity android:name="com.c317.warmlight.android.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.c317.warmlight.android.Activity.LoginActivity"></activity>
-        <activity android:name="com.c317.warmlight.android.MainActivity"></activity>
         <activity android:name="com.c317.warmlight.android.Activity.NewsDetailActivity"></activity>
 
         <activity android:name="com.c317.warmlight.android.Activity.DateDetailActivity"></activity>
@@ -73,14 +72,14 @@
 
         <activity android:name="com.c317.warmlight.android.Activity.PersonnalinfoChangepasswordAty"></activity>
 
-        <activity android:name="com.c317.warmlight.android.Activity.SettingMyDateActivity"
+        <activity
+            android:name="com.c317.warmlight.android.Activity.SettingMyDateActivity"
             android:theme="@style/Theme.PageIndicatorDefaults"></activity>
-
-
 
         <activity android:name="com.c317.warmlight.android.Activity.MapActivity"></activity>
         <activity android:name="com.c317.warmlight.android.Activity.AddDateActivity"></activity>
         <activity android:name="com.c317.warmlight.android.Activity.JoinSettingActivity"></activity>
+
     </application>
 
 </manifest>

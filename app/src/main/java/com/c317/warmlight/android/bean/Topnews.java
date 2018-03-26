@@ -15,5 +15,7 @@ public class Topnews {
     public static class Topnews_Info{
         public String search_id;
         public String pictureURL;
+        public String introduce;
+        public String title;
     }
 }

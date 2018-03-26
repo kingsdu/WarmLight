@@ -14,6 +14,8 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.c317.warmlight.android.R;
+
 /**
  * Created by Administrator on 2017/12/5.
  */
@@ -47,10 +49,10 @@ public class NestListView extends LinearLayout {
 
     public void init(Context context){
         setOrientation(VERTICAL);
-        initNestViewHeader(context);
+//        initNestViewHeader(context);
         initListView(context);
     }
-
+//    android:background="@drawable/readbookborder"
 
     public void initNestViewHeader(Context context){
         if (!mHeaderDefaultText.isEmpty()) {
@@ -58,6 +60,7 @@ public class NestListView extends LinearLayout {
             LinearLayout.LayoutParams l = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             mNestViewHeader.setLayoutParams(l);
             mNestViewHeader.setText(mHeaderDefaultText);
+            mNestViewHeader.setTextColor(R.color.main_orange);
             addView(mNestViewHeader);
         }
     }

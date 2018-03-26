@@ -7,7 +7,9 @@
     <com.c317.warmlight.android.views.SmallNewsListView
         android:id="@+id/rv_smallListView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:divider="@drawable/divide_shape"
+        android:showDividers="middle|end" />
 
 </LinearLayout>
 

@@ -38,7 +38,6 @@ dependencies {
     compile 'com.zhy:okhttputils:2.6.2'
     testCompile 'junit:junit:4.12'
     compile project(':ViewPagelibrary')
-    compile project(':SwipeCardlibrary')
     compile files('libs/glide-3.6.0.jar')
     compile files('libs/swiperefreshendless.jar')
     compile files('libs/rxjava-1.1.0.jar')

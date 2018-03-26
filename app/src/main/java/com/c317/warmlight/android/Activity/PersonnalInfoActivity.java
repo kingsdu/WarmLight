@@ -40,6 +40,7 @@ import com.c317.warmlight.android.utils.SharedPrefUtility;
 import com.c317.warmlight.android.utils.UtilImags;
 import com.google.gson.Gson;
 import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.xutils.common.Callback;
@@ -149,9 +150,11 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
      * @Date 2018/3/16 19:49
      **/
     private void initPhotoData() {
-        String picname = "icon/" + account + ".jpg";
+        String picname = "icon/" + account + "_thumbnail.jpg";
         String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + picname;
-        Picasso.with(PersonnalInfoActivity.this).load(imageUrl).memoryPolicy(MemoryPolicy.NO_CACHE).into(civPersonnalinfoCircleImageView);
+        Uri uri = Uri.parse(imageUrl);
+        Picasso.with(PersonnalInfoActivity.this).invalidate(uri);
+        Picasso.with(PersonnalInfoActivity.this).load(uri).networkPolicy(NetworkPolicy.NO_CACHE).into(civPersonnalinfoCircleImageView);
     }
 
     @Override
