@@ -142,7 +142,7 @@ public class Read_Fragment extends BaseFragment {
 
 
     private void getReadData(final List<String> url) {
-        //1 头条
+        //1 头条11
         RequestParams params = new RequestParams(url.get(0));
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
