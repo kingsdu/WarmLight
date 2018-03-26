@@ -184,6 +184,8 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         mPlace = getIntent().getStringExtra("place");
     }
 
+
+
     /**
      * 获取当前用户是否收藏的信息
      *
@@ -195,6 +197,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         String isCollect = dataBaseHelper.queryIsCollectDate(mActivityid);
         if (TextUtils.isEmpty(isCollect)) {
             DateNews.DateNews_Detail dateNews_detail = new DateNews.DateNews_Detail();
+            setDefaultData();
             dateNews_detail.activity_id = mActivityid;
             dateNews_detail.picture = mPicture;
             dateNews_detail.agreeNum = Integer.valueOf(mAgreeNum);
@@ -218,6 +221,56 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         }
         return false;
     }
+
+
+
+    /**
+    * 将空值设置为默认的数据
+    * @params
+    * @author Du
+    * @Date 2018/3/20 21:58
+    **/
+    private void setDefaultData() {
+        if(TextUtils.isEmpty(mActivityid)){
+            mActivityid = 0 + "";
+        }
+        if(TextUtils.isEmpty(mPicture)){
+            mPicture = R.drawable.musi01+"";
+        }
+        if(TextUtils.isEmpty(mAgreeNum)){
+            mAgreeNum = 0 + "";
+        }
+        if(TextUtils.isEmpty(mCommentNum)){
+            mCommentNum = 0 + "";
+        }
+        if(TextUtils.isEmpty(mMemberNum)){
+            mMemberNum = 0 + "";
+        }
+        if(TextUtils.isEmpty(mContent)){
+            mContent = "content is null";
+        }
+        if(TextUtils.isEmpty(mTitle)){
+            mTitle = "title is null";
+        }
+        if(TextUtils.isEmpty(mType)){
+            mType =  0 + "";
+        }
+        if(TextUtils.isEmpty(mStartTime)){
+            mStartTime = "1999-01-01";
+        }
+        if(TextUtils.isEmpty(mEndTime)){
+            mEndTime = "1999-01-01";
+        }
+        if(TextUtils.isEmpty(mPlace)){
+            mPlace = "mPlace is null";
+        }
+        if(TextUtils.isEmpty(mReadNum)){
+            mReadNum = 0 + "";
+        }
+    }
+
+
+
 
     private void getDataFromServer() {
         RequestParams params = new RequestParams(url);

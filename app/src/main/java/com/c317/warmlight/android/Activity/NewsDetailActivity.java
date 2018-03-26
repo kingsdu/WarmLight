@@ -192,6 +192,7 @@ public class NewsDetailActivity extends Activity {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 Smallnews.Smallnews_Detail smallnews_detail = new Smallnews.Smallnews_Detail();
+                setDefaultData();
                 smallnews_detail.pubDate = sdf.parse(mPubDate);
                 smallnews_detail.article_id = Integer.parseInt(mArticleId);
                 smallnews_detail.title = mTitle;
@@ -208,6 +209,42 @@ public class NewsDetailActivity extends Activity {
         }
         return false;
     }
+
+
+    /**
+    * 设置为空
+    * @params
+    * @author Du
+    * @Date 2018/3/20 23:00
+    **/
+    private void setDefaultData() {
+        if(TextUtils.isEmpty(mPubDate)){
+            mPubDate = 0 + "";
+        }
+        if(TextUtils.isEmpty(mArticleId)){
+            mArticleId = 0 + "";
+        }
+        if(TextUtils.isEmpty(mTitle)){
+            mTitle = "mTitle is null";
+        }
+        if(TextUtils.isEmpty(mIntroduce)){
+            mIntroduce = "mIntroduce is null";
+        }
+        if(TextUtils.isEmpty(mPictureURL)){
+            mPictureURL = R.drawable.musi01+"";
+        }
+        if(TextUtils.isEmpty(mSource)){
+            mSource = "mSource is null";
+        }
+        if(TextUtils.isEmpty(mReadNum)){
+            mReadNum =  0 + "";
+        }
+        if(TextUtils.isEmpty(mAgreeNum)){
+            mAgreeNum = 0 + "";
+        }
+    }
+
+
 
 
     @Override

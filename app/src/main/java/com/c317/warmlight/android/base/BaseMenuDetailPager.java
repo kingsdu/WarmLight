@@ -14,13 +14,17 @@ public abstract class BaseMenuDetailPager extends Fragment {
 
     public Activity mActivity;
     public View mRootView;//菜单详情页面根布局
-    public int PAGESIZE = 0;
+    public int DOWNPAGESIZE = 0;
+    public int UPPAGESIZE = 0;
     public int PAGE = 1;
+
 
     public BaseMenuDetailPager(Activity activity){
         mActivity = activity;
         mRootView = initView();
     }
+
+
     //初始化布局，子类实现
     public abstract View initView();
 

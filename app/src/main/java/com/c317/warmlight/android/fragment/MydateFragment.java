@@ -43,10 +43,19 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
     private String mType;
     private static final String TAG_READ = "TAG_READ";
     private static final String TAG_DATE = "TAG_DATE";
+//    private boolean isPrepared;
 
     public MydateFragment(String type){
         mType = type;
     }
+
+//    @Override
+//    protected void lazyLoad() {
+//        if(!isPrepared || !isVisible) {
+//            return;
+//        }
+//        initData();
+//    }
 
     @Override
     public View initView() {

@@ -49,10 +49,6 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
     CircleImageView circleImageView;
     @Bind(R.id.tv_nickname_me)
     TextView tvNicknameMe;
-    @Bind(R.id.tv_renown_me)
-    TextView tvRenownMe;
-    @Bind(R.id.btn_signIn)
-    Button btnSignIn;
     @Bind(R.id.rl_myread)
     RelativeLayout rlMyread;
     @Bind(R.id.rl_mydate)
@@ -66,6 +62,7 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
     private static final int RESULT_CODE = 3;//返回码
     private Bitmap bmp;
 
+
     @Override
     public View initView() {
         View view = UIUtils.getXmlView(R.layout.fragment_me);
@@ -76,8 +73,6 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
         tvTopbarTitle.setText("我的");
         //个人资料初始化
         tvNicknameMe.setText("LBJ");
-        tvRenownMe.setText("总得分：40000");
-        btnSignIn.setText("签到");
         //监听事件初始化
         ivMeSetting.setOnClickListener(this);
         //圆形头像个人资料监听
@@ -85,6 +80,8 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
         //我的友约监听
         rlMydate.setOnClickListener(this);
         rlMyread.setOnClickListener(this);
+//        isPrepared = true;
+//        lazyLoad();
         return view;
     }
 

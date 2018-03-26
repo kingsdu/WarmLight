@@ -2,8 +2,11 @@ package com.c317.warmlight.android.tabpager;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -47,8 +50,10 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
     private String mUrl;//请求链接
     private int mType;
     boolean isAlldata = false;
-    private ArrayList<DateNews.DateNews_Detail> mDetail = new ArrayList<>();
-    private DateNews dateNews_info;
+    boolean isFirst = true;//篇listview刷新用
+    private List<DateNews.DateNews_Detail> dateNews_details = new ArrayList<>();//ListView存储数据
+    private DateNews dateNews_info;//服务端解析数据
+    private DateAdapter dateAdapter;
 
 
     public DateTabDetails(Activity activity, String url, int type) {
@@ -57,31 +62,31 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
         mUrl = url + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGE;
     }
 
-
     @Override
     public View initView() {
         View view = View.inflate(mActivity, R.layout.pager_mydate_detail, null);
         ButterKnife.bind(this, view);
         //判断是否全部友约
-        if(mType==0){
+        if (mType == -1) {
             isAlldata = true;
         }
         pullMydateRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
-                if(mType==0){
+                if (mType == -1) {
                     isAlldata = true;
                 }
-                getDataFromServer(mUrl, DateTabDetails.this.mType,isAlldata);
+                mUrl = "http://14g97976j3.51mypc.cn:10759/youyue/getActivityList";
+                getDataFromServerPullDown(mUrl, mType, isAlldata);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
-                if(mType==0){
+                if (mType == -1) {
                     isAlldata = true;
                 }
                 PAGE++;//页数增加
-                getDataFromServer(mUrl, DateTabDetails.this.mType,isAlldata);
+                getDataFromServer(mUrl, mType, isAlldata);
             }
         });
         pullMydateRefresh.setMode(PullToRefreshBase.Mode.BOTH);//上拉下拉都支持
@@ -91,88 +96,99 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
 
     //初始化数据
     public void initData() {
-        if(mType!=0){
+        if (mType != -1) {
             String cache = CacheUtils.getCache(mUrl + "&type=" + mType + "&page=" + PAGE, mActivity);
             if (!TextUtils.isEmpty(cache)) {
-                processData(cache, true);
-            } else {
-                getDataFromServer(mUrl, mType,false);//通过服务器获取数据
-            }
-            pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(mActivity, DateDetailActivity.class);
-                    DateNews.DateNews_Detail dateNews_detail = mDetail.get(position - 1);
-                    intent.putExtra("activity_id", dateNews_detail.activity_id);
-                    intent.putExtra("picUrl", dateNews_detail.picture);
-                    intent.putExtra("title", dateNews_detail.title);
-                    intent.putExtra("content", dateNews_detail.content);
-                    intent.putExtra("readNum", dateNews_detail.readNum + "");
-                    intent.putExtra("agreeNum", dateNews_detail.agreeNum + "");
-                    intent.putExtra("commentNum", dateNews_detail.commentNum + "");
-                    intent.putExtra("endTime", dateNews_detail.endTime);
-                    intent.putExtra("startTime", dateNews_detail.startTime);
-                    intent.putExtra("memberNum", dateNews_detail.memberNum + "");
-                    intent.putExtra("type", dateNews_detail.type + "");
-                    intent.putExtra("place", dateNews_detail.place);
-                    mActivity.startActivity(intent);
-                }
-            });
-        }else{
-            //全部友约
-            String cache = CacheUtils.getCache(mUrl + "&type=" + mType, mActivity);
-            if(!TextUtils.isEmpty(cache)){
                 Gson gson = new Gson();
                 dateNews_info = gson.fromJson(cache, DateNews.class);
-                if (!TextUtils.isEmpty(dateNews_info.data.detail.toString())) {
+                if (!(dateNews_info.data.detail.size() == 0)) {
+                    dateNews_details.addAll(dateNews_info.data.detail);
                     processData(cache, true);
-                }else {
-                    getDataFromServer(mUrl,mType,true);//通过服务器获取数据
+                } else {
+                    getDataFromServer(mUrl, mType, false);//通过服务器获取数据
                 }
-            }else {
-                getDataFromServer(mUrl,mType,true);//通过服务器获取数据
+            } else {
+                getDataFromServer(mUrl, mType, false);//通过服务器获取数据
             }
-            pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(mActivity, DateDetailActivity.class);
-                    DateNews.DateNews_Detail dateNews_detail = mDetail.get(position - 1);
-                    intent.putExtra("activity_id", dateNews_detail.activity_id);
-                    intent.putExtra("picUrl", dateNews_detail.picture);
-                    intent.putExtra("title", dateNews_detail.title);
-                    intent.putExtra("content", dateNews_detail.content);
-                    intent.putExtra("readNum", dateNews_detail.readNum + "");
-                    intent.putExtra("agreeNum", dateNews_detail.agreeNum + "");
-                    intent.putExtra("commentNum", dateNews_detail.commentNum + "");
-                    intent.putExtra("endTime", dateNews_detail.endTime);
-                    intent.putExtra("startTime", dateNews_detail.startTime);
-                    intent.putExtra("memberNum", dateNews_detail.memberNum + "");
-                    intent.putExtra("type", dateNews_detail.type + "");
-                    intent.putExtra("place", dateNews_detail.place);
-                    mActivity.startActivity(intent);
+        } else {
+            String cache = CacheUtils.getCache(mUrl + "&page=" + PAGE, mActivity);
+            if (!TextUtils.isEmpty(cache)) {
+                Gson gson = new Gson();
+                dateNews_info = gson.fromJson(cache, DateNews.class);
+                if (!(dateNews_info.data.detail.size() == 0)) {
+                    processData(cache, true);
+                } else {
+                    getDataFromServer(mUrl, mType, true);//通过服务器获取数据
                 }
-            });
+            } else {
+                getDataFromServer(mUrl, mType, true);//通过服务器获取数据
+            }
         }
-
+        pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(mActivity, DateDetailActivity.class);
+                DateNews.DateNews_Detail dateNews_detail = dateNews_details.get(position);
+                intent.putExtra("activity_id", dateNews_detail.activity_id);
+                intent.putExtra("picUrl", dateNews_detail.picture);
+                intent.putExtra("title", dateNews_detail.title);
+                intent.putExtra("content", dateNews_detail.content);
+                intent.putExtra("readNum", dateNews_detail.readNum + "");
+                intent.putExtra("agreeNum", dateNews_detail.agreeNum + "");
+                intent.putExtra("commentNum", dateNews_detail.commentNum + "");
+                intent.putExtra("endTime", dateNews_detail.endTime);
+                intent.putExtra("startTime", dateNews_detail.startTime);
+                intent.putExtra("memberNum", dateNews_detail.memberNum + "");
+                intent.putExtra("type", dateNews_detail.type + "");
+                intent.putExtra("place", dateNews_detail.place);
+                mActivity.startActivity(intent);
+            }
+        });
     }
 
 
     private void processData(String cache, boolean isMore) {
-        if (isMore) {
-            Gson gson = new Gson();
-            dateNews_info = gson.fromJson(cache, DateNews.class);
-            DateAdapter dateAdapter = new DateAdapter();
-            dateAdapter.notifyDataSetChanged();
-            pullMydateRefresh.setAdapter(dateAdapter);
+        if (isFirst) {
+            if (isMore) {
+                Gson gson = new Gson();
+                dateNews_info = gson.fromJson(cache, DateNews.class);
+                dateNews_details.addAll(dateNews_info.data.detail);
+                dateAdapter = new DateAdapter();
+                pullMydateRefresh.setAdapter(dateAdapter);
+            } else {
+                //Toast.makeText(mActivity, "到底了", Toast.LENGTH_SHORT).show();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            isFirst = false;
         } else {
-            Toast.makeText(mActivity, "没有数据了", Toast.LENGTH_SHORT).show();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (isMore) {
+                Gson gson = new Gson();
+                dateNews_info = gson.fromJson(cache, DateNews.class);
+                dateNews_details.addAll(dateNews_info.data.detail);
+                dateAdapter.notifyDataSetChanged();
+            } else {
+                //Toast.makeText(mActivity, "到底了", Toast.LENGTH_SHORT).show();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
         pullMydateRefresh.onRefreshComplete();
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        if (getUserVisibleHint() && pullMydateRefresh.getVisibility() != View.VISIBLE) {
+            initData();
+        }
+        super.onActivityCreated(savedInstanceState);
     }
 
     /**
@@ -182,9 +198,9 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
      * @author Du
      * @Date 2018/3/12 19:49
      **/
-    private void getDataFromServer(final String url, final int type,boolean isAllDate) {
+    private void getDataFromServer(final String url, final int type, boolean isAllDate) {
         RequestParams params = new RequestParams(url);
-        if(!isAllDate){
+        if (!isAllDate) {
             params.addParameter("type", type);
             params.addParameter("page", PAGE);
             x.http().get(params, new Callback.CommonCallback<String>() {
@@ -193,9 +209,10 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                     Gson gson = new Gson();
                     DateNews dateNews = gson.fromJson(result, DateNews.class);
                     //判断下一页是否还有数据
-                    if (PAGESIZE <= dateNews.data.total) {
+                    if (UPPAGESIZE < dateNews.data.total) {
                         CacheUtils.setCache(url + "&type=" + type + "&page=" + PAGE, result, mActivity);
                         processData(result, true);
+                        UPPAGESIZE++;
                     } else {
                         //无新数据
                         processData(result, false);
@@ -217,7 +234,7 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
 
                 }
             });
-        }else{
+        } else {
             params.addParameter("page", PAGE);
             x.http().get(params, new Callback.CommonCallback<String>() {
                 @Override
@@ -225,9 +242,10 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                     Gson gson = new Gson();
                     DateNews dateNews = gson.fromJson(result, DateNews.class);
                     //判断下一页是否还有数据
-                    if (PAGESIZE <= dateNews.data.total) {
+                    if (UPPAGESIZE < dateNews.data.total) {
                         CacheUtils.setCache(url + "&page=" + PAGE, result, mActivity);
                         processData(result, true);
+                        UPPAGESIZE++;
                     } else {
                         //无新数据
                         processData(result, false);
@@ -250,8 +268,96 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                 }
             });
         }
-
     }
+
+
+    /**
+     * 下拉刷新，显示最新数据
+     *
+     * @params
+     * @author Du
+     * @Date 2018/3/21 10:06
+     **/
+    private void getDataFromServerPullDown(final String mUrl, final int mType, boolean isAlldata) {
+        RequestParams params = new RequestParams(mUrl);
+        if (!isAlldata) {
+            params.addParameter("type", mType);
+            x.http().get(params, new Callback.CommonCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    Gson gson = new Gson();
+                    DateNews dateNews = gson.fromJson(result, DateNews.class);
+                    //判断下一页是否还有数据
+                    if (DOWNPAGESIZE < dateNews.data.total) {
+                        if (dateNews.data.detail.get(0).activity_id.equals(dateNews_details.get(0).activity_id)) {
+                            Toast.makeText(mActivity, "没有新数据", Toast.LENGTH_SHORT).show();
+                        } else {
+                            CacheUtils.setCache(mUrl + "&type=" + mType, result, mActivity);
+                            processData(result, true);
+                            Toast.makeText(mActivity, "刷新完成", Toast.LENGTH_SHORT).show();
+                            DOWNPAGESIZE++;
+                        }
+                    } else {
+                        Toast.makeText(mActivity, "无数据", Toast.LENGTH_SHORT).show();
+                    }
+                    pullMydateRefresh.onRefreshComplete();
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    Toast.makeText(mActivity, "onError", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancelled(CancelledException cex) {
+
+                }
+
+                @Override
+                public void onFinished() {
+
+                }
+            });
+        } else {
+            x.http().get(params, new Callback.CommonCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    Gson gson = new Gson();
+                    DateNews dateNews = gson.fromJson(result, DateNews.class);
+                    //判断下一页是否还有数据
+                    if (DOWNPAGESIZE < dateNews.data.total) {
+                        if (dateNews.data.detail.get(0).activity_id.equals(dateNews_details.get(0).activity_id)) {
+                            Toast.makeText(mActivity, "没有新数据", Toast.LENGTH_SHORT).show();
+                        } else {
+                            CacheUtils.setCache(mUrl + "&type=" + mType, result, mActivity);
+                            processData(result, true);
+                            Toast.makeText(mActivity, "刷新完成", Toast.LENGTH_SHORT).show();
+                            DOWNPAGESIZE++;
+                        }
+                    } else {
+                        Toast.makeText(mActivity, "无数据", Toast.LENGTH_SHORT).show();
+                    }
+                    pullMydateRefresh.onRefreshComplete();
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    Toast.makeText(mActivity, "onError", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancelled(CancelledException cex) {
+
+                }
+
+                @Override
+                public void onFinished() {
+
+                }
+            });
+        }
+    }
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -260,7 +366,6 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
 
     @Override
     public void onPageSelected(int position) {
-
     }
 
     @Override
@@ -273,12 +378,12 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
 
         @Override
         public int getCount() {
-            return dateNews_info.data.detail.size();
+            return dateNews_details.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return dateNews_info.data.detail.get(position);
+            return dateNews_details.get(position);
         }
 
         @Override
@@ -305,14 +410,14 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            final DateNews.DateNews_Detail DateNews_Details = dateNews_info.data.detail.get(position);;
-            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + DateNews_Details.picture;
+            DateNews.DateNews_Detail dateNews_detail = dateNews_details.get(position);
+            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + dateNews_detail.picture;
             Picasso.with(mActivity).load(imageUrl).into(holder.ivPic);
-            holder.tvTitle.setText(DateNews_Details.title);
-            holder.tvStartTime.setText(DateNews_Details.startTime);
-            holder.tvPlace.setText(DateNews_Details.place);
-            holder.tvMember.setText(String.valueOf(DateNews_Details.memberNum));
-            holder.tvStartTime.setText(DateNews_Details.startTime);
+            holder.tvTitle.setText(dateNews_detail.title);
+            holder.tvStartTime.setText(dateNews_detail.startTime);
+            holder.tvPlace.setText(dateNews_detail.place);
+            holder.tvMember.setText(String.valueOf(dateNews_detail.memberNum));
+            holder.tvStartTime.setText(dateNews_detail.startTime);
             holder.ivTime.setImageResource(R.drawable.time);
             holder.ivLocate.setImageResource(R.drawable.locate);
             holder.ivJoinPeople.setImageResource(R.drawable.join_people);

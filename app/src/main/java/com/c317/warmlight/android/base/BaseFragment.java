@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 public abstract class BaseFragment extends Fragment {
 
     public Activity mActivity;
-    public int PAGESIZE = 1;
+//    protected boolean isVisible;
 
     //fragment创建
     @Override
@@ -39,6 +39,27 @@ public abstract class BaseFragment extends Fragment {
         //初始化数据
         initData();
     }
+
+//    /**
+//     * 在这里实现Fragment数据的缓加载.
+//     * @param isVisibleToUser
+//     */
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if(getUserVisibleHint()) {
+//            isVisible = true;
+//            onVisible();
+//        } else {
+//            isVisible = false;
+//            onInvisible();
+//        }
+//    }
+//    protected void onVisible(){
+//        lazyLoad();
+//    }
+//    protected abstract void lazyLoad();
+//    protected void onInvisible(){}
 
     //子类实现初始化布局
     public abstract View initView();

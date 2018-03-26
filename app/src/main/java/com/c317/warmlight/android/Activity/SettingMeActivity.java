@@ -56,7 +56,6 @@ public class SettingMeActivity extends Activity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.iv_back_me:
                 finish();

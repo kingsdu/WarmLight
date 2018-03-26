@@ -52,7 +52,7 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
     private String account;
     private WarmLightDataBaseHelper dataBaseHelper;
     private List<DateNews.DateNews_Detail> dateNews_details;
-
+    private boolean isPrepared;
 
     public MyDateTabDetails(Activity activity, String url, int type) {
         super(activity);
@@ -78,8 +78,6 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
             }
         });
         pullMydateRefresh.setMode(PullToRefreshBase.Mode.BOTH);//上拉下拉都支持
-
-
         return view;
     }
 

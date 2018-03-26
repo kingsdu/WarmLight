@@ -53,7 +53,7 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     public MyReadTabDetails(Activity activity, String url, int type) {
         super(activity);
         mType = type;
-        mUrl = url + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE;
+        mUrl = url;
     }
 
     @Override
