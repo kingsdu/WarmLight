@@ -93,6 +93,10 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
     LinearLayout llDataCollect;
     @Bind(R.id.ll_date_joinIn)
     LinearLayout llDateJoinIn;
+    @Bind(R.id.iv_back_me)
+    ImageView ivBackMe;
+    @Bind(R.id.tv_topbar_title)
+    TextView tvTopbarTitle;
     private Activity mActivity;
     private String picUrl;
     private String mActivityid;
@@ -119,12 +123,21 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         Application_my.getInstance().addActivity(this);
         setContentView(R.layout.data_details);
         ButterKnife.bind(this);
+        //顶部图标
+        ivBackMe.setVisibility(View.VISIBLE);
+        tvTopbarTitle.setText("友约详情");
         picUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + getIntent().getStringExtra("picUrl");
         ectractPutEra();
         url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + "getActivity" + AppNetConfig.PARAMETER + "activity_id=" + mActivityid;
         dataBaseHelper = WarmLightDataBaseHelper.getDatebaseHelper(this);
         iscollect = getIsCollect();
         getDataFromServer();
+        ivBackMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         llConsult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,13 +154,13 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         llDataCollect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!iscollect){
-                    dataBaseHelper.updateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME,mActivityid,WarmLightDataBaseHelper.DATE_ID,WarmLightDataBaseHelper.DATE_ISCOLLECT);
+                if (!iscollect) {
+                    dataBaseHelper.updateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME, mActivityid, WarmLightDataBaseHelper.DATE_ID, WarmLightDataBaseHelper.DATE_ISCOLLECT);
                     tvMark.setText("已收藏");
                     Toast.makeText(DateDetailActivity.this, "已收藏", Toast.LENGTH_SHORT).show();
                     iscollect = true;
-                }else{
-                    dataBaseHelper.unUpdateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME,mActivityid,WarmLightDataBaseHelper.DATE_ID,WarmLightDataBaseHelper.DATE_ISCOLLECT);
+                } else {
+                    dataBaseHelper.unUpdateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME, mActivityid, WarmLightDataBaseHelper.DATE_ID, WarmLightDataBaseHelper.DATE_ISCOLLECT);
                     tvMark.setText("收藏");
                     Toast.makeText(DateDetailActivity.this, "取消收藏", Toast.LENGTH_SHORT).show();
                     iscollect = false;
@@ -173,13 +186,14 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
 
     /**
      * 获取当前用户是否收藏的信息
+     *
      * @params
      * @author Du
      * @Date 2018/3/13 22:22
      **/
     private boolean getIsCollect() {
         String isCollect = dataBaseHelper.queryIsCollectDate(mActivityid);
-        if(TextUtils.isEmpty(isCollect)){
+        if (TextUtils.isEmpty(isCollect)) {
             DateNews.DateNews_Detail dateNews_detail = new DateNews.DateNews_Detail();
             dateNews_detail.activity_id = mActivityid;
             dateNews_detail.picture = mPicture;
@@ -195,10 +209,10 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
             dateNews_detail.readNum = Integer.valueOf(mReadNum);
             dateNews_detail.isCollect = 0;
             dataBaseHelper.InsertCollectInfoDate(dateNews_detail);
-        }else{
-            if(isCollect.equals("1")){
+        } else {
+            if (isCollect.equals("1")) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -258,11 +272,10 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         ivConsult.setImageResource(R.drawable.consult);
         tvConsult.setText("咨询");
         ivMark.setImageResource(R.drawable.mark);
-        if(!iscollect){
+        if (!iscollect) {
             tvMark.setText("收藏");
             tvMark.setTextColor(0xffBCBCBC);
-        }
-        else {
+        } else {
             tvMark.setText("已收藏");
             tvMark.setTextColor(0xff87CEEB);
         }

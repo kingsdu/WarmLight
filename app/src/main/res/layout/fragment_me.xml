@@ -44,29 +44,29 @@
                 android:textColor="@color/black"
                 android:textSize="19sp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="100dp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+            <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:paddingLeft="100dp"-->
+                <!--android:layout_marginBottom="10dp"-->
+                <!--android:gravity="center"-->
+                <!--android:orientation="horizontal">-->
 
-                <TextView
-                    android:id="@+id/tv_renown_me"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="19sp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_renown_me"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@color/black"-->
+                    <!--android:textSize="19sp" />-->
 
-                <Button
-                    android:id="@+id/btn_signIn"
-                    android:layout_marginLeft="20dp"
-                    android:layout_width="65dp"
-                    android:layout_height="35dp"
-                    android:textColor="@color/white"
-                    android:background="@drawable/my_button_bg" />
-            </LinearLayout>
+                <!--<Button-->
+                    <!--android:id="@+id/btn_signIn"-->
+                    <!--android:layout_marginLeft="20dp"-->
+                    <!--android:layout_width="65dp"-->
+                    <!--android:layout_height="35dp"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:background="@drawable/my_button_bg" />-->
+            <!--</LinearLayout>-->
 
 
         </LinearLayout>

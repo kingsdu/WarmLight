@@ -55,7 +55,7 @@
             android:id="@+id/iv_locate_date"
             android:layout_width="28dp"
             android:layout_height="29dp"
-            android:src="@drawable/datamap"
+            android:src="@drawable/map"
             android:visibility="gone"/>
 
         <ImageView
@@ -69,7 +69,7 @@
             android:id="@+id/iv_me_setting"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:src="@drawable/setting"
+            android:src="@drawable/set"
             android:visibility="gone"/>
 
         <ImageView

@@ -19,7 +19,6 @@ import com.c317.warmlight.android.base.BaseMenuDetailPager;
 import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.UserManage;
-import com.c317.warmlight.android.fragment.Date_Fragment;
 import com.c317.warmlight.android.utils.CacheUtils;
 import com.c317.warmlight.android.utils.WarmLightDataBaseHelper;
 import com.google.gson.Gson;
@@ -41,23 +40,21 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2018/3/12.
  */
 
-public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.OnPageChangeListener {
+public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnPageChangeListener {
 
     @Bind(R.id.pull_mydate_refresh)
     PullToRefreshListView pullMydateRefresh;
     private String mUrl;//请求链接
     private int mType;
-    private ArrayList<DateNews.DateNews_Detail> mDatadetail = new ArrayList<>();
-    private int PAGESIZE = 1;
-    private String account;
-    private WarmLightDataBaseHelper dataBaseHelper;
-    private List<DateNews.DateNews_Detail> dateNews_details;
+    boolean isAlldata = false;
+    private ArrayList<DateNews.DateNews_Detail> mDetail = new ArrayList<>();
+    private DateNews dateNews_info;
 
 
-    public MyDateTabDetails(Activity activity, String url, int type) {
+    public DateTabDetails(Activity activity, String url, int type) {
         super(activity);
         mType = type;
-        mUrl = url + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE;
+        mUrl = url + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGE;
     }
 
 
@@ -65,89 +62,108 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
     public View initView() {
         View view = View.inflate(mActivity, R.layout.pager_mydate_detail, null);
         ButterKnife.bind(this, view);
-        account = UserManage.getInstance().getUserInfo(mActivity).account;
+        //判断是否全部友约
+        if(mType==0){
+            isAlldata = true;
+        }
         pullMydateRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
-                getDataFromServer(account, mUrl, MyDateTabDetails.this.mType);
+                if(mType==0){
+                    isAlldata = true;
+                }
+                getDataFromServer(mUrl, DateTabDetails.this.mType,isAlldata);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
-                getDataFromServer(account, mUrl, MyDateTabDetails.this.mType);
+                if(mType==0){
+                    isAlldata = true;
+                }
+                PAGE++;//页数增加
+                getDataFromServer(mUrl, DateTabDetails.this.mType,isAlldata);
             }
         });
         pullMydateRefresh.setMode(PullToRefreshBase.Mode.BOTH);//上拉下拉都支持
-
-
         return view;
     }
 
 
     //初始化数据
     public void initData() {
-        if (mType != 4) {
-            String cache = CacheUtils.getCache(mUrl + "&type=" + mType, mActivity);
+        if(mType!=0){
+            String cache = CacheUtils.getCache(mUrl + "&type=" + mType + "&page=" + PAGE, mActivity);
             if (!TextUtils.isEmpty(cache)) {
                 processData(cache, true);
             } else {
-                getDataFromServer(account, mUrl, mType);//通过服务器获取数据
+                getDataFromServer(mUrl, mType,false);//通过服务器获取数据
             }
             pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(mActivity, DateDetailActivity.class);
-                    DateNews.DateNews_Detail dateNews_detail = mDatadetail.get(position-1);
+                    DateNews.DateNews_Detail dateNews_detail = mDetail.get(position - 1);
                     intent.putExtra("activity_id", dateNews_detail.activity_id);
                     intent.putExtra("picUrl", dateNews_detail.picture);
                     intent.putExtra("title", dateNews_detail.title);
                     intent.putExtra("content", dateNews_detail.content);
-                    intent.putExtra("readNum", dateNews_detail.readNum+"");
-                    intent.putExtra("agreeNum", dateNews_detail.agreeNum+"");
-                    intent.putExtra("commentNum", dateNews_detail.commentNum+"");
+                    intent.putExtra("readNum", dateNews_detail.readNum + "");
+                    intent.putExtra("agreeNum", dateNews_detail.agreeNum + "");
+                    intent.putExtra("commentNum", dateNews_detail.commentNum + "");
                     intent.putExtra("endTime", dateNews_detail.endTime);
                     intent.putExtra("startTime", dateNews_detail.startTime);
-                    intent.putExtra("memberNum", dateNews_detail.memberNum+"");
-                    intent.putExtra("type", dateNews_detail.type+"");
+                    intent.putExtra("memberNum", dateNews_detail.memberNum + "");
+                    intent.putExtra("type", dateNews_detail.type + "");
                     intent.putExtra("place", dateNews_detail.place);
                     mActivity.startActivity(intent);
                 }
             });
-        } else {
-            String isCollect = 1 + "";
-            dataBaseHelper = WarmLightDataBaseHelper.getDatebaseHelper(mActivity);
-            dateNews_details = dataBaseHelper.queryMultiIsCollectDate(isCollect);
-            pullMydateRefresh.setAdapter(new MyCollectAdapter());
+        }else{
+            //全部友约
+            String cache = CacheUtils.getCache(mUrl + "&type=" + mType, mActivity);
+            if(!TextUtils.isEmpty(cache)){
+                Gson gson = new Gson();
+                dateNews_info = gson.fromJson(cache, DateNews.class);
+                if (!TextUtils.isEmpty(dateNews_info.data.detail.toString())) {
+                    processData(cache, true);
+                }else {
+                    getDataFromServer(mUrl,mType,true);//通过服务器获取数据
+                }
+            }else {
+                getDataFromServer(mUrl,mType,true);//通过服务器获取数据
+            }
             pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(mActivity, DateDetailActivity.class);
-                    DateNews.DateNews_Detail dateNews_detail = dateNews_details.get(position-1);
+                    DateNews.DateNews_Detail dateNews_detail = mDetail.get(position - 1);
                     intent.putExtra("activity_id", dateNews_detail.activity_id);
                     intent.putExtra("picUrl", dateNews_detail.picture);
                     intent.putExtra("title", dateNews_detail.title);
                     intent.putExtra("content", dateNews_detail.content);
-                    intent.putExtra("readNum", dateNews_detail.readNum+"");
-                    intent.putExtra("agreeNum", dateNews_detail.agreeNum+"");
-                    intent.putExtra("commentNum", dateNews_detail.commentNum+"");
+                    intent.putExtra("readNum", dateNews_detail.readNum + "");
+                    intent.putExtra("agreeNum", dateNews_detail.agreeNum + "");
+                    intent.putExtra("commentNum", dateNews_detail.commentNum + "");
                     intent.putExtra("endTime", dateNews_detail.endTime);
                     intent.putExtra("startTime", dateNews_detail.startTime);
-                    intent.putExtra("memberNum", dateNews_detail.memberNum+"");
-                    intent.putExtra("type", dateNews_detail.type+"");
+                    intent.putExtra("memberNum", dateNews_detail.memberNum + "");
+                    intent.putExtra("type", dateNews_detail.type + "");
                     intent.putExtra("place", dateNews_detail.place);
                     mActivity.startActivity(intent);
                 }
             });
         }
+
     }
 
+
     private void processData(String cache, boolean isMore) {
-        Gson gson = new Gson();
-        DateNews dateNews = gson.fromJson(cache, DateNews.class);
         if (isMore) {
-            mDatadetail = dateNews.data.detail;
-            pullMydateRefresh.setAdapter(new MydateAdapter());
-            PAGESIZE++;//页数增加
+            Gson gson = new Gson();
+            dateNews_info = gson.fromJson(cache, DateNews.class);
+            DateAdapter dateAdapter = new DateAdapter();
+            dateAdapter.notifyDataSetChanged();
+            pullMydateRefresh.setAdapter(dateAdapter);
         } else {
             Toast.makeText(mActivity, "没有数据了", Toast.LENGTH_SHORT).show();
             try {
@@ -160,48 +176,81 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
     }
 
     /**
-     * 获取“我的友约”数据
+     * 获取“除全部友约以外各类型数据”数据
      *
      * @params
      * @author Du
      * @Date 2018/3/12 19:49
      **/
-    private void getDataFromServer(String account, final String url, final int type) {
+    private void getDataFromServer(final String url, final int type,boolean isAllDate) {
         RequestParams params = new RequestParams(url);
-        params.addParameter("account", account);
-        params.addParameter("type", type);
-        x.http().get(params, new Callback.CommonCallback<String>() {
-
-            @Override
-            public void onSuccess(String result) {
-                Gson gson = new Gson();
-                DateNews dateNews = gson.fromJson(result, DateNews.class);
-                //判断下一页是否还有数据
-                if (PAGESIZE <= dateNews.data.total) {
-                    PAGESIZE++;//页数增加
-                    CacheUtils.setCache(url + "&type=" + type, result, mActivity);
-                    processData(result, true);
-                } else {
-                    //无新数据
-                    processData(result, false);
+        if(!isAllDate){
+            params.addParameter("type", type);
+            params.addParameter("page", PAGE);
+            x.http().get(params, new Callback.CommonCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    Gson gson = new Gson();
+                    DateNews dateNews = gson.fromJson(result, DateNews.class);
+                    //判断下一页是否还有数据
+                    if (PAGESIZE <= dateNews.data.total) {
+                        CacheUtils.setCache(url + "&type=" + type + "&page=" + PAGE, result, mActivity);
+                        processData(result, true);
+                    } else {
+                        //无新数据
+                        processData(result, false);
+                    }
                 }
-            }
 
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(CancelledException cex) {
+                @Override
+                public void onCancelled(CancelledException cex) {
 
-            }
+                }
 
-            @Override
-            public void onFinished() {
+                @Override
+                public void onFinished() {
 
-            }
-        });
+                }
+            });
+        }else{
+            params.addParameter("page", PAGE);
+            x.http().get(params, new Callback.CommonCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    Gson gson = new Gson();
+                    DateNews dateNews = gson.fromJson(result, DateNews.class);
+                    //判断下一页是否还有数据
+                    if (PAGESIZE <= dateNews.data.total) {
+                        CacheUtils.setCache(url + "&page=" + PAGE, result, mActivity);
+                        processData(result, true);
+                    } else {
+                        //无新数据
+                        processData(result, false);
+                    }
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+
+                }
+
+                @Override
+                public void onCancelled(CancelledException cex) {
+
+                }
+
+                @Override
+                public void onFinished() {
+
+                }
+            });
+        }
+
     }
 
     @Override
@@ -220,16 +269,16 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
     }
 
 
-    private class MydateAdapter extends BaseAdapter {
+    private class DateAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return mDatadetail.size();
+            return dateNews_info.data.detail.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return mDatadetail.get(position);
+            return dateNews_info.data.detail.get(position);
         }
 
         @Override
@@ -256,59 +305,7 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            final DateNews.DateNews_Detail DateNews_Details = (DateNews.DateNews_Detail) getItem(position);
-            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + DateNews_Details.picture;
-            Picasso.with(mActivity).load(imageUrl).into(holder.ivPic);
-            holder.tvTitle.setText(DateNews_Details.title);
-            holder.tvStartTime.setText(DateNews_Details.startTime);
-            holder.tvPlace.setText(DateNews_Details.place);
-            holder.tvMember.setText(String.valueOf(DateNews_Details.memberNum));
-            holder.tvStartTime.setText(DateNews_Details.startTime);
-            holder.ivTime.setImageResource(R.drawable.time);
-            holder.ivLocate.setImageResource(R.drawable.locate);
-            holder.ivJoinPeople.setImageResource(R.drawable.join_people);
-            return convertView;
-        }
-    }
-
-
-    private class MyCollectAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return dateNews_details.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return dateNews_details.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            //重用ListView
-            ViewHolder holder;
-            if (convertView == null) {
-                convertView = View.inflate(mActivity, R.layout.list_item_dates, null);
-                holder = new ViewHolder();
-                holder.ivPic = (ImageView) convertView.findViewById(R.id.iv_date_itemPic);
-                holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_date_itemTitle);
-                holder.tvStartTime = (TextView) convertView.findViewById(R.id.tv_date_itemStartTime);
-                holder.tvPlace = (TextView) convertView.findViewById(R.id.tv_date_itemPlace);
-                holder.tvMember = (TextView) convertView.findViewById(R.id.tv_date_itemMembernum);
-                holder.ivTime = (ImageView) convertView.findViewById(R.id.iv_date_clock);
-                holder.ivLocate = (ImageView) convertView.findViewById(R.id.iv_date_locate);
-                holder.ivJoinPeople = (ImageView) convertView.findViewById(R.id.iv_date_joinpeople);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-            final DateNews.DateNews_Detail DateNews_Details = (DateNews.DateNews_Detail) getItem(position);
+            final DateNews.DateNews_Detail DateNews_Details = dateNews_info.data.detail.get(position);;
             String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + DateNews_Details.picture;
             Picasso.with(mActivity).load(imageUrl).into(holder.ivPic);
             holder.tvTitle.setText(DateNews_Details.title);

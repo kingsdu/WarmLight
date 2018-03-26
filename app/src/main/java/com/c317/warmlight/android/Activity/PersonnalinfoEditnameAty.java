@@ -74,7 +74,7 @@ public class PersonnalinfoEditnameAty extends Activity implements View.OnClickLi
     }
 
     /**
-     * 存储用户名
+     * 存储用户个性签名
      *
      * @params
      * @author Du
@@ -93,9 +93,13 @@ public class PersonnalinfoEditnameAty extends Activity implements View.OnClickLi
 
     private void getUserName() {
         String param = (String) SharedPrefUtility.getParam(this, AppConstants.USERNAME, AppConstants.USERNAME);
+        if (!TextUtils.isEmpty(param) && param.equals(AppConstants.USERNAME)) {
+            getNameFromServer();//快速加载
+        }
         if (!TextUtils.isEmpty(param)) {
             etEditnamePersonnalinfo.setText(param);
-        } else {
+        }
+        else {
             String cache = CacheUtils.getCache(url, PersonnalinfoEditnameAty.this);
             if (!TextUtils.isEmpty(cache)) {
                 processData(cache);
@@ -131,6 +135,7 @@ public class PersonnalinfoEditnameAty extends Activity implements View.OnClickLi
                 UserInfo.UserInfo_content userInfo_content = userinfo.data;
                 CacheUtils.setCache(url, result, PersonnalinfoEditnameAty.this);
                 setUserInfoView(userInfo_content);
+
             }
 
             @Override

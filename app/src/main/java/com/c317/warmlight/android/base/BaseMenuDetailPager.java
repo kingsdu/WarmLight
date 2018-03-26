@@ -14,7 +14,8 @@ public abstract class BaseMenuDetailPager extends Fragment {
 
     public Activity mActivity;
     public View mRootView;//菜单详情页面根布局
-    public int PAGESIZE = 1;
+    public int PAGESIZE = 0;
+    public int PAGE = 1;
 
     public BaseMenuDetailPager(Activity activity){
         mActivity = activity;
