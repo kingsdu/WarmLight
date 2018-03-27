@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#efefef">
@@ -73,14 +74,12 @@
                 android:layout_weight="2"
                 android:orientation="vertical">
 
-
-                <Button
-                    android:id="@+id/btn_date_uploadpho"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:paddingTop="10dp"
-                    android:layout_marginBottom="30dp"
-                    android:background="@drawable/addpic" />
+                <com.yzs.imageshowpickerview.ImageShowPickerView
+                    android:id="@+id/it_picker_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    app:is_show_del="true" />
 
             </LinearLayout>
 

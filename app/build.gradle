@@ -36,6 +36,9 @@ dependencies {
     compile 'com.github.userswlwork:pull-to-refresh:1.0.0'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.zhy:okhttputils:2.6.2'
+    compile 'com.github.yaozs:ImageShowPicker:1.0.0'
+    compile 'com.zhihu.android:matisse:0.4.3'
+    compile 'com.yanzhenjie:permission:1.0.7'
     testCompile 'junit:junit:4.12'
     compile project(':ViewPagelibrary')
     compile files('libs/glide-3.6.0.jar')

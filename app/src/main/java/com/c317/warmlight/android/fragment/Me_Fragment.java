@@ -80,8 +80,6 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
         //我的友约监听
         rlMydate.setOnClickListener(this);
         rlMyread.setOnClickListener(this);
-//        isPrepared = true;
-//        lazyLoad();
         return view;
     }
 

@@ -28,6 +28,7 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.c317.warmlight.android.R;
+import com.c317.warmlight.android.common.Application_my;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -90,6 +91,7 @@ public class DateSelplaceActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Application_my.getInstance().addActivity(this);
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.dateselplace_aty);
         ButterKnife.bind(this);
