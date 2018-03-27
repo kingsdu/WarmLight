@@ -50,26 +50,41 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
     private String mUrl;//请求链接
     private int mType;
     boolean isAlldata = false;
-    boolean isFirst = true;//篇listview刷新用
+    boolean isFirst = true;//listview刷新用
     private List<DateNews.DateNews_Detail> dateNews_details = new ArrayList<>();//ListView存储数据
     private DateNews dateNews_info;//服务端解析数据
     private DateAdapter dateAdapter;
+    private boolean isHaveNextPage = true;//是否还有下一页
+    private int startPage = 1;//初始页
 
 
     public DateTabDetails(Activity activity, String url, int type) {
         super(activity);
         mType = type;
-        mUrl = url + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGE;
+        mUrl = url;
     }
 
     @Override
     public View initView() {
         View view = View.inflate(mActivity, R.layout.pager_mydate_detail, null);
         ButterKnife.bind(this, view);
+        pullMydateRefresh.setMode(PullToRefreshBase.Mode.BOTH);//上拉下拉都支持
+        return view;
+    }
+
+
+    //初始化数据
+    public void initData() {
         //判断是否全部友约
         if (mType == -1) {
             isAlldata = true;
         }
+        if (mType != -1) {
+            getDataFromServer(mUrl, mType, false);//通过服务器获取数据
+        } else {
+            getDataFromServer(mUrl, mType, true);//通过服务器获取数据
+        }
+        //设置pullMydateRefresh监听
         pullMydateRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
@@ -85,50 +100,18 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                 if (mType == -1) {
                     isAlldata = true;
                 }
-                PAGE++;//页数增加
+                if (isHaveNextPage) {
+                    PAGE++;//数据页数增加
+                    UPPAGESIZE++;//总页数
+                }
                 getDataFromServer(mUrl, mType, isAlldata);
             }
         });
-        pullMydateRefresh.setMode(PullToRefreshBase.Mode.BOTH);//上拉下拉都支持
-        return view;
-    }
-
-
-    //初始化数据
-    public void initData() {
-        if (mType != -1) {
-            String cache = CacheUtils.getCache(mUrl + "&type=" + mType + "&page=" + PAGE, mActivity);
-            if (!TextUtils.isEmpty(cache)) {
-                Gson gson = new Gson();
-                dateNews_info = gson.fromJson(cache, DateNews.class);
-                if (!(dateNews_info.data.detail.size() == 0)) {
-                    dateNews_details.addAll(dateNews_info.data.detail);
-                    processData(cache, true);
-                } else {
-                    getDataFromServer(mUrl, mType, false);//通过服务器获取数据
-                }
-            } else {
-                getDataFromServer(mUrl, mType, false);//通过服务器获取数据
-            }
-        } else {
-            String cache = CacheUtils.getCache(mUrl + "&page=" + PAGE, mActivity);
-            if (!TextUtils.isEmpty(cache)) {
-                Gson gson = new Gson();
-                dateNews_info = gson.fromJson(cache, DateNews.class);
-                if (!(dateNews_info.data.detail.size() == 0)) {
-                    processData(cache, true);
-                } else {
-                    getDataFromServer(mUrl, mType, true);//通过服务器获取数据
-                }
-            } else {
-                getDataFromServer(mUrl, mType, true);//通过服务器获取数据
-            }
-        }
         pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(mActivity, DateDetailActivity.class);
-                DateNews.DateNews_Detail dateNews_detail = dateNews_details.get(position);
+                DateNews.DateNews_Detail dateNews_detail = dateNews_details.get(position - 1);
                 intent.putExtra("activity_id", dateNews_detail.activity_id);
                 intent.putExtra("picUrl", dateNews_detail.picture);
                 intent.putExtra("title", dateNews_detail.title);
@@ -148,6 +131,7 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
 
 
     private void processData(String cache, boolean isMore) {
+        //在加入到dateNews_details必须先判断是否已有
         if (isFirst) {
             if (isMore) {
                 Gson gson = new Gson();
@@ -156,30 +140,61 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                 dateAdapter = new DateAdapter();
                 pullMydateRefresh.setAdapter(dateAdapter);
             } else {
-                //Toast.makeText(mActivity, "到底了", Toast.LENGTH_SHORT).show();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                //第一次，无数据
             }
             isFirst = false;
         } else {
             if (isMore) {
                 Gson gson = new Gson();
                 dateNews_info = gson.fromJson(cache, DateNews.class);
-                dateNews_details.addAll(dateNews_info.data.detail);
-                dateAdapter.notifyDataSetChanged();
-            } else {
-                //Toast.makeText(mActivity, "到底了", Toast.LENGTH_SHORT).show();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (!haveRepeat(dateNews_info)) {
+                    dateNews_details.addAll(dateNews_info.data.detail);
+                    dateAdapter.notifyDataSetChanged();
                 }
+            } else {
+                //非第一次，无数据
             }
         }
         pullMydateRefresh.onRefreshComplete();
+    }
+
+
+    /**
+     * 下拉刷新数据，更新数据
+     *
+     * @params
+     * @author Du
+     * @Date 2018/3/27 14:46
+     **/
+    private void processDataPullDown(String result) {
+        //重新开始加载
+        dateNews_details.clear();
+        PAGE = 1;
+        UPPAGESIZE = 0;
+        //加载新数据
+        Gson gson = new Gson();
+        dateNews_info = gson.fromJson(result, DateNews.class);
+        dateNews_details.addAll(dateNews_info.data.detail);
+        dateAdapter = new DateAdapter();
+        pullMydateRefresh.setAdapter(dateAdapter);
+    }
+
+
+    /**
+     * 是否有重复项
+     *
+     * @params true有
+     * @author Du
+     * @Date 2018/3/27 14:21
+     **/
+    private boolean haveRepeat(DateNews dateNews_info) {
+        ArrayList<DateNews.DateNews_Detail> detail = dateNews_info.data.detail;
+        for (int i = 0; i < detail.size(); i++) {
+            if (dateNews_details.get(i).activity_id.equals(detail.get(i).activity_id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -210,13 +225,13 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                     DateNews dateNews = gson.fromJson(result, DateNews.class);
                     //判断下一页是否还有数据
                     if (UPPAGESIZE < dateNews.data.total) {
-                        CacheUtils.setCache(url + "&type=" + type + "&page=" + PAGE, result, mActivity);
                         processData(result, true);
-                        UPPAGESIZE++;
+                        isHaveNextPage = true;
                     } else {
                         //无新数据
-                        processData(result, false);
+                        isHaveNextPage = false;
                     }
+                    pullMydateRefresh.onRefreshComplete();
                 }
 
                 @Override
@@ -243,13 +258,13 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                     DateNews dateNews = gson.fromJson(result, DateNews.class);
                     //判断下一页是否还有数据
                     if (UPPAGESIZE < dateNews.data.total) {
-                        CacheUtils.setCache(url + "&page=" + PAGE, result, mActivity);
                         processData(result, true);
-                        UPPAGESIZE++;
+                        isHaveNextPage = true;
                     } else {
                         //无新数据
-                        processData(result, false);
+                        isHaveNextPage = false;
                     }
+                    pullMydateRefresh.onRefreshComplete();
                 }
 
                 @Override
@@ -282,6 +297,7 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
         RequestParams params = new RequestParams(mUrl);
         if (!isAlldata) {
             params.addParameter("type", mType);
+            params.addParameter("page", startPage);
             x.http().get(params, new Callback.CommonCallback<String>() {
                 @Override
                 public void onSuccess(String result) {
@@ -289,16 +305,9 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                     DateNews dateNews = gson.fromJson(result, DateNews.class);
                     //判断下一页是否还有数据
                     if (DOWNPAGESIZE < dateNews.data.total) {
-                        if (dateNews.data.detail.get(0).activity_id.equals(dateNews_details.get(0).activity_id)) {
-                            Toast.makeText(mActivity, "没有新数据", Toast.LENGTH_SHORT).show();
-                        } else {
-                            CacheUtils.setCache(mUrl + "&type=" + mType, result, mActivity);
-                            processData(result, true);
-                            Toast.makeText(mActivity, "刷新完成", Toast.LENGTH_SHORT).show();
-                            DOWNPAGESIZE++;
-                        }
+                        processDataPullDown(result);
                     } else {
-                        Toast.makeText(mActivity, "无数据", Toast.LENGTH_SHORT).show();
+                        //无数据
                     }
                     pullMydateRefresh.onRefreshComplete();
                 }
@@ -319,6 +328,7 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                 }
             });
         } else {
+            params.addParameter("page", startPage);
             x.http().get(params, new Callback.CommonCallback<String>() {
                 @Override
                 public void onSuccess(String result) {
@@ -326,16 +336,9 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                     DateNews dateNews = gson.fromJson(result, DateNews.class);
                     //判断下一页是否还有数据
                     if (DOWNPAGESIZE < dateNews.data.total) {
-                        if (dateNews.data.detail.get(0).activity_id.equals(dateNews_details.get(0).activity_id)) {
-                            Toast.makeText(mActivity, "没有新数据", Toast.LENGTH_SHORT).show();
-                        } else {
-                            CacheUtils.setCache(mUrl + "&type=" + mType, result, mActivity);
-                            processData(result, true);
-                            Toast.makeText(mActivity, "刷新完成", Toast.LENGTH_SHORT).show();
-                            DOWNPAGESIZE++;
-                        }
+                        processDataPullDown(result);
                     } else {
-                        Toast.makeText(mActivity, "无数据", Toast.LENGTH_SHORT).show();
+                        //无数据
                     }
                     pullMydateRefresh.onRefreshComplete();
                 }

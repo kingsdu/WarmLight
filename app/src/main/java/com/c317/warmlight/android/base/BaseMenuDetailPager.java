@@ -14,8 +14,8 @@ public abstract class BaseMenuDetailPager extends Fragment {
 
     public Activity mActivity;
     public View mRootView;//菜单详情页面根布局
-    public int DOWNPAGESIZE = 0;
-    public int UPPAGESIZE = 0;
+    public int DOWNPAGESIZE = 0;//下拉刷新
+    public int UPPAGESIZE = 0;//上拉加载更多
     public int PAGE = 1;
 
 
