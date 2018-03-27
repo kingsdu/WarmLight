@@ -275,7 +275,7 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
                 itPickerView.addData(new ImageBean(getRealFilePath(AddDateActivity.this, uriList.get(0))));
             } else {
                 itPickerView.addData(new ImageBean(getRealFilePath(AddDateActivity.this, uriList.get(0))));
-                CommonUtils.showToastShort(AddDateActivity.this, "抱歉暂时只能上传一张图片，默认第一张");
+                CommonUtils.showToastShort(AddDateActivity.this, "抱歉，暂时只能上传一张图片，默认第一张");
             }
         }
         upLoadOneImageUrl(uriList);//一张
