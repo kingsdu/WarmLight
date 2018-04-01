@@ -150,7 +150,6 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
                 startActivity(intent);
             }
         });
-
         llDataCollect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

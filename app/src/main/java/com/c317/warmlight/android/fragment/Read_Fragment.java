@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.c317.warmlight.android.Activity.DateDetailActivity;
 import com.c317.warmlight.android.Activity.NewsDetailActivity;
 import com.c317.warmlight.android.Activity.TopDetailsActivity;
 import com.c317.warmlight.android.R;
@@ -549,7 +550,33 @@ public class Read_Fragment extends BaseFragment {
 
         @Override
         public void onItemClicked(MotionEvent event, View v, Object dataObject) {
-            CommonUtils.showToastShort(mContext, "card");
+            DateNews.DateNews_Detail dateNews_detail = (DateNews.DateNews_Detail) dataObject;
+            String activity_id = dateNews_detail.activity_id;
+            String picture = dateNews_detail.picture;
+            String title = dateNews_detail.title;
+            String content = dateNews_detail.content;
+            int readNum = dateNews_detail.readNum;
+            int agreeNum = dateNews_detail.agreeNum;
+            int commentNum = dateNews_detail.commentNum;
+            String endTime = dateNews_detail.endTime;
+            String startTime = dateNews_detail.startTime;
+            int memberNum = dateNews_detail.memberNum;
+            int type = dateNews_detail.type;
+            String place = dateNews_detail.place;
+            Intent intent = new Intent(mActivity, DateDetailActivity.class);
+            intent.putExtra("activity_id",activity_id);
+            intent.putExtra("picture", picture);
+            intent.putExtra("title", title);
+            intent.putExtra("content", content);
+            intent.putExtra("readNum", readNum);
+            intent.putExtra("agreeNum", agreeNum);
+            intent.putExtra("commentNum", commentNum);
+            intent.putExtra("endTime", endTime);
+            intent.putExtra("startTime", startTime);
+            intent.putExtra("memberNum", memberNum);
+            intent.putExtra("type", type);
+            intent.putExtra("place", place);
+            mActivity.startActivity(intent);
         }
 
         @Override
@@ -653,8 +680,6 @@ public class Read_Fragment extends BaseFragment {
                 readDivideName = (TextView) itemView.findViewById(R.id.tv_read_dividename);
             }
         }
-
-
     }
 
 
@@ -687,6 +712,7 @@ public class Read_Fragment extends BaseFragment {
             container.addView(imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 String url = "";
+
                 @Override
                 public void onClick(View v) {
                     String search_id = topnewsInfo.search_id;
@@ -802,7 +828,7 @@ public class Read_Fragment extends BaseFragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             CardViewHolder holder;
             DateNews.DateNews_Detail dateNews_detail = getItem(position);
             if (convertView == null) {
@@ -846,7 +872,6 @@ public class Read_Fragment extends BaseFragment {
             holder.workView.setHint(no);
             holder.workView.setText(dateNews_detail.commentNum + "");
             holder.workView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.comment, 0, 0, 0);
-
             return convertView;
         }
     }

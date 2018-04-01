@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
-    <include layout="@layout/common_top" />
-
-    <FrameLayout
+    <com.c317.warmlight.android.views.NewsWebView
+        android:id="@+id/wv_news_details"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_height="match_parent" />
 
-        <WebView
-            android:id="@+id/wv_news_details"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <LinearLayout
+        android:id="@+id/ll_news_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:divider="@drawable/divide_shape"
+        android:showDividers="beginning"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
 
-    </FrameLayout>
+        <include layout="@layout/news_details_layout" />
 
-</LinearLayout>
+    </LinearLayout>
+
+
+</FrameLayout>

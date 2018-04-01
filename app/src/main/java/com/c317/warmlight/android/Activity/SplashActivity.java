@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import com.c317.warmlight.android.MainActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.common.Application_my;
-import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.utils.SharedPrefUtility;
 
 import butterknife.Bind;

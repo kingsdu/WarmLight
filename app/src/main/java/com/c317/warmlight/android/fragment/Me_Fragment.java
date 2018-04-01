@@ -7,14 +7,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.c317.warmlight.android.Activity.PersonnalInfoActivity;
@@ -22,12 +19,10 @@ import com.c317.warmlight.android.Activity.SettingMeActivity;
 import com.c317.warmlight.android.Activity.SettingMyDateActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.base.BaseFragment;
-import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.utils.UIUtils;
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -57,6 +52,8 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
     RelativeLayout rlMyAnswer;
     @Bind(R.id.rl_mymessage)
     RelativeLayout rlMymessage;
+    @Bind(R.id.iv_add_date)
+    ImageView ivAddDate;
 
     private static final int SHOW_PICTURE = 2;//显示图片
     private static final int RESULT_CODE = 3;//返回码
@@ -70,6 +67,7 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
         Application_my.getInstance().addActivity(mActivity);
         //顶部图标
         ivMeSetting.setVisibility(View.VISIBLE);
+        ivAddDate.setVisibility(View.INVISIBLE);
         tvTopbarTitle.setText("我的");
         //个人资料初始化
         tvNicknameMe.setText("LBJ");
@@ -114,7 +112,7 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
     }
 
     protected void setImageToView(Intent data) {
-        if(data!=null){
+        if (data != null) {
             Uri selectedImage = data.getData();
             String[] filePathColumns = {MediaStore.Images.Media.DATA};
             Cursor c = mActivity.getContentResolver().query(selectedImage,
@@ -158,12 +156,12 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.rl_mydate:
                 intent = new Intent(mActivity, SettingMyDateActivity.class);
-                intent.putExtra("TAG","TAG_DATE");
+                intent.putExtra("TAG", "TAG_DATE");
                 startActivity(intent);
                 break;
             case R.id.rl_myread:
                 intent = new Intent(mActivity, SettingMyDateActivity.class);
-                intent.putExtra("TAG","TAG_READ");
+                intent.putExtra("TAG", "TAG_READ");
                 startActivity(intent);
                 break;
         }

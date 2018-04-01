@@ -1,0 +1,63 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/lv_read_comment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+
+    <!-- 输入框、留言按钮 -->
+    <LinearLayout
+        android:id="@+id/ll_read_comment"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#FFF"
+        android:orientation="horizontal">
+        <!-- 输入框 -->
+        <EditText
+            android:id="@+id/et_read_input"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:inputType="textMultiLine"
+            android:maxLength="100"
+            android:maxLines="6"
+            android:hint="添加评论..."
+            android:minHeight="40dp"/>
+        <!-- 留言按钮 -->
+        <Button
+            android:id="@+id/btn_read_submit"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/date_saveset_bg"
+            android:text="评论"
+            android:textColor="#000000"/>
+
+        <Button
+            android:id="@+id/btn_read_replay"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/date_saveset_bg"
+            android:visibility="gone"
+            android:text="评论"
+            android:textColor="#000000"/>
+    </LinearLayout>
+
+</LinearLayout>
