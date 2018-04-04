@@ -10,8 +10,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.c317.warmlight.android.R;
+import com.c317.warmlight.android.bean.Result;
+import com.c317.warmlight.android.bean.UserInfo;
+import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.utils.MD5utils;
+import com.google.gson.Gson;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -78,19 +82,24 @@ public class SignInActivity extends Activity {
 
 
     private void signIn(String account, String password) {
-        RequestParams params = new RequestParams("http://14g97976j3.51mypc.cn:10759/my/createUser");
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.MY + AppNetConfig.SEPARATOR + AppNetConfig.CREATEUSER;
+        RequestParams params = new RequestParams(url);
         params.addParameter("account", account);
         params.addParameter("password", password);
         x.http().post(params, new Callback.CacheCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                //成功
-                Toast.makeText(
-                        SignInActivity.this,
-                        "注册成功",
-                        Toast.LENGTH_LONG)
-                        .show();
-                finish();
+                Gson gson = new Gson();
+                UserInfo userInfo = gson.fromJson(result, UserInfo.class);
+                if(userInfo.code == 201){
+                    //成功
+                    Toast.makeText(
+                            SignInActivity.this,
+                            "注册成功",
+                            Toast.LENGTH_LONG)
+                            .show();
+                    finish();
+                }
             }
 
 

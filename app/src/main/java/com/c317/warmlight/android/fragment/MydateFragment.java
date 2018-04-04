@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.c317.warmlight.android.Activity.SettingMyDateActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.base.BaseFragment;
+import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.tabpager.MyDateTabDetails;
 import com.c317.warmlight.android.tabpager.MyReadTabDetails;
 import com.viewpagerindicator.TabPageIndicator;
@@ -43,19 +44,11 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
     private String mType;
     private static final String TAG_READ = "TAG_READ";
     private static final String TAG_DATE = "TAG_DATE";
-//    private boolean isPrepared;
 
     public MydateFragment(String type){
         mType = type;
     }
 
-//    @Override
-//    protected void lazyLoad() {
-//        if(!isPrepared || !isVisible) {
-//            return;
-//        }
-//        initData();
-//    }
 
     @Override
     public View initView() {
@@ -84,11 +77,12 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
      **/
     @Override
     public void initData() {
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.GETMYACTIVITYLIST;
         if(mType.equals(TAG_DATE)){
             tvTopbarTitle.setText("我的友约");
             mDatePagers = new ArrayList<>();
             for(int i=0;i<tabInfoDate.length;i++){
-                MyDateTabDetails myPager = new MyDateTabDetails(mActivity,"http://14g97976j3.51mypc.cn:10759/youyue/getMyActivityList",i+1);
+                MyDateTabDetails myPager = new MyDateTabDetails(mActivity,url,i+1);
                 mDatePagers.add(myPager);
             }
             vpMyViewpager.setAdapter(new MyDataPageAdapter());
@@ -99,7 +93,7 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
             tvTopbarTitle.setText("我的有读");
             mReadPagers = new ArrayList<>();
             for(int i=0;i<tabInfoRead.length;i++){
-                MyReadTabDetails myPager = new MyReadTabDetails(mActivity,"http://14g97976j3.51mypc.cn:10759/youyue/getMyActivityList",i+1);
+                MyReadTabDetails myPager = new MyReadTabDetails(mActivity,url,i+1);
                 mReadPagers.add(myPager);
             }
             vpMyViewpager.setAdapter(new MyReadPageAdapter());

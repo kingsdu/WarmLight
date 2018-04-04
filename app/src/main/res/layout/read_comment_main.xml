@@ -19,7 +19,7 @@
         android:id="@+id/ll_read_comment"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#FFF"
+        android:background="@color/white"
         android:orientation="horizontal">
         <!-- 输入框 -->
         <EditText
@@ -30,9 +30,10 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:background="#FFFFFF"
+            android:background="@color/gray_gray"
             android:gravity="center_vertical"
             android:inputType="textMultiLine"
+            android:textColor="@color/black"
             android:maxLength="100"
             android:maxLines="6"
             android:hint="添加评论..."
@@ -46,18 +47,8 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/date_saveset_bg"
             android:text="评论"
-            android:textColor="#000000"/>
+            android:textColor="#000000" />
 
-        <Button
-            android:id="@+id/btn_read_replay"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/date_saveset_bg"
-            android:visibility="gone"
-            android:text="评论"
-            android:textColor="#000000"/>
     </LinearLayout>
 
 </LinearLayout>

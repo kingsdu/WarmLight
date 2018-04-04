@@ -98,8 +98,9 @@ public class Date_Fragment extends BaseFragment implements ViewPager.OnPageChang
     @Override
     public void initData() {
         mDatePagers = new ArrayList<>();
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYLIST;
         for (int i = 0; i < tabInfoDateType.length; i++) {
-            DateTabDetails myPager = new DateTabDetails(mActivity, "http://14g97976j3.51mypc.cn:10759/youyue/getActivityList", i-1);
+            DateTabDetails myPager = new DateTabDetails(mActivity, url, i-1);
             mDatePagers.add(myPager);
         }
         vpMyViewpager.setAdapter(new DatePageAdapter());

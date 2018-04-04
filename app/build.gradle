@@ -42,8 +42,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':ViewPagelibrary')
     compile files('libs/glide-3.6.0.jar')
-    compile files('libs/swiperefreshendless.jar')
     compile files('libs/rxjava-1.1.0.jar')
     compile files('libs/rxandroid-24.0.jar')
     compile files('libs/BaiduLBS_Android.jar')
+    compile project(':pulltorefreshlibrary')
 }

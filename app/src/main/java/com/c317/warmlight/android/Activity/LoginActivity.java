@@ -16,6 +16,7 @@ import com.c317.warmlight.android.MainActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.bean.Result;
 import com.c317.warmlight.android.bean.UserInfo;
+import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.fragment.Read_Fragment;
@@ -88,16 +89,17 @@ public class LoginActivity extends Activity {
 
 
     private void login(final String account, final String password) {
-        RequestParams params = new RequestParams("http://14g97976j3.51mypc.cn:10759/my/userLogin");
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.MY + AppNetConfig.SEPARATOR + AppNetConfig.USERLOGIN;
+        RequestParams params = new RequestParams(url);
         params.addParameter("account", account);
         params.addParameter("password", password);
         x.http().post(params, new Callback.CacheCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Gson gson = new Gson();
-                Result resultInfo = gson.fromJson(result, Result.class);
-                if (resultInfo.code == 200) {
-                    UserManage.getInstance().saveUserInfo(LoginActivity.this, account, password);
+                UserInfo userInfo = gson.fromJson(result, UserInfo.class);
+                if (userInfo.data.account != null) {
+                    UserManage.getInstance().saveUserInfo(LoginActivity.this, userInfo.data.account, userInfo.data.user_id);
                     //保存登录状态
                     SharedPrefUtility.setParam(LoginActivity.this, SharedPrefUtility.IS_LOGIN, true);
                     //保存登录个人信息
@@ -106,6 +108,7 @@ public class LoginActivity extends Activity {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else {
+                    Result resultInfo = gson.fromJson(result, Result.class);
                     Toast.makeText(LoginActivity.this, resultInfo.desc, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -113,7 +116,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 PrefUtils.setBoolean(getApplicationContext(), "is_first_enter", true);
-                Toast.makeText(LoginActivity.this, "登陆失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, ex.toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

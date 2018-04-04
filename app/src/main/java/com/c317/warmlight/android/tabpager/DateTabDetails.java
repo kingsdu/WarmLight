@@ -91,7 +91,7 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                 if (mType == -1) {
                     isAlldata = true;
                 }
-                mUrl = "http://14g97976j3.51mypc.cn:10759/youyue/getActivityList";
+                mUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.ACTIVITYLIST;
                 getDataFromServerPullDown(mUrl, mType, isAlldata);
             }
 

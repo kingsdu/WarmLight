@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="46dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -85,6 +85,14 @@
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:src="@drawable/unread_collect0"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/iv_all_comment"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/comment"
+            android:background="@null"
             android:visibility="gone"/>
 
         <TextView

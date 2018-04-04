@@ -10,6 +10,7 @@ import java.util.Date;
 
 public class UserInfo {
     public UserInfo_content data;
+    public int code;
     public static class UserInfo_content{
         /**
          * 用户ID

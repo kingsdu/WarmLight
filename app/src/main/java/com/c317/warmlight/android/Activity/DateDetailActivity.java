@@ -97,6 +97,8 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
     ImageView ivBackMe;
     @Bind(R.id.tv_topbar_title)
     TextView tvTopbarTitle;
+    @Bind(R.id.iv_all_comment)
+    ImageView ivAllComment;
     private Activity mActivity;
     private String picUrl;
     private String mActivityid;
@@ -126,6 +128,8 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         //顶部图标
         ivBackMe.setVisibility(View.VISIBLE);
         tvTopbarTitle.setText("友约详情");
+        ivAllComment.setVisibility(View.VISIBLE);
+        ivAllComment.setOnClickListener(this);
         picUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + getIntent().getStringExtra("picUrl");
         ectractPutEra();
         url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + "getActivity" + AppNetConfig.PARAMETER + "activity_id=" + mActivityid;
@@ -184,7 +188,6 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
     }
 
 
-
     /**
      * 获取当前用户是否收藏的信息
      *
@@ -222,53 +225,51 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
     }
 
 
-
     /**
-    * 将空值设置为默认的数据
-    * @params
-    * @author Du
-    * @Date 2018/3/20 21:58
-    **/
+     * 将空值设置为默认的数据
+     *
+     * @params
+     * @author Du
+     * @Date 2018/3/20 21:58
+     **/
     private void setDefaultData() {
-        if(TextUtils.isEmpty(mActivityid)){
+        if (TextUtils.isEmpty(mActivityid)) {
             mActivityid = 0 + "";
         }
-        if(TextUtils.isEmpty(mPicture)){
-            mPicture = R.drawable.musi01+"";
+        if (TextUtils.isEmpty(mPicture)) {
+            mPicture = R.drawable.musi01 + "";
         }
-        if(TextUtils.isEmpty(mAgreeNum)){
+        if (TextUtils.isEmpty(mAgreeNum)) {
             mAgreeNum = 0 + "";
         }
-        if(TextUtils.isEmpty(mCommentNum)){
+        if (TextUtils.isEmpty(mCommentNum)) {
             mCommentNum = 0 + "";
         }
-        if(TextUtils.isEmpty(mMemberNum)){
+        if (TextUtils.isEmpty(mMemberNum)) {
             mMemberNum = 0 + "";
         }
-        if(TextUtils.isEmpty(mContent)){
+        if (TextUtils.isEmpty(mContent)) {
             mContent = "content is null";
         }
-        if(TextUtils.isEmpty(mTitle)){
+        if (TextUtils.isEmpty(mTitle)) {
             mTitle = "title is null";
         }
-        if(TextUtils.isEmpty(mType)){
-            mType =  0 + "";
+        if (TextUtils.isEmpty(mType)) {
+            mType = 0 + "";
         }
-        if(TextUtils.isEmpty(mStartTime)){
+        if (TextUtils.isEmpty(mStartTime)) {
             mStartTime = "1999-01-01";
         }
-        if(TextUtils.isEmpty(mEndTime)){
+        if (TextUtils.isEmpty(mEndTime)) {
             mEndTime = "1999-01-01";
         }
-        if(TextUtils.isEmpty(mPlace)){
+        if (TextUtils.isEmpty(mPlace)) {
             mPlace = "mPlace is null";
         }
-        if(TextUtils.isEmpty(mReadNum)){
+        if (TextUtils.isEmpty(mReadNum)) {
             mReadNum = 0 + "";
         }
     }
-
-
 
 
     private void getDataFromServer() {
@@ -348,9 +349,22 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
             case R.id.ll_consult:
                 callPhone();
                 break;
-            default:
+            case R.id.iv_all_comment:
+                enterCommentAty();
                 break;
         }
+    }
+
+    /**
+    * 进入评论页面
+    * @params
+    * @author Du
+    * @Date 2018/4/2 16:20
+    **/
+    private void enterCommentAty() {
+        Intent intent = new Intent(DateDetailActivity.this,CommentActivity.class);
+        intent.putExtra("searchID","a"+mActivityid);
+        startActivity(intent);
     }
 
 

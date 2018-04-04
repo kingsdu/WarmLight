@@ -19,8 +19,6 @@ import com.c317.warmlight.android.base.BaseMenuDetailPager;
 import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.UserManage;
-import com.c317.warmlight.android.fragment.Date_Fragment;
-import com.c317.warmlight.android.utils.CacheUtils;
 import com.c317.warmlight.android.utils.WarmLightDataBaseHelper;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -47,17 +45,19 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
     PullToRefreshListView pullMydateRefresh;
     private String mUrl;//请求链接
     private int mType;
-    private ArrayList<DateNews.DateNews_Detail> mDatadetail = new ArrayList<>();
-    private int PAGESIZE = 1;
+    private List<DateNews.DateNews_Detail> mDatadetail = new ArrayList<>();
     private String account;
     private WarmLightDataBaseHelper dataBaseHelper;
-    private List<DateNews.DateNews_Detail> dateNews_details;
-    private boolean isPrepared;
+    boolean isFirst = true;//listview刷新用
+    private boolean isHaveNextPage = true;//是否还有下一页
+    private int startPage = 1;//初始页
+    private MydateAdapter mDateAdapter;
+
 
     public MyDateTabDetails(Activity activity, String url, int type) {
         super(activity);
         mType = type;
-        mUrl = url + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE;
+        mUrl = url;
     }
 
 
@@ -65,73 +65,75 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
     public View initView() {
         View view = View.inflate(mActivity, R.layout.pager_mydate_detail, null);
         ButterKnife.bind(this, view);
-        account = UserManage.getInstance().getUserInfo(mActivity).account;
-        pullMydateRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
-                getDataFromServer(account, mUrl, MyDateTabDetails.this.mType);
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
-                getDataFromServer(account, mUrl, MyDateTabDetails.this.mType);
-            }
-        });
         pullMydateRefresh.setMode(PullToRefreshBase.Mode.BOTH);//上拉下拉都支持
         return view;
     }
 
 
+
     //初始化数据
     public void initData() {
-        if (mType != 4) {
-            String cache = CacheUtils.getCache(mUrl + "&type=" + mType, mActivity);
-            if (!TextUtils.isEmpty(cache)) {
-                processData(cache, true);
-            } else {
-                getDataFromServer(account, mUrl, mType);//通过服务器获取数据
+        account = UserManage.getInstance().getUserInfo(mActivity).account;
+        pullMydateRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
+                mUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.GETMYACTIVITYLIST;
+                getDataFromServerPullDown(account, mUrl, MyDateTabDetails.this.mType);
             }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
+                if (isHaveNextPage) {
+                    PAGE++;//数据页数增加
+                    UPPAGESIZE++;//总页数
+                }
+                getDataFromServer(account, mUrl, MyDateTabDetails.this.mType);
+            }
+        });
+        if (mType != 4) {//不是收藏页面
+            getDataFromServer(account, mUrl, mType);//通过服务器获取数据
             pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(mActivity, DateDetailActivity.class);
-                    DateNews.DateNews_Detail dateNews_detail = mDatadetail.get(position-1);
+                    DateNews.DateNews_Detail dateNews_detail = mDatadetail.get(position - 1);
                     intent.putExtra("activity_id", dateNews_detail.activity_id);
                     intent.putExtra("picUrl", dateNews_detail.picture);
                     intent.putExtra("title", dateNews_detail.title);
                     intent.putExtra("content", dateNews_detail.content);
-                    intent.putExtra("readNum", dateNews_detail.readNum+"");
-                    intent.putExtra("agreeNum", dateNews_detail.agreeNum+"");
-                    intent.putExtra("commentNum", dateNews_detail.commentNum+"");
+                    intent.putExtra("readNum", dateNews_detail.readNum + "");
+                    intent.putExtra("agreeNum", dateNews_detail.agreeNum + "");
+                    intent.putExtra("commentNum", dateNews_detail.commentNum + "");
                     intent.putExtra("endTime", dateNews_detail.endTime);
                     intent.putExtra("startTime", dateNews_detail.startTime);
-                    intent.putExtra("memberNum", dateNews_detail.memberNum+"");
-                    intent.putExtra("type", dateNews_detail.type+"");
+                    intent.putExtra("memberNum", dateNews_detail.memberNum + "");
+                    intent.putExtra("type", dateNews_detail.type + "");
                     intent.putExtra("place", dateNews_detail.place);
                     mActivity.startActivity(intent);
                 }
             });
         } else {
+            //如果是收藏友约
             String isCollect = 1 + "";
             dataBaseHelper = WarmLightDataBaseHelper.getDatebaseHelper(mActivity);
-            dateNews_details = dataBaseHelper.queryMultiIsCollectDate(isCollect);
+            mDatadetail = dataBaseHelper.queryMultiIsCollectDate(isCollect);
             pullMydateRefresh.setAdapter(new MyCollectAdapter());
             pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(mActivity, DateDetailActivity.class);
-                    DateNews.DateNews_Detail dateNews_detail = dateNews_details.get(position-1);
+                    DateNews.DateNews_Detail dateNews_detail = mDatadetail.get(position - 1);
                     intent.putExtra("activity_id", dateNews_detail.activity_id);
                     intent.putExtra("picUrl", dateNews_detail.picture);
                     intent.putExtra("title", dateNews_detail.title);
                     intent.putExtra("content", dateNews_detail.content);
-                    intent.putExtra("readNum", dateNews_detail.readNum+"");
-                    intent.putExtra("agreeNum", dateNews_detail.agreeNum+"");
-                    intent.putExtra("commentNum", dateNews_detail.commentNum+"");
+                    intent.putExtra("readNum", dateNews_detail.readNum + "");
+                    intent.putExtra("agreeNum", dateNews_detail.agreeNum + "");
+                    intent.putExtra("commentNum", dateNews_detail.commentNum + "");
                     intent.putExtra("endTime", dateNews_detail.endTime);
                     intent.putExtra("startTime", dateNews_detail.startTime);
-                    intent.putExtra("memberNum", dateNews_detail.memberNum+"");
-                    intent.putExtra("type", dateNews_detail.type+"");
+                    intent.putExtra("memberNum", dateNews_detail.memberNum + "");
+                    intent.putExtra("type", dateNews_detail.type + "");
                     intent.putExtra("place", dateNews_detail.place);
                     mActivity.startActivity(intent);
                 }
@@ -139,22 +141,106 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
         }
     }
 
+
     private void processData(String cache, boolean isMore) {
-        Gson gson = new Gson();
-        DateNews dateNews = gson.fromJson(cache, DateNews.class);
-        if (isMore) {
-            mDatadetail = dateNews.data.detail;
-            pullMydateRefresh.setAdapter(new MydateAdapter());
-            PAGESIZE++;//页数增加
-        } else {
-            Toast.makeText(mActivity, "没有数据了", Toast.LENGTH_SHORT).show();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        //在加入到dateNews_details必须先判断是否已有
+        if (isFirst) {
+            if (isMore) {
+                Gson gson = new Gson();
+                DateNews dateNews = gson.fromJson(cache, DateNews.class);
+                mDatadetail.addAll(dateNews.data.detail);
+                mDateAdapter = new MydateAdapter();
+                pullMydateRefresh.setAdapter(mDateAdapter);
+            } else {
+                //第一次，无数据
+            }
+            isFirst = false;
+        }else{
+            if (isMore) {
+                Gson gson = new Gson();
+                DateNews dateNews = gson.fromJson(cache, DateNews.class);
+                if (!haveRepeat(dateNews)) {
+                    mDatadetail.addAll(dateNews.data.detail);
+                    mDateAdapter.notifyDataSetChanged();
+                }
+            } else {
+                //非第一次，无数据
             }
         }
         pullMydateRefresh.onRefreshComplete();
+    }
+
+
+    /**
+     * 下拉刷新数据，更新数据
+     *
+     * @params
+     * @author Du
+     * @Date 2018/3/27 14:46
+     **/
+    private void processDataPullDown(String result) {
+        //重新开始加载
+        mDatadetail.clear();
+        PAGE = 1;
+        UPPAGESIZE = 0;
+        //加载新数据
+        Gson gson = new Gson();
+        DateNews dateNews = gson.fromJson(result, DateNews.class);
+        mDatadetail.addAll(dateNews.data.detail);
+        pullMydateRefresh.setAdapter(mDateAdapter);
+    }
+
+    /**
+     * 是否有重复项
+     *
+     * @params true有
+     * @author Du
+     * @Date 2018/3/27 14:21
+     **/
+    private boolean haveRepeat(DateNews dateNews_info) {
+        ArrayList<DateNews.DateNews_Detail> detail = dateNews_info.data.detail;
+        for (int i = 0; i < detail.size(); i++) {
+            if (mDatadetail.get(i).activity_id.equals(detail.get(i).activity_id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private void getDataFromServerPullDown(String account, String mUrl, int mType) {
+        RequestParams params = new RequestParams(mUrl);
+        params.addParameter("account", account);
+        params.addParameter("type", mType);
+        params.addParameter("page", startPage);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                DateNews dateNews = gson.fromJson(result, DateNews.class);
+                //判断下一页是否还有数据
+                if (DOWNPAGESIZE <= dateNews.data.total) {
+                    processDataPullDown(result);
+                }
+                pullMydateRefresh.onRefreshComplete();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Toast.makeText(mActivity, "onError", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
     /**
@@ -168,6 +254,7 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
         RequestParams params = new RequestParams(url);
         params.addParameter("account", account);
         params.addParameter("type", type);
+        params.addParameter("page", PAGE);
         x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
@@ -175,19 +262,18 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
                 Gson gson = new Gson();
                 DateNews dateNews = gson.fromJson(result, DateNews.class);
                 //判断下一页是否还有数据
-                if (PAGESIZE <= dateNews.data.total) {
-                    PAGESIZE++;//页数增加
-                    CacheUtils.setCache(url + "&type=" + type, result, mActivity);
+                if (UPPAGESIZE <= dateNews.data.total) {
                     processData(result, true);
+                    isHaveNextPage = true;
                 } else {
-                    //无新数据
-                    processData(result, false);
+                    isHaveNextPage = false;
                 }
+                pullMydateRefresh.onRefreshComplete();
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-
+                Toast.makeText(mActivity, "onError", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -274,12 +360,12 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
 
         @Override
         public int getCount() {
-            return dateNews_details.size();
+            return mDatadetail.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return dateNews_details.get(position);
+            return mDatadetail.get(position);
         }
 
         @Override

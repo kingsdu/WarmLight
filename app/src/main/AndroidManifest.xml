@@ -49,6 +49,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.c317.warmlight.android.Activity.LoginActivity"></activity>
+        <activity android:name="com.c317.warmlight.android.Activity.SignInActivity"></activity>
         <activity android:name="com.c317.warmlight.android.MainActivity">
         </activity>
         <activity android:name="com.c317.warmlight.android.Activity.NewsDetailActivity"></activity>
@@ -80,7 +81,7 @@
         <activity android:name="com.c317.warmlight.android.Activity.MapActivity"></activity>
         <activity android:name="com.c317.warmlight.android.Activity.AddDateActivity"></activity>
         <activity android:name="com.c317.warmlight.android.Activity.JoinSettingActivity"></activity>
-
+        <activity android:name="com.c317.warmlight.android.Activity.CommentActivity"></activity>
     </application>
 
 </manifest>

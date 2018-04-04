@@ -7,6 +7,9 @@ package com.c317.warmlight.android.common;
  */
 
 public class AppConstants {
+    //Read页面状态更新
+    public final static int READ_DATA  = 1;
+
     //标识不同布局
     public final static String RV_ITEM_STATUS= "itemStatus";
     public final static int RV_TOP_NEWS = 0;

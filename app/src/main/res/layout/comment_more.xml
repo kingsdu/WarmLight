@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="180dp"
+    android:layout_height="30dp"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:gravity="center"
+    android:background="@color/background_material_dark">
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/like"/>
+
+    <TextView
+        android:id="@+id/tv_comment_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:clickable="true"
+        android:paddingLeft="5dp"
+        android:paddingRight="35dp"
+        android:gravity="center_vertical"
+        android:text="赞"
+        android:textColor="#fff"
+        android:textSize="10sp" />
+
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/comment"/>
+
+    <TextView
+        android:id="@+id/tv_comment_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:clickable="true"
+        android:paddingLeft="5dp"
+        android:paddingRight="10dp"
+        android:gravity="center_vertical"
+        android:text="评论"
+        android:textColor="#fff"
+        android:textSize="10sp" />
+
+</LinearLayout>
