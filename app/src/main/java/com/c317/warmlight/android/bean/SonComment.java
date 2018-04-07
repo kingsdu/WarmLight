@@ -13,15 +13,15 @@ public class SonComment {
     public int code;
 
     public static class SonCommentItem{
-        public int commentID;
-        public int comFor;
+        public String account;
+        public String comTime;
         public int comParentID;
         public int userID;
-        public int toUserID;
-        public String toUserAccount;
         public String userName;
-        public String toUserName;
+        public String toUserAccount;
         public String comContent;
-        public String comTime;
+        public int toUserID;
+        public int commentID;
+        public String toUserName;
     }
 }

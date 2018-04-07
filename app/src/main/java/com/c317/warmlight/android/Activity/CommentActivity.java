@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +34,10 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -45,7 +49,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2018/3/28.
  */
 
-public class CommentActivity extends AppCompatActivity implements View.OnClickListener{
+public class CommentActivity extends AppCompatActivity implements View.OnClickListener,ListView.OnItemClickListener{
 
     @Bind(R.id.lv_read_comment)
     ListView lvReadComment;
@@ -68,6 +72,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.read_comment_main);
         ButterKnife.bind(this);
         btnReadSubmit.setOnClickListener(this);
+        lvReadComment.setOnItemClickListener(this);
         searchID = getIntent().getStringExtra("searchID");
         initData();
     }
@@ -114,8 +119,33 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.btn_read_submit:
                 firstComment();
                 break;
+
+
         }
     }
+
+
+    /**
+    * 某个评论被点击
+    * @params
+    * @author Du
+    * @Date 2018/4/7 17:34
+    **/
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String userName = commentItem.data.get(position).userName;
+        try {
+            Date comDate = sdf.parse(commentItem.data.get(position).comTime);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
 
 
     /**
@@ -227,7 +257,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 }
             }
-
             mCachedViews.put(position, view);
         }
 
@@ -261,8 +290,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                 Gson gson = new Gson();
                                 Result retrunRes = gson.fromJson(result, Result.class);
                                 if (retrunRes.code == 201) {
-                                    CommentItemView itemView = mCachedViews.get(position);//获取到用户评论的那个View
-                                    itemView.addComment();
+//                                    CommentItemView itemView = mCachedViews.get(position);//获取到用户评论的那个View
+//                                    itemView.addComment(commentItem.data.get(position).commentID);
+//                                    initData();
+                                    btnReadSubmit.setOnClickListener(CommentActivity.this);
                                     CommonUtils.showToastShort(CommentActivity.this, "评论成功");
                                 }
                                 et.setText("");

@@ -9,9 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -25,6 +27,10 @@ import com.google.gson.Gson;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Administrator on 2018/4/2.
@@ -50,7 +56,6 @@ public class CommentItemView extends LinearLayout implements View.OnClickListene
 
 
     private OnCommentListener mCommentListener;
-
 
     public CommentItemView(Context context) {
         super(context);
@@ -96,39 +101,48 @@ public class CommentItemView extends LinearLayout implements View.OnClickListene
         commnetcontent.setText(data.comContent);
         commenttime.setText(data.comTime);
 
-        updateComment();
+        updateComment(mData.commentID);
 
         commentbutton.setOnClickListener(this);
     }
 
-    private void updateComment() {
+    private void updateComment(int comID) {
+        commentlayout.removeAllViews();
         if (mData.userName != null) {
-            commentlayout.removeAllViews();
             commentlayout.setVisibility(View.VISIBLE);
             //取二级评论数据
             String secondComUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.GETOTHERCOMMENT;
             RequestParams params = new RequestParams(secondComUrl);
-            params.addParameter("commentID", mData.commentID);
+            params.addParameter("commentID", comID);
             x.http().get(params, new Callback.CommonCallback<String>() {
 
                 @Override
                 public void onSuccess(String result) {
                     Gson gson = new Gson();
-                    SonComment.SonCommentItem sonCommentItem = gson.fromJson(result, SonComment.SonCommentItem.class);
-                    TextView t = new TextView(getContext());
-                    t.setLayoutParams(new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)));
-                    t.setBackgroundColor(getResources().getColor(R.color.white));
-                    t.setTextSize(16);
-                    t.setTextColor(getResources().getColor(R.color.black));
-                    t.setPadding(5, 2, 0, 3);
-                    t.setLineSpacing(3, (float) 1.5);
-                    t.setText(sonCommentItem.comContent);
-                    commentlayout.addView(t);
+                    SonComment sonCommentItem = gson.fromJson(result, SonComment.class);
+                    if (sonCommentItem.code == 200) {
+                        for(int i=0;i<sonCommentItem.data.size();i++){
+                            View view;
+                            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            view = inflater.inflate(R.layout.comment_listview_item, null, false);//填充ListView
+                            TextView userName = (TextView) view.findViewById(R.id.tv_comment_username);
+                            TextView content = (TextView) view.findViewById(R.id.tv_comment_comcontent);
+                            CharSequence no = "暂无";
+                            userName.setHint(no);
+                            content.setHint(no);
+                            String user = sonCommentItem.data.get(i).userName;
+                            user += " : ";
+                            userName.setText(user);
+                            content.setText(sonCommentItem.data.get(i).comContent);
+                            commentlayout.addView(view);
+                        }
+                    }
+
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
-                    Log.d("a",ex.toString());
+                    Log.d("a", ex.toString());
                 }
 
                 @Override
@@ -146,6 +160,7 @@ public class CommentItemView extends LinearLayout implements View.OnClickListene
             commentlayout.setVisibility(View.GONE);
         }
     }
+
 
     @Override
     public void onClick(View v) {
@@ -208,7 +223,48 @@ public class CommentItemView extends LinearLayout implements View.OnClickListene
         return mPosition;
     }
 
-    public void addComment() {
-        updateComment();
+    public void addComment(int comId) {
+        updateComment(comId);
+    }
+
+
+    private class SonCommentAdapter extends BaseAdapter {
+        private SonComment sonCommentAdapter;
+
+        public SonCommentAdapter(SonComment son){
+            sonCommentAdapter = son;
+        }
+
+        @Override
+        public int getCount() {
+            return sonCommentAdapter.data.size();
+        }
+
+        @Override
+        public SonComment.SonCommentItem getItem(int position) {
+            return sonCommentAdapter.data.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view;
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.comment_listview_item, null, false);//填充ListView
+            TextView userName = (TextView) view.findViewById(R.id.tv_comment_username);
+            TextView content = (TextView) view.findViewById(R.id.tv_comment_comcontent);
+            CharSequence no = "暂无";
+            userName.setHint(no);
+            content.setHint(no);
+            String user = getItem(position).userName;
+            user += " : ";
+            userName.setText(user);
+            content.setText(getItem(position).comContent);
+            return view;
+        }
     }
 }

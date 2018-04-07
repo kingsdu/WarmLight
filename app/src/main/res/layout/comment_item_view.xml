@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_comment_commenttime"
-            android:background="@color/gray_gray"
+            android:background="@color/white"
             android:orientation="vertical"
             android:padding="5dp"
             android:visibility="gone"></LinearLayout>
