@@ -90,6 +90,18 @@ public class AppNetConfig {
 
     public static final String GETMYACTIVITYLIST = "getMyActivityList";
 
+    //请求好友
+    public static final String ABOUTFRIEND = "aboutFriend";
+
+    //请求聊天
+    public static final String ABOUTCHAT = "aboutChat";
+
+    //请求聊天
+    public static final String ABOUTGROUP = "aboutGroup";
+
+    //请求该账号所有相关好友昵称
+    public static final String GETFRIENDNAME = "getFriendName";
+
     /*********************************基本操作符定义***************************************/
     public static final String SEPARATOR = File.separator;
 

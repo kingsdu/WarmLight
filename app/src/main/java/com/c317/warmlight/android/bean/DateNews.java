@@ -33,8 +33,16 @@ public class DateNews {
         public String startTime;
         public int memberNum;
         public String place;
+        public String coordinate;
         public int type;
         public int isCollect;
+
+        public String getCoordinate() {
+            return coordinate;
+        }
+        public void setCoordinate(String coordinate) {
+            this.coordinate = coordinate;
+        }
     }
 
 

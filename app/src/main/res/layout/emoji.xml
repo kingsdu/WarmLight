@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:background="#F2F2F2" >
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="10dp"
+    android:background="#F2F2F2" >
+    </LinearLayout>
+    
+<LinearLayout
+    android:id="@+id/emojibox"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="180dp"
+    android:background="#F2F2F2"
+    android:paddingBottom="5dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="5dp" >
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="120dp"
+    android:background="#F2F2F2"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp" >
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:layout_gravity="center_horizontal"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView11"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_weix" />
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView21"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_yeah" />
+
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_gravity="center_horizontal"
+    android:layout_weight="1"
+    android:padding="5dp" >
+    <ImageView
+        android:id="@+id/imageView31"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_feiw" />
+</LinearLayout>
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:layout_gravity="center_horizontal"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView12"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_fad" />
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView22"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_wos" />
+
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_gravity="center_horizontal"
+    android:layout_weight="1"
+    android:padding="5dp" >
+    <ImageView
+        android:id="@+id/imageView32"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_meig" />
+</LinearLayout>
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:layout_gravity="center_horizontal"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_dey" />
+
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView23"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_baoq" />
+
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_gravity="center_horizontal"
+    android:layout_weight="1"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView33"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_shengr" />
+
+</LinearLayout>
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:layout_gravity="center_horizontal"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView14"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_shuai" />
+
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView24"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_zoufan" />
+
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_gravity="center_horizontal"
+    android:layout_weight="1"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView34"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_xi" />
+
+</LinearLayout>
+
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:layout_gravity="center_horizontal"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView15"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_liul" />
+
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+    <ImageView
+        android:id="@+id/imageView25"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_huat" />
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_gravity="center_horizontal"
+    android:layout_weight="1"
+    android:padding="5dp" >
+    <ImageView
+        android:id="@+id/imageView35"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_xinf" />
+</LinearLayout>
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:layout_gravity="center_horizontal"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView16"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_toux" />
+
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+    <ImageView
+        android:id="@+id/imageView26"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_fac" />
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_gravity="center_horizontal"
+    android:layout_weight="1"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView36"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_sun" />
+
+</LinearLayout>
+
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:layout_gravity="center_horizontal"
+    android:padding="5dp" >
+    <ImageView
+        android:id="@+id/imageView17"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_zuq" />
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:background="#F2F2F2"
+    android:layout_weight="1"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/imageView27"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_yaow" />
+
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    android:layout_gravity="center_horizontal"
+    android:layout_weight="1"
+    android:padding="5dp" >
+        
+    <ImageView
+        android:id="@+id/imageView37"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/emoji_wana" />
+    
+</LinearLayout>
+
+</LinearLayout>
+</LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:background="#F2F2F2"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical" >
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/uploadfi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border01blue"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="传文件"
+                        android:textColor="#00BFFF"
+                        android:textSize="10dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/uploadpic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_weight="2"
+                        android:background="@drawable/border01blue"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="发图片"
+                        android:textColor="#00BFFF"
+                        android:textSize="10dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical" >
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
+</LinearLayout>

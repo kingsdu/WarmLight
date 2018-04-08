@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.c317.warmlight.android.Activity.PersonnalInfoActivity;
 import com.c317.warmlight.android.Activity.SettingMeActivity;
 import com.c317.warmlight.android.Activity.SettingMyDateActivity;
+import com.c317.warmlight.android.Activity.SettingMyMessageActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.base.BaseFragment;
 import com.c317.warmlight.android.common.AppNetConfig;
@@ -78,6 +79,7 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
         //我的友约监听
         rlMydate.setOnClickListener(this);
         rlMyread.setOnClickListener(this);
+        rlMymessage.setOnClickListener(this);
         return view;
     }
 
@@ -162,6 +164,10 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
             case R.id.rl_myread:
                 intent = new Intent(mActivity, SettingMyDateActivity.class);
                 intent.putExtra("TAG", "TAG_READ");
+                startActivity(intent);
+                break;
+            case R.id.rl_mymessage:
+                intent = new Intent(mActivity, SettingMyMessageActivity.class);
                 startActivity(intent);
                 break;
         }

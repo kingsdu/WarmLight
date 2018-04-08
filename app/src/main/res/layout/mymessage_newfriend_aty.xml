@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/common_top"></include>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+        <TextView
+            android:text="好友通知"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textColor="@color/bg_text"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_newfriend_newfriendlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ListView
+            android:id="@+id/lv_newfriend_newfriendlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/button_gray"
+            android:dividerHeight="1dip">
+        </ListView>
+    </LinearLayout>
+
+</LinearLayout>

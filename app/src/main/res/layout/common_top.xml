@@ -10,7 +10,10 @@
         android:background="@color/main_orange"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <ImageView
             android:id="@+id/iv_add_date"
@@ -102,6 +105,13 @@
             android:gravity="right"
             android:textColor="@color/title_text_color"
             android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/iv_groupchat_me"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/me"
+            android:visibility="gone" />
 
     </LinearLayout>
 

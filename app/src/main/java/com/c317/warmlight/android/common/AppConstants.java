@@ -31,8 +31,8 @@ public class AppConstants {
 
     //缓存内容标识
     public final static String ENROLLSETTING = "enrollSetting";//报名设置缓存
-
-
+    public final static String SELPLACEINFO = "selplaceInfo";//选择友约地点缓存
+    public final static String COORDINATE = "coordinate";//选择友约地点缓存
     public final static String ACCOUNT = "account";//用户名
     public final static String SEX = "sex";//性别
     public final static String USERNAME = "username";
@@ -40,6 +40,8 @@ public class AppConstants {
     public final static String UPLOADPIC = "uploadpic";//上传图片
 
 
+    public final static String FRIEND_ID = "friend_id";
+    public final static String ISFRIEND = "isFriend";
 
 
     public final static String EXIT_APP = "exit_app";//退出所有应用

@@ -47,6 +47,7 @@ import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.utils.CacheUtils;
 import com.c317.warmlight.android.utils.CommonUtils;
 import com.c317.warmlight.android.utils.ImageLoader;
+import com.c317.warmlight.android.utils.SharedPrefUtility;
 import com.c317.warmlight.android.utils.UtilImags;
 import com.google.gson.Gson;
 import com.yanzhenjie.permission.AndPermission;
@@ -417,12 +418,14 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
 
 
     public void releaseDate() {
+        String param = (String) SharedPrefUtility.getParam(this, AppConstants.COORDINATE, AppConstants.COORDINATE);
         String enrollInfo = getEnrollInfo();
         CacheUtils.cleanCache(AddDateActivity.this, AppConstants.ENROLLSETTING);//清除页面缓存
         if (!TextUtils.isEmpty(getUserAccount())) {
             if (!TextUtils.isEmpty(enrollInfo)) {
                 DateNews_detalis.DateNews_content newDateParams = getNewDateParams();
                 newDateParams.proposer = getUserAccount();
+                newDateParams.coordinate=param;
                 String[] enrollInfos = enrollInfo.split("\\|");
                 if (enrollInfos.length == 2) {
                     newDateParams.beginTime = enrollInfos[0];
@@ -461,6 +464,7 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
         params.addParameter("beginTime", news_content.beginTime);
         params.addParameter("deadline", news_content.deadline);
         params.addParameter("place", news_content.place);
+        params.addParameter("coordinate", news_content.coordinate);
         params.addParameter("type", news_content.type);
         params.addParameter("proposer", news_content.proposer);
         if (picFile != null) {

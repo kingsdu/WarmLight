@@ -95,4 +95,10 @@
     <!--shenbei_充值button-->
     <color name="bg">#ccc</color>
     <color name="bg_text">#999</color>
+
+
+
+    <color name="mediumslateblue">#7B68EE</color><!--中暗蓝色 -->
+    <color name="dimgray">#696969</color><!--暗灰色 -->
+    <color name="chat_butt_off">#66CCFF</color>
 </resources>

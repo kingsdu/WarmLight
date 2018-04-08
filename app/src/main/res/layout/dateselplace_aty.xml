@@ -1,24 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <include layout="@layout/common_top" />
-    <TextView
-        android:id="@+id/tv_baidupos_position"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <com.baidu.mapapi.map.MapView
-        android:id="@+id/mv_baidumap_selplacemapview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true" />
-    <TextView
-        android:id="@+id/tv_baidumapstate_selplace"
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:lines="3"
-        android:text="点击、长按、双击地图以获取经纬度和地图状态" />
+        android:id="@+id/search_layout"
+        android:layout_alignParentRight="false">
 
-</LinearLayout>
+        <include layout="@layout/common_top" />
+    </RelativeLayout>
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/bmapView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="true"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentEnd="false"
+        android:layout_below="@+id/search_layout" />
+
+    <RelativeLayout
+        android:id="@+id/id_marker_info"
+        android:visibility="invisible"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:clickable="true" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/tv_addrName"
+                android:textColor="@color/black"
+                android:layout_above="@+id/go_button"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/tv_coordinate"
+                android:textColor="@color/black"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:textAlignment="center"
+        android:text="长按地图选择友约地点"
+        android:id="@+id/location_text"
+        android:layout_below="@+id/search_layout"
+        android:background="@color/white"
+        android:textSize="18dp"
+        android:textColor="#ff0000" />
+
+</RelativeLayout>
+

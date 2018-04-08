@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:orientation="vertical">
+    
+  <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp">
+<TextView
+        android:id="@+id/tvconttime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="12dp"
+        android:text="聊天时间..."
+        android:textColor="#e4e4e4" />   
+      
+        </RelativeLayout>
+    
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="0dp"
+    android:paddingRight="40dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
+        
+>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civ_chat_circleImageView"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/musi01"
+            app:civ_border_color="@android:color/white"
+            app:civ_border_width="3dp" />
+        </LinearLayout>
+        <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="6dp"
+        android:orientation="vertical">
+        <TextView
+        android:id="@+id/tvaccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:textSize="15dp"
+        android:text=""
+        android:textColor="#A6A6A6" />
+                <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">   
+        <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:background="@drawable/border_chat01">   
+        
+        <TextView
+        android:id="@+id/tvcontent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="9dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:textSize="17dp"
+        android:text="聊天内容..."
+        android:textColor="#333333" />    
+         <ImageView
+          android:id="@+id/iv_sendpic"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:adjustViewBounds="true"
+       
+        />
+        </LinearLayout>
+
+        </LinearLayout>
+
+</LinearLayout>
+</LinearLayout>
+        </LinearLayout>

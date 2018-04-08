@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <include layout="@layout/common_top" />
@@ -15,7 +16,19 @@
     <com.baidu.mapapi.map.MapView
         android:id="@+id/mv_baidumap_mapview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
         android:clickable="true" />
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/pull_coordinatedate_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:divider="@color/gray_gray"
+        android:dividerHeight="1px"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrDrawable="@drawable/default_ptr_flip"
+        ptr:ptrHeaderBackground="@android:color/transparent"
+        ptr:ptrHeaderTextColor="#919191"/>
 
 </LinearLayout>

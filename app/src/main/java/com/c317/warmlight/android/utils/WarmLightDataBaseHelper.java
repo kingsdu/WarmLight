@@ -10,11 +10,13 @@ import android.util.Log;
 
 import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.bean.DateNews_detalis;
+import com.c317.warmlight.android.bean.GroupNewsDTO;
 import com.c317.warmlight.android.bean.Smallnews;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -63,6 +65,17 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
     public static final String READ_AGREENUM = "agreeNum";
     public static final String READ_ISCOLLECT = "iscollect";
 
+    /**
+     * 群消息表及字段
+     */
+    public static final String GROUPMESSAGE_TABLENAME = "groupmessage";
+    public static final String GROUPMESSAGE_CHATID = "chat_id";
+    public static final String GROUPMESSAGE_LASTTIME = "lastTime";
+    public static final String GROUPMESSAGE_ACCOUNT = "account";
+    public static final String GROUPMESSAGE_GROUPID = "group_id";
+    public static final String GROUPMESSAGE_CHATTIME = "chatTime";
+    public static final String GROUPMESSAGE_CONTENT = "content";
+    public static final String GROUPMESSAGE_ISREAD = "isread";
 
     public static synchronized WarmLightDataBaseHelper getDatebaseHelper(
             Context context) {
@@ -102,6 +115,7 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
         /**
          * 创建有读表
          * */
+
         sql = "create table " + READ_TABLENAME + "("
                 + READ_ID + " integer primary key autoincrement, "
                 + READ_TITLE + " text, "
@@ -113,7 +127,23 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
                 + READ_AGREENUM + " integer, "
                 + READ_ISCOLLECT + " integer)";
         db.execSQL(sql);
+
+        /**
+         * 创建群消息表
+         */
+        sql="create table "+ GROUPMESSAGE_TABLENAME +"("
+                 + GROUPMESSAGE_CHATID + " integer primary key autoincrement, "
+                 + GROUPMESSAGE_LASTTIME + " text ,"
+                 + GROUPMESSAGE_ACCOUNT + " text ,"
+                 + GROUPMESSAGE_GROUPID + " integer, "
+                 + GROUPMESSAGE_CHATTIME + " text ,"
+                 + GROUPMESSAGE_CONTENT + " text ,"
+                 + GROUPMESSAGE_ISREAD + " integer, UNIQUE("
+                 + GROUPMESSAGE_CONTENT + ", " + GROUPMESSAGE_CHATTIME + ", "
+                 + GROUPMESSAGE_CHATID + ") ON CONFLICT REPLACE )";
+        db.execSQL(sql);
     }
+
 
 
     /**
@@ -330,6 +360,115 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return smallnews_details;
     }
+
+
+    /* 以下开始是操作 群消息表 */
+
+    /**
+     * 批量插入群消息
+     */
+    public void batchInsertGroupNews(Collection<GroupNewsDTO.GroupNewsDTO_Content> newsDTOs_contents){
+        try{
+            db.beginTransaction();
+            for (GroupNewsDTO.GroupNewsDTO_Content newmessage : newsDTOs_contents){
+                ContentValues cv = new ContentValues();
+                cv.put(GROUPMESSAGE_CHATID, newmessage.getChat_id());
+                cv.put(GROUPMESSAGE_LASTTIME, newmessage.getLastTime());
+                cv.put(GROUPMESSAGE_ACCOUNT, newmessage.getAccount());
+                cv.put(GROUPMESSAGE_GROUPID, newmessage.getGroup_id());
+                cv.put(GROUPMESSAGE_CHATTIME, newmessage.getChatTime());
+                cv.put(GROUPMESSAGE_CONTENT, newmessage.getContent());
+                cv.put(GROUPMESSAGE_ISREAD, newmessage.getReadStatus());
+                db.insert(GROUPMESSAGE_TABLENAME, null, cv);
+            }
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.e(TAG, "", e);
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    /**
+     * 查询多条已读群消息
+     */
+    public List<GroupNewsDTO.GroupNewsDTO_Content> queryMultiGroupNewsRead(int group_id){
+//        db = getWritableDatabase();// 如果数据库不存在则会调用onCreate函数
+        ArrayList<GroupNewsDTO.GroupNewsDTO_Content> messages = new ArrayList<GroupNewsDTO.GroupNewsDTO_Content>();
+        String where = GROUPMESSAGE_GROUPID + " =? ";
+        String[] whereValue = { group_id + "" };
+        Cursor cursor = db.query(GROUPMESSAGE_TABLENAME, null, where, whereValue,
+                null, null, null);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return messages;
+        }
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            GroupNewsDTO.GroupNewsDTO_Content message = new GroupNewsDTO.GroupNewsDTO_Content();
+            message.setChat_id(cursor.getInt(0));
+            message.setLastTime(cursor.getString(1));
+            message.setAccount(cursor.getString(2));
+            message.setGroup_id(cursor.getInt(3));
+            message.setChatTime(cursor.getString(4));
+            message.setContent(cursor.getString(5));
+            message.setRead(cursor.getInt(6));
+            messages.add(message);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return messages;
+    }
+
+    /**
+     * 查询所有未读群消息
+     */
+    public List<GroupNewsDTO.GroupNewsDTO_Content> queryMultiGroupNewsUnRead(int group_id){
+        ArrayList<GroupNewsDTO.GroupNewsDTO_Content> messages = new ArrayList<GroupNewsDTO.GroupNewsDTO_Content>();
+        String where = GROUPMESSAGE_GROUPID + " =? and " + GROUPMESSAGE_ISREAD
+                + " =?";
+        String[] whereValue = { group_id + "", "0" };
+        Cursor cursor = db.query(GROUPMESSAGE_TABLENAME, null, where,
+                whereValue, null, null, null);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return messages;
+        }
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            GroupNewsDTO.GroupNewsDTO_Content message = new GroupNewsDTO.GroupNewsDTO_Content();
+            message.setChat_id(cursor.getInt(0));
+            message.setLastTime(cursor.getString(1));
+            message.setAccount(cursor.getString(2));
+            message.setGroup_id(cursor.getInt(3));
+            message.setChatTime(cursor.getString(4));
+            message.setContent(cursor.getString(5));
+            message.setRead(cursor.getInt(6));
+            messages.add(message);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return messages;
+    }
+
+    /**
+     * 更新群所有未读消息为已读
+     */
+    public int updataGroupNews(int group_id) {
+        String where = GROUPMESSAGE_GROUPID + " =? and " + GROUPMESSAGE_ISREAD
+                + "=0";
+        String[] whereValue = { group_id + "" };
+        ContentValues cv = new ContentValues();
+        cv.put(GROUPMESSAGE_ISREAD, "1");
+        return db.update(GROUPMESSAGE_TABLENAME, cv, where, whereValue);
+    }
+
+
+
+
+
+
+
 
 
     @Override

@@ -27,7 +27,7 @@
     <application
         android:name="com.c317.warmlight.android.common.Application_my"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -35,7 +35,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="FNURfeiYUfq4noTqbbVjzHhAij817OcG" />
+            android:value="3PeMXgN0K4dVS1Z8cGxi2hEPt2nQ4QQw" />
 
         <service
             android:name="com.baidu.location.f"
@@ -73,6 +73,20 @@
         <activity android:name="com.c317.warmlight.android.Activity.EditPersonnalinfoActivity"></activity>
 
         <activity android:name="com.c317.warmlight.android.Activity.PersonnalinfoChangepasswordAty"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.SettingMyMessageActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.AddActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.NewFriendActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.DateSelplaceActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.SingleChatActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.GroupChatActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.SingleChatSettingAty"></activity>
 
         <activity
             android:name="com.c317.warmlight.android.Activity.SettingMyDateActivity"
