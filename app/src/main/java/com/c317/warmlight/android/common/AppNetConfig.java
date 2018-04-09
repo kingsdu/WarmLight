@@ -93,6 +93,10 @@ public class AppNetConfig {
     //请求好友
     public static final String ABOUTFRIEND = "aboutFriend";
 
+    //请求添加成员（即加入群组）
+    public static final String ABOUTGROUPMEMBER = "aboutGroupMember";
+
+
     //请求聊天
     public static final String ABOUTCHAT = "aboutChat";
 

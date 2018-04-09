@@ -18,8 +18,10 @@ import android.widget.Toast;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.bean.DateNews_detalis;
+import com.c317.warmlight.android.bean.Result;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
+import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.utils.WarmLightDataBaseHelper;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -104,6 +106,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
     private String mActivityid;
     private String url;
     private boolean iscollect;
+    private String account;
 
     private WarmLightDataBaseHelper dataBaseHelper;
     private DateNews_detalis dateNews_detalis;
@@ -118,6 +121,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
     private String mMemberNum;
     private String mType;
     private String mPlace;
+    public int group_id;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -130,7 +134,9 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         tvTopbarTitle.setText("友约详情");
         ivAllComment.setVisibility(View.VISIBLE);
         ivAllComment.setOnClickListener(this);
+        tvJoinIn.setOnClickListener(this);
         picUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + getIntent().getStringExtra("picUrl");
+        account = UserManage.getInstance().getUserInfo(DateDetailActivity.this).account;
         ectractPutEra();
         url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + "getActivity" + AppNetConfig.PARAMETER + "activity_id=" + mActivityid;
         dataBaseHelper = WarmLightDataBaseHelper.getDatebaseHelper(this);
@@ -152,6 +158,14 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
                     return;
                 }
                 startActivity(intent);
+            }
+        });
+
+
+        tvJoinIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                join(UserManage.getInstance().getUserInfo(DateDetailActivity.this).account,group_id);
             }
         });
         llDataCollect.setOnClickListener(new View.OnClickListener() {
@@ -280,6 +294,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
                 Gson gson = new Gson();
                 dateNews_detalis = gson.fromJson(result, DateNews_detalis.class);
                 setDataView(dateNews_detalis.data);
+                group_id=dateNews_detalis.data.group_id;
             }
 
             @Override
@@ -376,5 +391,41 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
             startActivity(intent);
             return;
         }
+    }
+
+    private void join(final String account,final int group_id){
+        RequestParams params = new RequestParams(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.MY + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTGROUPMEMBER);
+        params.addParameter("account", account);
+        params.addParameter("group_id", group_id);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                //成功
+                Gson gson = new Gson();
+                Result resultInfo = gson.fromJson(result, Result.class);
+//                if (resultInfo.code == 200) {
+                    Toast.makeText(DateDetailActivity.this, "报名成功，请关注“我的消息”中的“群聊", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(AddActivity.this, resultInfo.desc, Toast.LENGTH_SHORT).show();
+//                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Toast.makeText(DateDetailActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+
+        });
+
     }
 }

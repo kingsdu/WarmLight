@@ -107,10 +107,17 @@
             android:textSize="20sp" />
 
         <ImageView
-            android:id="@+id/iv_groupchat_me"
+            android:id="@+id/iv_singlechat_me"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/me"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_groupchat_me"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/icon_groupsetting"
             android:visibility="gone" />
 
     </LinearLayout>

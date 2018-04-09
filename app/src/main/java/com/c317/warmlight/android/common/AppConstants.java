@@ -39,6 +39,7 @@ public class AppConstants {
     public final static String SIGNATURE = "signature";
     public final static String UPLOADPIC = "uploadpic";//上传图片
 
+    public final static String GROUPNAME = "groupName";
 
     public final static String FRIEND_ID = "friend_id";
     public final static String ISFRIEND = "isFriend";

@@ -88,6 +88,12 @@
 
         <activity android:name="com.c317.warmlight.android.Activity.SingleChatSettingAty"></activity>
 
+        <activity android:name="com.c317.warmlight.android.Activity.GroupChatSettingAty"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.CreateGroupActivity"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.GroupChatEditGroupnameAty"></activity>
+
         <activity
             android:name="com.c317.warmlight.android.Activity.SettingMyDateActivity"
             android:theme="@style/Theme.PageIndicatorDefaults"></activity>

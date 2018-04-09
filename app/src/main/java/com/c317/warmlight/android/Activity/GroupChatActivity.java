@@ -2,6 +2,7 @@ package com.c317.warmlight.android.Activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,6 +117,7 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
     private WarmLightDataBaseHelper dataBaseHelper;
     private int more = 0;
     private String mAccount;
+    private String mGroupName;
     private int mGroup_id;
     private int group_id;
     private int mFriend_id;
@@ -122,10 +125,10 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
     private String account;
 
     private List<GroupNewsDTO.GroupNewsDTO_Content> chatList;
-    private ChatItemAdapter chatitemAdapter;
+    private ChatItemAdapter adapter;
     private GroupNewsDTO groupnewsDTO;
     private Handler myHandler;
-
+    private ListView actuaListView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,7 +138,7 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
         ectractPutEra();
         //顶部图标
         ivBackMe.setVisibility(View.VISIBLE);
-        tvTopbarTitle.setText(mAccount);
+        tvTopbarTitle.setText(mGroupName);
         emojibox.setVisibility(View.GONE);
         ivGroupchatMe.setVisibility(View.VISIBLE);
 
@@ -146,14 +149,18 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
         etSendwords.setOnClickListener(this);
         buttonSendchat.setOnClickListener(this);
         chatList = new ArrayList<GroupNewsDTO.GroupNewsDTO_Content>();
-//        chatitemAdapter = new ChatItemAdapter(this, chatList);
 
+
+        adapter = new ChatItemAdapter(this, chatList);
+        actuaListView = mylv.getRefreshableView();
+        actuaListView.setAdapter(adapter);
         myHandler = new MyHandler();
+        getChatMessage();
         loadChats();
     }
 
     private void ectractPutEra() {
-        mAccount = getIntent().getStringExtra("account");
+        mGroupName = getIntent().getStringExtra("groupName");
         mGroup_id = getIntent().getIntExtra("group_id",group_id);
         mFriend_id = getIntent().getIntExtra("friend_id",friend_id);
     }
@@ -174,8 +181,8 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
                 findViewById(R.id.emojibox).setVisibility(View.GONE);
                 break;
             case R.id.iv_groupchat_me:
-                Intent intent = new Intent(GroupChatActivity.this, SingleChatSettingAty.class);
-                intent.putExtra("friend_id", mFriend_id);
+                Intent intent = new Intent(GroupChatActivity.this, GroupChatSettingAty.class);
+                intent.putExtra("groupName", mGroupName);
                 startActivity(intent);
                 break;
         }
@@ -189,7 +196,6 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
             String content_str = etSendwords.getText().toString();
             etSendwords.setText("");
             requestsendWords(account,content_str);
-
             findViewById(R.id.emojibox).setVisibility(View.GONE);
             more = 0;
         }
@@ -211,8 +217,8 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
                 Gson gson = new Gson();
                 Result resultInfo = gson.fromJson(result, Result.class);
                 if (resultInfo.code == 201) {
-//                    getChatMessage();
-//                    loadChats();
+                    getChatMessage();
+
                     Toast.makeText(GroupChatActivity.this, "请求成功", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(GroupChatActivity.this, resultInfo.desc, Toast.LENGTH_SHORT).show();
@@ -262,7 +268,9 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
                     groupNewsDTO_contents.add(groupNewsDTO_content);
 //                    dataBaseHelper.InsertCollectInfoDate(groupnewsDTO.data.get(i));
                 }
+                adapter.notifyDataSetChanged();
                 dataBaseHelper.batchInsertGroupNews(groupNewsDTO_contents);
+//                adapter.notifyDataSetChanged();
 //                rightorleft();
 //
             }
@@ -291,12 +299,10 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
         dataBaseHelper = WarmLightDataBaseHelper.getDatebaseHelper(GroupChatActivity.this);
         chatList=dataBaseHelper.queryMultiGroupNewsRead(mGroup_id);
         if(chatList.size()>0){
-
+            adapter.clear();
             rightorleft();
-            ChatItemAdapter chatitemAdapter = new ChatItemAdapter();
-            
-            mylv.setAdapter(chatitemAdapter);
-            mylv.onRefreshComplete();
+            adapter.addAll(chatList);
+//            mylv.onRefreshComplete();
         }
         // 开启线程加载未读信息
         new Thread(){
@@ -345,10 +351,9 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
 
         @Override
         public void handleMessage(Message msg) {
-            ChatItemAdapter chatitemAdapter = new ChatItemAdapter();
-
-            mylv.setAdapter(chatitemAdapter);
-            mylv.onRefreshComplete();
+            adapter.clear();
+            adapter.addAll(chatList);
+//            mylv.onRefreshComplete();
             // 更新未读为已读
             dataBaseHelper.updataGroupNews(mGroup_id);
         }
@@ -356,6 +361,13 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
     }
 
     private class ChatItemAdapter extends BaseAdapter{
+
+        private Context context;
+        private List<GroupNewsDTO.GroupNewsDTO_Content> chatList;
+        public ChatItemAdapter(Context context, List<GroupNewsDTO.GroupNewsDTO_Content> chatList) {
+            this.context = context;
+            this.chatList = chatList;
+        }
 
         @Override
         public int getCount() {
@@ -375,21 +387,21 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             //重用ListView
-           ViewHolder holder= null;
+            ViewHolder holder= null;
             GroupNewsDTO.GroupNewsDTO_Content chat = chatList.get(position);
 
 //            if (convertView == null) {
-                if(chat.getIsme() == 1){
-                    convertView = View.inflate(GroupChatActivity.this, R.layout.chat_item_right, null);
-                }else {
-                    convertView = View.inflate(GroupChatActivity.this, R.layout.chat_item, null);
-                }
+            if(chat.getIsme() == 1){
+                convertView = View.inflate(GroupChatActivity.this, R.layout.chat_item_right, null);
+            }else {
+                convertView = View.inflate(GroupChatActivity.this, R.layout.chat_item, null);
+            }
             holder = new ViewHolder();
-                holder.tvContent= (TextView) convertView.findViewById(R.id.tvcontent);
-                holder.tvAccount = (TextView) convertView.findViewById(R.id.tvaccount);
-                holder.tvSendtime = (TextView) convertView.findViewById(R.id.tvconttime);
-                holder.ivpic = (ImageView) convertView.findViewById(R.id.civ_chat_circleImageView);
-                holder.iv_sendpic = (ImageView) convertView.findViewById(R.id.iv_sendpic);
+            holder.tvContent= (TextView) convertView.findViewById(R.id.tvcontent);
+            holder.tvAccount = (TextView) convertView.findViewById(R.id.tvaccount);
+            holder.tvSendtime = (TextView) convertView.findViewById(R.id.tvconttime);
+            holder.ivpic = (ImageView) convertView.findViewById(R.id.civ_chat_circleImageView);
+            holder.iv_sendpic = (ImageView) convertView.findViewById(R.id.iv_sendpic);
 //                Pattern mPatternPic = Pattern.compile("\\&(.*?)\\&");
 //                Matcher matcherPic = mPatternPic.matcher(chat.getContent());
 //                int ContentAfterPic;
@@ -401,7 +413,7 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
 //                    holder.tvContent.setText(MyTool.strToSmiley(context,chat.getContent(),60));
 //
 //                }
-                convertView.setTag(holder);
+            convertView.setTag(holder);
 //            } else {
 //                holder = (ViewHolder) convertView.getTag();
 //            }
@@ -416,14 +428,24 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
             Picasso.with(GroupChatActivity.this).load(uri).networkPolicy(NetworkPolicy.NO_CACHE).into(holder.ivpic);
             return convertView;
         }
+        public void addAll(List<GroupNewsDTO.GroupNewsDTO_Content> data) {
+            this.chatList.addAll(data);
+            notifyDataSetChanged();
+        }
+        public void clear() {
+            chatList.clear();
+            notifyDataSetChanged();
+        }
+
+        private class ViewHolder {
+            private TextView tvContent;
+            private TextView tvAccount;
+            private TextView tvSendtime;
+            private ImageView ivpic;
+            private ImageView iv_sendpic;
+        }
     }
 
-    static class ViewHolder {
-        private TextView tvContent;
-        private TextView tvAccount;
-        private TextView tvSendtime;
-        private ImageView ivpic;
-        private ImageView iv_sendpic;
-    }
+
 
 }

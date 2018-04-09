@@ -34,6 +34,7 @@ public class DateNews_detalis {
         public String coordinate;
         public String telephone;
         public int type;
+        public int group_id;
     }
 
 }

@@ -98,7 +98,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/linearLayout2"
-        android:layout_alignTop="@+id/iv_pic"
+
         android:text="我"
         android:textColor="#FAFAFA"
         android:textSize="15dp" />
