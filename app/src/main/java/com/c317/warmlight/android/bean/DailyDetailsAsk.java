@@ -4,23 +4,15 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Created by Administrator on 2017/12/29.
- *
- * 每日一问
+ * Created by Administrator on 2018/4/9.
  */
 
-public class DailyAsk{
+public class DailyDetailsAsk {
 
-    public DailyAsk_info data;
     public int code;
+    public DailyAsk_detail data;
 
-    public static class DailyAsk_info{
-        public int total;
-        public int page;
-        public ArrayList<DailyAsk_details> detail;
-    }
-
-    public static class DailyAsk_details{
+    public static class DailyAsk_detail{
         public int question_id;
         public String title;
         public String content;

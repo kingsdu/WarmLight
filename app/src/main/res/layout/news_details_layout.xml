@@ -17,7 +17,7 @@
             android:id="@+id/iv_newsdetails_back"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/back"
+            android:src="@drawable/back_1"
             android:visibility="gone" />
 
     </LinearLayout>
@@ -32,7 +32,7 @@
             android:id="@+id/iv_newsdetails_comment"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/comment"
+            android:src="@drawable/comment_1"
             android:visibility="gone" />
 
         <ImageView

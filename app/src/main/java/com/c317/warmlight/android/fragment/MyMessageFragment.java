@@ -95,7 +95,6 @@ public class MyMessageFragment extends Fragment {
         //设置Tab的图标
         one.setIcon(R.drawable.grouppage_circle);
         two.setIcon(R.drawable.grouppage_groupchat);
-
     }
 
 

@@ -55,7 +55,8 @@ public class SmallNewsController {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         String article_id = String.valueOf(smallnews_detail.article_id);
                         Intent intent = new Intent(mContext, NewsDetailActivity.class);
-                        intent.putExtra("url","http://14g97976j3.51mypc.cn:10759/youdu/getArtCont/"+article_id);
+                        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.GETARTCONT + AppNetConfig.SEPARATOR + article_id;
+                        intent.putExtra("url",url);
                         intent.putExtra("article_id",article_id);
                         intent.putExtra("title",smallnews_detail.title);
                         intent.putExtra("introduce",smallnews_detail.introduce);
@@ -175,7 +176,7 @@ public class SmallNewsController {
                     Picasso.with(mContext).load(imageUrl).into(((SmallNewsViewHolder) holder).small_image);
                 }
                 holder.small_title.setText(smallnews_detail.title);
-                holder.small_user.setText(String.valueOf(smallnews_detail.readNum));
+//                holder.small_user.setText(String.valueOf(smallnews_detail.readNum));
                 holder.small_views.setText(String.valueOf(smallnews_detail.agreeNum));
                 holder.itemView.setTag(position);
             }
@@ -208,7 +209,7 @@ public class SmallNewsController {
                 super(itemView);
                 small_image = (ImageView) itemView.findViewById(R.id.iv_small_image);
                 small_title = (TextView) itemView.findViewById(R.id.tv_small_title);
-                small_user = (TextView) itemView.findViewById(R.id.tv_small_user);
+//                small_user = (TextView) itemView.findViewById(R.id.tv_small_user);
                 small_views = (TextView) itemView.findViewById(R.id.tv_small_views);
             }
         }

@@ -12,6 +12,7 @@ public class Comment {
     public int code;
 
     public static class CommentItem{
+        public String account;
         public String comContent;
         public int commentID;
         public String searchID;

@@ -106,6 +106,10 @@ public class AppNetConfig {
     //请求该账号所有相关好友昵称
     public static final String GETFRIENDNAME = "getFriendName";
 
+
+    public static final String CREATEQUESTION = "createQuestion";
+
+
     /*********************************基本操作符定义***************************************/
     public static final String SEPARATOR = File.separator;
 

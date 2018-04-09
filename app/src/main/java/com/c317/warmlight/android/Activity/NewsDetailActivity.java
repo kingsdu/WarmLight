@@ -79,7 +79,6 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
     private static final int TIME_ANIMATION = 300;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,8 +90,6 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
         ivNewsdetailsBack.setVisibility(View.VISIBLE);
         ivNewsdetailsComment.setVisibility(View.VISIBLE);
 
-        //表示滑动的时候，手的移动要大于viewSlop这个距离才开始移动控件
-        viewSlop = ViewConfiguration.get(this).getScaledTouchSlop();
         mGestureDetector = new GestureDetector(this, new DetailGestureListener());
 
         wvNewsDetails.setBottomListener(this);
@@ -237,7 +234,9 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
     * @Date 2018/4/1 9:13
     **/
     private void commentActivity() {
-        Intent intent = new Intent();//传ActivityId
+        Intent intent = new Intent(NewsDetailActivity.this,CommentActivity.class);//传ActivityId
+        intent.putExtra("searchID","w"+mArticleId);
+        startActivity(intent);
     }
 
     public void initData() {
@@ -365,8 +364,6 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
      * 显示工具栏，代表的是底部的评论部分
      */
     private void showTool() {
-        Log.d("TAG", "------------showTool-----------");
-
         int startY = getWindow().getDecorView()
                 .getHeight() - getStatusHeight(this);
         ObjectAnimator anim = ObjectAnimator.ofFloat(llNewsBottom, "y", startY,
@@ -380,8 +377,6 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
      * 隐藏工具栏
      */
     private void hideTool() {
-        Log.d("TAG", "------------hideTool-----------");
-
         int startY = getWindow().getDecorView()
                 .getHeight() - getStatusHeight(this);
         ObjectAnimator anim = ObjectAnimator.ofFloat(llNewsBottom, "y", startY - llNewsBottom.getHeight(),

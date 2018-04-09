@@ -98,6 +98,14 @@
             android:background="@null"
             android:visibility="gone"/>
 
+        <ImageView
+            android:id="@+id/iv_all_newask"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/newask"
+            android:background="@null"
+            android:visibility="gone"/>
+
         <TextView
             android:id="@+id/tv_topbar_right"
             android:layout_width="wrap_content"

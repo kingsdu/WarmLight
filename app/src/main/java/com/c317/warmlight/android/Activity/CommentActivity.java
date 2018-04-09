@@ -6,8 +6,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +14,10 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.bean.Comment;
@@ -36,7 +35,6 @@ import org.xutils.x;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,7 +47,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2018/3/28.
  */
 
-public class CommentActivity extends AppCompatActivity implements View.OnClickListener,ListView.OnItemClickListener{
+public class CommentActivity extends AppCompatActivity implements View.OnClickListener{
 
     @Bind(R.id.lv_read_comment)
     ListView lvReadComment;
@@ -60,6 +58,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     @Bind(R.id.ll_read_comment)
     LinearLayout llReadComment;
     String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.GETCOMMENT + AppNetConfig.PARAMETER;
+    @Bind(R.id.iv_back_me)
+    ImageView ivBackMe;
+    @Bind(R.id.tv_topbar_title)
+    TextView tvTopbarTitle;
     private String searchID;
     private Comment commentItem;
 
@@ -72,14 +74,18 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.read_comment_main);
         ButterKnife.bind(this);
         btnReadSubmit.setOnClickListener(this);
-        lvReadComment.setOnItemClickListener(this);
+        ivBackMe.setOnClickListener(this);
+        ivBackMe.setVisibility(View.VISIBLE);
         searchID = getIntent().getStringExtra("searchID");
         initData();
     }
 
+
     private void initData() {
+        tvTopbarTitle.setText("评论");
         getCommentData(url);
     }
+
 
     private void getCommentData(String url) {
         RequestParams params = new RequestParams(url);
@@ -98,7 +104,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                CommonUtils.showToastShort(CommentActivity.this,"评论失败");
+                CommonUtils.showToastShort(CommentActivity.this, "评论失败");
             }
 
             @Override
@@ -115,48 +121,27 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_read_submit:
                 firstComment();
                 break;
-
-
+            case R.id.iv_back_me:
+                finish();
+                break;
         }
     }
 
 
     /**
-    * 某个评论被点击
-    * @params
-    * @author Du
-    * @Date 2018/4/7 17:34
-    **/
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String userName = commentItem.data.get(position).userName;
-        try {
-            Date comDate = sdf.parse(commentItem.data.get(position).comTime);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-
-
-
-    /**
-    * 一级评论
-    * @params
-    * @author Du
-    * @Date 2018/4/2 16:08
-    **/
+     * 一级评论
+     *
+     * @params
+     * @author Du
+     * @Date 2018/4/2 16:08
+     **/
     private void firstComment() {
         String comment = etReadInput.getText().toString();
-        if(!TextUtils.isEmpty(comment)){
+        if (!TextUtils.isEmpty(comment)) {
             String insertUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.ADDFIRSTCOMMENT;
             RequestParams params = new RequestParams(insertUrl);
             params.addParameter("searchID", searchID);
@@ -191,7 +176,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                 }
             });
-        }else{
+        } else {
             CommonUtils.showToastShort(CommentActivity.this, "评论内容为空");
         }
 
@@ -290,9 +275,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                 Gson gson = new Gson();
                                 Result retrunRes = gson.fromJson(result, Result.class);
                                 if (retrunRes.code == 201) {
-//                                    CommentItemView itemView = mCachedViews.get(position);//获取到用户评论的那个View
-//                                    itemView.addComment(commentItem.data.get(position).commentID);
-//                                    initData();
                                     btnReadSubmit.setOnClickListener(CommentActivity.this);
                                     CommonUtils.showToastShort(CommentActivity.this, "评论成功");
                                 }

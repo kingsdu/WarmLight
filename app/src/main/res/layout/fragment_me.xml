@@ -20,15 +20,15 @@
             android:scaleType="centerCrop"
             android:src="@drawable/bg" />
 
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/circleImageView"
+                android:layout_marginTop="20dp"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:src="@drawable/musi01"
@@ -37,37 +37,13 @@
 
             <TextView
                 android:id="@+id/tv_nickname_me"
+                android:paddingTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:textColor="@color/black"
+                android:layout_weight="1"
                 android:textSize="19sp" />
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:paddingLeft="100dp"-->
-                <!--android:layout_marginBottom="10dp"-->
-                <!--android:gravity="center"-->
-                <!--android:orientation="horizontal">-->
-
-                <!--<TextView-->
-                    <!--android:id="@+id/tv_renown_me"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:textColor="@color/black"-->
-                    <!--android:textSize="19sp" />-->
-
-                <!--<Button-->
-                    <!--android:id="@+id/btn_signIn"-->
-                    <!--android:layout_marginLeft="20dp"-->
-                    <!--android:layout_width="65dp"-->
-                    <!--android:layout_height="35dp"-->
-                    <!--android:textColor="@color/white"-->
-                    <!--android:background="@drawable/my_button_bg" />-->
-            <!--</LinearLayout>-->
-
 
         </LinearLayout>
 
@@ -104,7 +80,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@color/white" />
+        android:background="@color/btn_gray" />
 
     <RelativeLayout
         android:id="@+id/rl_mydate"
@@ -137,7 +113,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@color/white" />
+        android:background="@color/btn_gray" />
 
     <RelativeLayout
         android:id="@+id/rl_my_answer"
@@ -170,7 +146,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@color/white" />
+        android:background="@color/btn_gray" />
 
     <RelativeLayout
         android:id="@+id/rl_mymessage"
@@ -203,5 +179,5 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@color/white" />
+        android:background="@color/btn_gray" />
 </LinearLayout>

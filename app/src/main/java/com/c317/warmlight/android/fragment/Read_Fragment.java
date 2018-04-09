@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,12 +29,14 @@ import android.widget.Toast;
 
 import com.androidkun.PullToRefreshRecyclerView;
 import com.androidkun.callback.PullToRefreshListener;
+import com.c317.warmlight.android.Activity.DailyAskDetailActivity;
 import com.c317.warmlight.android.Activity.DateDetailActivity;
 import com.c317.warmlight.android.Activity.NewsDetailActivity;
 import com.c317.warmlight.android.Activity.TopDetailsActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.base.BaseFragment;
 import com.c317.warmlight.android.bean.AllDataBean;
+import com.c317.warmlight.android.bean.DailyAsk;
 import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.bean.OrangeGuess;
 import com.c317.warmlight.android.bean.Smallnews;
@@ -60,6 +63,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -92,6 +96,8 @@ public class Read_Fragment extends BaseFragment implements PullToRefreshListener
     //小桔猜猜部分
     public TextView dailyAskNoChange;
     public TextView dailyAskTitle;
+    private Button getDailyAsk;
+
 
     private static int PAGESIZE = 1;
     private boolean first = true;//下拉刷新，判断是否为第一次
@@ -126,13 +132,13 @@ public class Read_Fragment extends BaseFragment implements PullToRefreshListener
     }
 
 
-
     private void getUrlDatas() {
         urls = new ArrayList<>();
         urls.add(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.TOPNEWS + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE);
         urls.add(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITY + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE);
         urls.add(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ARTICLE + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE);
         urls.add(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.GUESS + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE);
+        urls.add(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.QUESTION + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE);
         urls.add(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ARTICLE + AppNetConfig.PARAMETER + AppNetConfig.PAGE + AppNetConfig.EQUAL + PAGESIZE + 1);
         PAGESIZE++;
     }
@@ -281,7 +287,20 @@ public class Read_Fragment extends BaseFragment implements PullToRefreshListener
                 ((HorizontalHolder) holder).nestListView.setAdapter(mSubAdapterCrl.getAdapter());
             } else if (getItemViewType(position) == AppConstants.RV_DAILYASK) {
                 dailyAskNoChange.setText("[每日一问]第一期");
-                dailyAskTitle.setText("毕业生找工作应该注意什么？");
+                final DailyAsk.DailyAsk_details dailyAsk_details = (DailyAsk.DailyAsk_details) mAllDatas.get(position).get(0);
+                dailyAskTitle.setText(dailyAsk_details.title);
+                getDailyAsk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mActivity, DailyAskDetailActivity.class);
+                        intent.putExtra("question_id", dailyAsk_details.question_id + "");
+                        intent.putExtra("title", dailyAsk_details.title);
+                        intent.putExtra("content", dailyAsk_details.content);
+                        intent.putExtra("proposer", dailyAsk_details.proposer);
+                        intent.putExtra("pubDate", dailyAsk_details.pubDate);
+                        startActivity(intent);
+                    }
+                });
             } else if (getItemViewType(position) == AppConstants.RV_DIVIDER) {
                 List<Object> objects = mAllDatas.get(position);
                 String divideName = (String) objects.get(0);
@@ -425,6 +444,7 @@ public class Read_Fragment extends BaseFragment implements PullToRefreshListener
                 super(itemView);
                 dailyAskNoChange = (TextView) itemView.findViewById(R.id.read_dailyask_nochange);
                 dailyAskTitle = (TextView) itemView.findViewById(R.id.read_dailyask_title);
+                getDailyAsk = (Button) itemView.findViewById((R.id.btn_text_wg));
             }
         }
 
@@ -602,7 +622,7 @@ public class Read_Fragment extends BaseFragment implements PullToRefreshListener
 
             holder.workView.setHint(no);
             holder.workView.setText(dateNews_detail.commentNum + "");
-            holder.workView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.comment, 0, 0, 0);
+            holder.workView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.comment_2, 0, 0, 0);
             return convertView;
         }
     }
@@ -691,55 +711,88 @@ public class Read_Fragment extends BaseFragment implements PullToRefreshListener
                                         List<Object> mAllData = new ArrayList();
                                         mAllData.add("每日一问");
                                         mAllDatas.add(mAllData);
-                                        // 8 每日一问
-                                        mDataType.add(AppConstants.RV_DAILYASK);
-                                        mAllDatas.add(mAllData);
 
-                                        // 9 书籍部分头布局
-                                        mDataType.add(AppConstants.RV_DIVIDER);
-                                        mAllData = new ArrayList();
-                                        mAllData.add("友读");
-                                        mAllDatas.add(mAllData);
-                                        //10  友读
+                                        // 8 每日一问
                                         RequestParams params = new RequestParams(url.get(4));
                                         x.http().get(params, new CommonCallback<String>() {
+
                                             @Override
                                             public void onSuccess(String result) {
                                                 Gson gson = new Gson();
-                                                Smallnews smallnew = gson.fromJson(result, Smallnews.class);
-                                                if (smallnew.data.detail.size() > 3) {
-                                                    for (int i = 0; i < 3; i++) {
-                                                        List<Object> mAllData = new ArrayList();
-                                                        mAllData.add(smallnew.data.detail.get(i));
-                                                        mAllDatas.add(mAllData);
-                                                        mDataType.add(AppConstants.RV_ARTICLE_NEWS_SMALL);
-                                                    }
-                                                } else {
-                                                    for (int i = 0; i < smallnew.data.detail.size(); i++) {
-                                                        List<Object> mAllData = new ArrayList();
-                                                        mAllData.add(smallnew.data.detail.get(i));
-                                                        mAllDatas.add(mAllData);
-                                                        mDataType.add(AppConstants.RV_ARTICLE_NEWS_SMALL);
-                                                    }
+                                                DailyAsk dailyAsk = gson.fromJson(result, DailyAsk.class);
+                                                if (dailyAsk.code == 200) {
+                                                    List<Object> mAllData = new ArrayList();
+                                                    int index = new java.util.Random().nextInt(dailyAsk.data.detail.size());
+                                                    mAllData.add(dailyAsk.data.detail.get(index));
+                                                    mDataType.add(AppConstants.RV_DAILYASK);
+                                                    mAllDatas.add(mAllData);
                                                 }
-                                                initRecycleViewData();
+
+                                                // 9 书籍部分头布局
+                                                mDataType.add(AppConstants.RV_DIVIDER);
+                                                List<Object> mAllData = new ArrayList();
+                                                mAllData.add("友读");
+                                                mAllDatas.add(mAllData);
+
+                                                //10  友读
+                                                RequestParams params = new RequestParams(url.get(5));
+                                                x.http().get(params, new CommonCallback<String>() {
+                                                    @Override
+                                                    public void onSuccess(String result) {
+                                                        Gson gson = new Gson();
+                                                        Smallnews smallnew = gson.fromJson(result, Smallnews.class);
+                                                        if (smallnew.data.detail.size() > 3) {
+                                                            for (int i = 0; i < 3; i++) {
+                                                                List<Object> mAllData = new ArrayList();
+                                                                mAllData.add(smallnew.data.detail.get(i));
+                                                                mAllDatas.add(mAllData);
+                                                                mDataType.add(AppConstants.RV_ARTICLE_NEWS_SMALL);
+                                                            }
+                                                        } else {
+                                                            for (int i = 0; i < smallnew.data.detail.size(); i++) {
+                                                                List<Object> mAllData = new ArrayList();
+                                                                mAllData.add(smallnew.data.detail.get(i));
+                                                                mAllDatas.add(mAllData);
+                                                                mDataType.add(AppConstants.RV_ARTICLE_NEWS_SMALL);
+                                                            }
+                                                        }
+                                                        initRecycleViewData();
+                                                    }
+
+                                                    //请求异常后的回调方法
+                                                    @Override
+                                                    public void onError(Throwable ex, boolean isOnCallback) {
+                                                        Toast.makeText(mActivity, ex.toString(), Toast.LENGTH_SHORT).show();
+                                                    }
+
+                                                    //主动调用取消请求的回调方法
+                                                    @Override
+                                                    public void onCancelled(CancelledException cex) {
+                                                    }
+
+                                                    @Override
+                                                    public void onFinished() {
+                                                    }
+                                                });
                                             }
 
-                                            //请求异常后的回调方法
                                             @Override
                                             public void onError(Throwable ex, boolean isOnCallback) {
-                                                Toast.makeText(mActivity, ex.toString(), Toast.LENGTH_SHORT).show();
+
                                             }
 
-                                            //主动调用取消请求的回调方法
                                             @Override
                                             public void onCancelled(CancelledException cex) {
+
                                             }
 
                                             @Override
                                             public void onFinished() {
+
                                             }
                                         });
+
+
                                     }
 
                                     //请求异常后的回调方法
