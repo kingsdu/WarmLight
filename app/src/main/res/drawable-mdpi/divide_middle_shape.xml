@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape  xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#EBEBEB"/>
-    <size android:height="15px" />
+    <solid android:color="@color/btn_gray"/>
+    <size android:height="13px" />
 </shape >

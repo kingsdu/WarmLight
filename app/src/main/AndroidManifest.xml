@@ -108,6 +108,10 @@
         <activity android:name="com.c317.warmlight.android.Activity.AddDateActivity"></activity>
         <activity android:name="com.c317.warmlight.android.Activity.JoinSettingActivity"></activity>
         <activity android:name="com.c317.warmlight.android.Activity.CommentActivity"></activity>
+        <activity android:name="com.c317.warmlight.android.Activity.MyDailyAskActivity"></activity>
+        <activity android:name="com.c317.warmlight.android.Activity.DailyAskDetailActivity"></activity>
+        <activity android:name="com.c317.warmlight.android.Activity.DailyAskCommentActivity"></activity>
+        <activity android:name="com.c317.warmlight.android.Activity.DailyAskAddActivity"></activity>
     </application>
 
 </manifest>

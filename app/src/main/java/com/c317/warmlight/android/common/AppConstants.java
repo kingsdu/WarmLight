@@ -43,6 +43,7 @@ public class AppConstants {
 
     public final static String FRIEND_ID = "friend_id";
     public final static String ISFRIEND = "isFriend";
+    public final static String PAGE = "page";//上传图片
 
 
     public final static String EXIT_APP = "exit_app";//退出所有应用

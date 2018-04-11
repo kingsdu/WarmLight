@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/btn_gray"
+    android:layout_height="match_parent">
+
+    <include
+        layout="@layout/common_top"></include>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_marginBottom="8dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@color/white">
+
+        <EditText
+            android:id="@+id/et_me_addinputtitle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColorHint="#707070"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:gravity="top|left"
+            android:hint="请输入问题题目......" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:layout_marginBottom="10dp"
+        android:background="@color/white"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <EditText
+            android:id="@+id/et_me_addinputcontent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColorHint="#707070"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:gravity="top|left"
+            android:hint="请输入问题内容......" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:paddingTop="30dp"
+        android:background="@color/white"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/btn_dailyask_addrelease"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:background="@drawable/date_saveset_bg"
+            android:text="提问"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/btn_gray">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:showDividers="end"
+            android:divider="@drawable/shadow"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:id="@+id/tv_readdailyask_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:showDividers="end"
+            android:divider="@drawable/newsdivide_shape"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_readdailyask_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_readdailyask_pubtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray_gray"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_readdailyask_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:gravity="center_horizontal"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:text="问题回答"/>
+
+        <ListView
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:id="@+id/ll_read_dailyaskdetail"
+            android:divider="@drawable/divide_middle_shape"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+
+    </LinearLayout>
+
+
+    <!-- 底部滑动动画 -->
+    <LinearLayout
+        android:id="@+id/ll_dailyask_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:divider="@drawable/divide_shape"
+        android:showDividers="beginning"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <include layout="@layout/news_details_layout" />
+
+    </LinearLayout>
+
+</FrameLayout>

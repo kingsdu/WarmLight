@@ -25,8 +25,7 @@
         android:textColor="@color/black"
         android:textSize="16sp" />
 
-    <!-- 阅读数 -->
-    <TextView
+<!--    <TextView
         android:id="@+id/tv_small_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,17 +33,17 @@
         android:layout_marginTop="60dp"
         android:layout_toRightOf="@+id/iv_small_image"
         android:textColor="@color/gray_gray"
-        android:textSize="16sp" />
-
+        android:textSize="16sp" />-->
+    <!-- 阅读数 -->
 
     <TextView
         android:id="@+id/tv_small_views"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_small_title"
-        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/iv_small_image"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="60dp"
-        android:layout_toRightOf="@+id/tv_small_user"
         android:textColor="@color/gray_gray"
         android:textSize="16sp" />
 
@@ -58,6 +57,5 @@
         android:textColor="@color/gray_gray"
         android:textSize="16sp"
         android:text="人阅读"/>
-
 
 </RelativeLayout>

@@ -93,7 +93,7 @@ public class AppNetConfig {
     //请求好友
     public static final String ABOUTFRIEND = "aboutFriend";
 
-    //请求添加成员（即加入群组）、删除成员
+    //请求添加成员（即加入群组）
     public static final String ABOUTGROUPMEMBER = "aboutGroupMember";
 
 
@@ -106,8 +106,9 @@ public class AppNetConfig {
     //请求该账号所有相关好友昵称
     public static final String GETFRIENDNAME = "getFriendName";
 
-    //请求有坐标的友约信息
-    public static final String ISCOOR = "isCoor";
+
+    public static final String CREATEQUESTION = "createQuestion";
+
 
     /*********************************基本操作符定义***************************************/
     public static final String SEPARATOR = File.separator;
