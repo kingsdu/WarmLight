@@ -5,13 +5,13 @@
     <include layout="@layout/common_top"></include>
 
     <LinearLayout
-        android:id="@+id/ll_me_editname"
+        android:id="@+id/ll_groupchat_editgroupname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="15dp">
         <EditText
-            android:id="@+id/et_editname_personnalinfo"
+            android:id="@+id/et_editgroupname_groupchat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -21,10 +21,9 @@
             android:textSize="17sp" />
         <TextView
             android:layout_marginTop="15dp"
-            android:text="好名字可以让你的朋友更容易记住你。"
+            android:text="仅管理员身份可以修改群名称。"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:textSize="17sp"
             android:textColor="@color/bg_text"/>
     </LinearLayout>

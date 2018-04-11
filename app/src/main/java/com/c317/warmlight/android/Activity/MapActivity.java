@@ -170,6 +170,7 @@ public class MapActivity extends Activity {
     public void initData(){
         getDataFromServer(PAGE);
         pullCoordinatedateRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
                 getDataFromServerPullDown();
@@ -218,7 +219,6 @@ public class MapActivity extends Activity {
             public void onSuccess(String result) {
                 Gson gson = new Gson();
                 DateNews dateNews = gson.fromJson(result, DateNews.class);
-
                 if (UPPAGESIZE < dateNews.data.total) {
                     processData(result, true);
                     isHaveNextPage = true;
@@ -228,7 +228,6 @@ public class MapActivity extends Activity {
                 }
                 GetCoordinatePoint();
                 pullCoordinatedateRefresh.onRefreshComplete();
-
             }
 
             @Override
@@ -274,6 +273,7 @@ public class MapActivity extends Activity {
                 //非第一次，无数据
             }
         }
+        pullCoordinatedateRefresh.onRefreshComplete();
     }
 
     /**
@@ -342,18 +342,15 @@ public class MapActivity extends Activity {
                 DateNews dateNews = gson.fromJson(result, DateNews.class);
                 //判断下一页是否还有数据
                 if (UPPAGESIZE < dateNews.data.total) {
-                    processData(result, true);
-                    isHaveNextPage = true;
+                    processDataPullDown(result);
                 } else {
-                    //无新数据
-                    isHaveNextPage = false;
                 }
                 pullCoordinatedateRefresh.onRefreshComplete();
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-
+                Toast.makeText(MapActivity.this, "onError", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -366,6 +363,26 @@ public class MapActivity extends Activity {
 
             }
         });
+    }
+
+    /**
+     * 下拉刷新数据，更新数据
+     *
+     * @params
+     * @author Du
+     * @Date 2018/3/27 14:46
+     **/
+    private void processDataPullDown(String result) {
+        //重新开始加载
+        coordinatedateNews_details.clear();
+        PAGE = 1;
+        UPPAGESIZE = 0;
+        //加载新数据
+        Gson gson = new Gson();
+        dateNews_info = gson.fromJson(result, DateNews.class);
+        coordinatedateNews_details.addAll(dateNews_info.data.detail);
+        coordinateDateAdapter = new CoordinateDateAdapter();
+        pullCoordinatedateRefresh.setAdapter(coordinateDateAdapter);
     }
 
     private class CoordinateDateAdapter extends BaseAdapter {

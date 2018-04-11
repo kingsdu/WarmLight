@@ -119,6 +119,7 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
     private String mAccount;
     private String mGroupName;
     private int mGroup_id;
+    private String mFounder;
     private int group_id;
     private int mFriend_id;
     private int friend_id;
@@ -163,6 +164,7 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
         mGroupName = getIntent().getStringExtra("groupName");
         mGroup_id = getIntent().getIntExtra("group_id",group_id);
         mFriend_id = getIntent().getIntExtra("friend_id",friend_id);
+        mFounder = getIntent().getStringExtra("founder");
     }
 
     @Override
@@ -181,9 +183,18 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
                 findViewById(R.id.emojibox).setVisibility(View.GONE);
                 break;
             case R.id.iv_groupchat_me:
-                Intent intent = new Intent(GroupChatActivity.this, GroupChatSettingAty.class);
-                intent.putExtra("groupName", mGroupName);
-                startActivity(intent);
+                if(account.equals(mFounder)){
+                    Intent intent = new Intent(GroupChatActivity.this, isAdminGroupChatSettingAty.class);
+                    intent.putExtra("groupName", mGroupName);
+                    intent.putExtra("group_id", mGroup_id);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(GroupChatActivity.this, isnotAdminGroupChatSettingAty.class);
+                    intent.putExtra("groupName", mGroupName);
+                    intent.putExtra("group_id", mGroup_id);
+                    startActivity(intent);
+                }
+
                 break;
         }
     }

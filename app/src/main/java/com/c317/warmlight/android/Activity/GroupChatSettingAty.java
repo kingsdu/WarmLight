@@ -33,6 +33,7 @@ public class GroupChatSettingAty extends Activity implements View.OnClickListene
 
     private String account;
     private String mGroupName;
+    private int mGroup_id;
     private static final int EDIT_GROUPNAME = 4;//编辑昵称
 
     @Override
@@ -50,10 +51,12 @@ public class GroupChatSettingAty extends Activity implements View.OnClickListene
         initData();
         //监听设置
         ivBackMe.setOnClickListener(this);
+        rlGroupchatsetGroupname.setOnClickListener(this);
     }
 
     private void ectractPutEra() {
         mGroupName = getIntent().getStringExtra("groupName");
+        mGroup_id = getIntent().getIntExtra("group_id",mGroup_id);
     }
 
     private void initData() {
@@ -69,7 +72,10 @@ public class GroupChatSettingAty extends Activity implements View.OnClickListene
                 finish();
                 break;
             case R.id.rl_groupchatset_groupname:
-                startActivityForResult(new Intent(GroupChatSettingAty.this, GroupChatEditGroupnameAty.class), EDIT_GROUPNAME);
+                Intent intent = new Intent(GroupChatSettingAty.this, GroupChatEditGroupnameAty.class);
+                intent.putExtra("group_id", mGroup_id);
+                intent.putExtra("groupName",mGroupName);
+                startActivityForResult(intent, EDIT_GROUPNAME);
                 break;
         }
     }
