@@ -461,7 +461,7 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
      * 存储新建友约的信息到服务端
      *
      * @params
-     * @author Du
+     * @author
      * @Date 2018/3/15 22:18
      **/
     private void saveNewDateToServer(DateNews_detalis.DateNews_content news_content, File picFile) {
