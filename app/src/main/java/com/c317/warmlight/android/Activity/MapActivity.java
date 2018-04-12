@@ -210,10 +210,9 @@ public class MapActivity extends Activity {
      * 获取友约活动列表
      */
     private void getDataFromServer(final int PAGE) {
-        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYLIST;
+        String url = "http://14g97976j3.51mypc.cn:10759/youyue/getActivityList?isCoor=1&page="+ PAGE;
         RequestParams params = new RequestParams(url);
-        params.addParameter("isCoor", 1);
-        params.addParameter("page", PAGE);
+        params.addParameter("page", 2);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -334,6 +333,7 @@ public class MapActivity extends Activity {
     private void getDataFromServerPullDown(){
         String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYLIST;
         RequestParams params = new RequestParams(url);
+        params.addParameter("isCoor", 1);
         params.addParameter("page", startPage);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override

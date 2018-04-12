@@ -208,6 +208,8 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
                 .rationale(rationaleListener)
                 .callback(this)
                 .start();
+
+//        updatecoordinate();
     }
 
     /**
@@ -422,6 +424,10 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
         String enrollInfo = getEnrollInfo();
         CacheUtils.cleanCache(AddDateActivity.this, AppConstants.ENROLLSETTING);//清除页面缓存
         if (!TextUtils.isEmpty(getUserAccount())) {
+            if(!TextUtils.isEmpty(param) && param.equals(AppConstants.COORDINATE)){
+                param=null;
+            }
+
             if (!TextUtils.isEmpty(enrollInfo)) {
                 DateNews_detalis.DateNews_content newDateParams = getNewDateParams();
                 newDateParams.proposer = getUserAccount();
@@ -431,18 +437,23 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
                     newDateParams.beginTime = enrollInfos[0];
                     newDateParams.deadline = enrollInfos[1];
                     saveNewDateToServer(newDateParams, picFile);
-                } else {
+                }
+                else {
                     Toast.makeText(AddDateActivity.this, "报名设置数据不完整",
                             Toast.LENGTH_SHORT).show();
                 }
+
             } else {
                 Toast.makeText(AddDateActivity.this, "请设置报名设置模块",
                         Toast.LENGTH_SHORT).show();
             }
-        } else {
+
+        }
+             else {
             Toast.makeText(AddDateActivity.this, "无法请求到用户",
                     Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
@@ -513,6 +524,7 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
 
             }
         });
+
     }
 
     /**
@@ -610,6 +622,15 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
         UserInfo.UserInfo_content userInfo_content = UserManage.getInstance().getUserInfo(this);
         return userInfo_content.getAccount();
     }
+
+//    public void updatecoordinate(){
+//        String coordinate=null;
+//        String param = (String) SharedPrefUtility.getParam(this, AppConstants.COORDINATE, AppConstants.COORDINATE);
+//        if (!TextUtils.isEmpty(param)) {
+//            SharedPrefUtility.setParam(this, AppConstants.COORDINATE, coordinate);
+//        }
+//    }
+
 
 
 }
