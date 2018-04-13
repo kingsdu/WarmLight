@@ -1,79 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <LinearLayout
-        android:layout_width="fill_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp" >
+
+    <ImageView
+        android:id="@+id/iv_coordate_itemPic"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="#a000"
+        android:padding="1dp"
+        android:scaleType="fitXY"
+        android:layout_marginRight="5dp"/>
+
+    <TextView
+        android:id="@+id/tv_coordate_itemTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dip"
-            android:layout_marginLeft="2dip"
-            android:layout_marginRight="2dip"
-            android:layout_marginTop="2dip"
-            android:layout_weight="1.0"
-            android:orientation="vertical" >
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/ll_coordinatedate_itemTitle"
-                android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/iv_coordinatedate_itemTitle"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="4dp"
-                    android:paddingTop="3dp" />
-                <TextView
-                    android:id="@+id/tv_coordinatedate_itemTitle"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/iv_coordinatedate_itemTitle"
-                    android:textColor="#f243"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:textSize="18sp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_coordinatedate_itemTitle"
-                android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/iv_coordinatedate_locate"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="8dp"
-                    android:paddingTop="3dp"
-                    android:layout_below="@+id/tv_coordinatedate_itemTitle"/>
-                <TextView
-                    android:id="@+id/tv_coordinatedate_itemPlace"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#f243"
-                    android:textSize="13sp"
-                    android:layout_marginTop="5dp"
-                    android:layout_below="@+id/tv_coordinatedate_itemTitle"
-                    android:layout_toRightOf="@+id/iv_coordinatedate_locate" />
-            </LinearLayout>
-        </RelativeLayout>
+        android:layout_alignParentTop="true"
+        android:textColor="#f243"
+        android:layout_toRightOf="@+id/iv_coordate_itemPic"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textSize="18sp"/>
 
-        <ImageView
-            android:id="@+id/iv_coordinatedate_route"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginBottom="1dip"
-            android:layout_marginLeft="1dip"
-            android:layout_marginRight="1dip"
-            android:layout_marginTop="1dip"
-            android:onClick="saveClick"
-            android:layout_weight="3.0" />
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/iv_coordate_clock"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="8dp"
+        android:paddingTop="2dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@+id/iv_coordate_itemPic"
+        android:layout_below="@+id/tv_coordate_itemTitle"/>
+
+    <TextView
+        android:id="@+id/tv_coordate_itemStartTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iv_coordate_clock"
+        android:layout_below="@+id/tv_coordate_itemTitle"
+        android:textSize="16sp"
+        android:textColor="#f243"
+        android:layout_marginTop="5dp"/>
+
+    <ImageView
+        android:id="@+id/iv_coordate_locate"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="4dp"
+        android:paddingTop="3dp"
+        android:layout_toRightOf="@+id/iv_coordate_itemPic"
+        android:layout_below="@+id/tv_coordate_itemStartTime"/>
+
+    <TextView
+        android:id="@+id/tv_coordate_itemPlace"
+        android:textColor="#f243"
+        android:textSize="13sp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/tv_coordate_itemStartTime"
+        android:layout_toRightOf="@+id/iv_coordate_locate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/iv_coordate_joinpeople"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:paddingTop="2dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@+id/iv_coordate_itemPic"
+        android:layout_below="@+id/tv_coordate_itemPlace"/>
+
+
+    <TextView
+        android:id="@+id/tv_coordate_itemMembernum"
+        android:textColor="#f243"
+        android:textSize="10sp"
+        android:layout_marginTop="3dp"
+        android:layout_below="@+id/tv_coordate_itemPlace"
+        android:layout_toRightOf="@+id/iv_coordate_joinpeople"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_coordate_itemnavigation"
+        android:focusable="false"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="120dp"
+        android:layout_toRightOf="@+id/tv_coordate_itemMembernum"
+        android:layout_below="@+id/tv_coordate_itemPlace"
+        android:layout_gravity="center"
+        android:background="@color/main_orange"
+        android:text="导航"
+        android:textSize="12dp"/>
+
+</RelativeLayout>
