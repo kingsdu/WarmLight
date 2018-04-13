@@ -62,7 +62,6 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
                 mActivity.finish();
             }
         });
-        //结束Fragment
         return view;
     }
 
@@ -93,7 +92,7 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
             tvTopbarTitle.setText("我的有读");
             mReadPagers = new ArrayList<>();
             for(int i=0;i<tabInfoRead.length;i++){
-                MyReadTabDetails myPager = new MyReadTabDetails(mActivity,url,i+1);
+                MyReadTabDetails myPager = new MyReadTabDetails(mActivity,i);
                 mReadPagers.add(myPager);
             }
             vpMyViewpager.setAdapter(new MyReadPageAdapter());

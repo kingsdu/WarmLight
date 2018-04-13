@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.bean.Comment;
-import com.c317.warmlight.android.bean.DailyAsk;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
 import com.google.gson.Gson;
@@ -36,7 +35,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2018/4/9.
  */
 
-public class DailyAskDetailActivity extends Activity implements View.OnTouchListener,View.OnClickListener {
+public class DailyAskDetailActivity extends Activity implements View.OnTouchListener, View.OnClickListener {
 
     @Bind(R.id.tv_readdailyask_title)
     TextView tvReaddailyaskTitle;
@@ -54,6 +53,8 @@ public class DailyAskDetailActivity extends Activity implements View.OnTouchList
     LinearLayout llDailyaskBottom;
     @Bind(R.id.ll_read_dailyaskdetail)
     ListView llReadDailyaskdetail;
+    @Bind(R.id.tv_topbar_title)
+    TextView tvTopbarTitle;
     //按下的y坐标
     private float lastY;
     private float viewSlop;
@@ -76,6 +77,7 @@ public class DailyAskDetailActivity extends Activity implements View.OnTouchList
         Application_my.getInstance().addActivity(this);
         setContentView(R.layout.read_dailyask_detail);
         ButterKnife.bind(this);
+        tvTopbarTitle.setVisibility(View.VISIBLE);
         ivNewsdetailsBack.setVisibility(View.VISIBLE);
         ivNewsdetailsComment.setVisibility(View.VISIBLE);
         ivNewsdetailsBack.setOnClickListener(this);
@@ -87,6 +89,7 @@ public class DailyAskDetailActivity extends Activity implements View.OnTouchList
     }
 
     private void initData() {
+        tvTopbarTitle.setText("问问详情");
         getIntentData();
         getDataFromServer();
     }
@@ -156,7 +159,7 @@ public class DailyAskDetailActivity extends Activity implements View.OnTouchList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.iv_newsdetails_back:
                 finish();
                 break;
@@ -168,8 +171,8 @@ public class DailyAskDetailActivity extends Activity implements View.OnTouchList
 
     private void addAnswer() {
         Intent intent = new Intent(DailyAskDetailActivity.this, DailyAskCommentActivity.class);
-        intent.putExtra("question_id",question_id);
-        startActivityForResult(intent,1);
+        intent.putExtra("question_id", question_id);
+        startActivityForResult(intent, 1);
     }
 
     @Override
@@ -204,7 +207,6 @@ public class DailyAskDetailActivity extends Activity implements View.OnTouchList
         }
         mGestureDetector.onTouchEvent(event);
     }
-
 
 
     /**

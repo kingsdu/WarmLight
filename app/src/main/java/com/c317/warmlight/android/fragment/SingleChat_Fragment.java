@@ -192,13 +192,11 @@ public class SingleChat_Fragment extends Fragment implements
             }
             final NewfriendInfo.NewfriendInfo_Content NewfriendInfo_Contents = truefrienddata.get(position);
             holder.tvaccount.setText(NewfriendInfo_Contents.account);
-//            for(int i=0;i<truefrienddata.size();i++){
             String picname = "icon/" + NewfriendInfo_Contents.account + "_thumbnail.jpg";
             String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + picname;
             Uri uri = Uri.parse(imageUrl);
             Picasso.with(getActivity()).invalidate(uri);
             Picasso.with(getActivity()).load(uri).networkPolicy(NetworkPolicy.NO_CACHE).into(holder.ivPic);
-//            }
             return convertView;
         }
     }

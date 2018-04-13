@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +20,7 @@ import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.bean.OrangeGuess_detail;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
+import com.c317.warmlight.android.utils.CommonUtils;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -75,7 +75,6 @@ public class BookDetailsActivity extends AppCompatActivity {
     private String picURL;
     private String title;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,9 +85,29 @@ public class BookDetailsActivity extends AppCompatActivity {
         title = getIntent().getStringExtra("title");
         picURL = getIntent().getStringExtra("pictureURL");
         author = getIntent().getStringExtra("author");
+        book_id = removeLetter(book_id);
         getDataFromServer();
         initToolBar();
         setToolBarLayout(title);
+    }
+
+
+    private String removeLetter(String book_id) {
+        StringBuffer sb = new StringBuffer();
+        for(int i=0;i<book_id.length();i++){
+            if(book_id.charAt(i) == 'b'){
+                continue;
+            }else{
+                sb.append(book_id.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
+        return true;
     }
 
     /**
@@ -98,8 +117,9 @@ public class BookDetailsActivity extends AppCompatActivity {
      * @Date 2018/1/9 20:44
      **/
     private void getDataFromServer() {
-        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + "getBookInfo" + AppNetConfig.PARAMETER + "book_id=" + book_id;
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.GETBOOKINFO;
         RequestParams params = new RequestParams(url);
+        params.addParameter("book_id",book_id);
         x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
@@ -112,7 +132,7 @@ public class BookDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-
+                CommonUtils.showToastShort(BookDetailsActivity.this,"书籍信息请求失败");
             }
 
             @Override
@@ -151,11 +171,6 @@ public class BookDetailsActivity extends AppCompatActivity {
         collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.white));
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.news_detail, menu);
-//        return true;
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -180,6 +195,23 @@ public class BookDetailsActivity extends AppCompatActivity {
     private void initToolBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener(){
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_back:
+                        finish();
+                        break;
+                    case R.id.action_comment:
+                        Intent intent = new Intent(BookDetailsActivity.this,CommentActivity.class);
+                        intent.putExtra("searchID","b"+book_id);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
 

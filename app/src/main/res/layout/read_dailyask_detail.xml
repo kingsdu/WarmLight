@@ -10,6 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top">
 
+        <include
+            layout="@layout/common_top"></include>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

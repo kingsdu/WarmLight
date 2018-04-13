@@ -110,6 +110,18 @@ public class AppNetConfig {
     public static final String CREATEQUESTION = "createQuestion";
 
 
+    public static final String GETACTIVITYDETAIL = "getActivityDetail";
+
+
+    public static final String GETBOOKINFO = "getBookInfo";
+
+
+    public static final String GETMYCOMMENTFOR = "getMyCommentFor";
+
+
+    public static final String ABOUTSAVE = "aboutSave";
+
+
     /*********************************基本操作符定义***************************************/
     public static final String SEPARATOR = File.separator;
 

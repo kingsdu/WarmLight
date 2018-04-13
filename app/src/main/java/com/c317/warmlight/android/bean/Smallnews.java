@@ -29,5 +29,6 @@ public class Smallnews {
         public int readNum;
         public int agreeNum;
         public int isCollect;
+        public int isComment;
     }
 }

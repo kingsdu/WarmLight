@@ -20,9 +20,11 @@ import com.c317.warmlight.android.Activity.DateDetailActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.base.BaseMenuDetailPager;
 import com.c317.warmlight.android.bean.DateNews;
+import com.c317.warmlight.android.bean.DateNews_detalis;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.utils.CacheUtils;
+import com.c317.warmlight.android.utils.CommonUtils;
 import com.c317.warmlight.android.utils.WarmLightDataBaseHelper;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -56,6 +58,7 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
     private DateAdapter dateAdapter;
     private boolean isHaveNextPage = true;//是否还有下一页
     private int startPage = 1;//初始页
+    private String telephone;
 
 
     public DateTabDetails(Activity activity, String url, int type) {
@@ -91,7 +94,7 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                 if (mType == -1) {
                     isAlldata = true;
                 }
-                mUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.ACTIVITYLIST;
+                mUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYLIST;
                 getDataFromServerPullDown(mUrl, mType, isAlldata);
             }
 
@@ -110,21 +113,65 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
         pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(mActivity, DateDetailActivity.class);
                 DateNews.DateNews_Detail dateNews_detail = dateNews_details.get(position - 1);
-                intent.putExtra("activity_id", dateNews_detail.activity_id);
-                intent.putExtra("picUrl", dateNews_detail.picture);
-                intent.putExtra("title", dateNews_detail.title);
-                intent.putExtra("content", dateNews_detail.content);
-                intent.putExtra("readNum", dateNews_detail.readNum + "");
-                intent.putExtra("agreeNum", dateNews_detail.agreeNum + "");
-                intent.putExtra("commentNum", dateNews_detail.commentNum + "");
-                intent.putExtra("endTime", dateNews_detail.endTime);
-                intent.putExtra("startTime", dateNews_detail.startTime);
-                intent.putExtra("memberNum", dateNews_detail.memberNum + "");
-                intent.putExtra("type", dateNews_detail.type + "");
-                intent.putExtra("place", dateNews_detail.place);
-                mActivity.startActivity(intent);
+                getTelphone(dateNews_detail);
+            }
+        });
+    }
+
+
+
+
+    /**
+    * 获取咨询电话
+    * @params
+    * @author Du
+    * @Date 2018/4/9 22:58
+    **/
+    private void getTelphone(final DateNews.DateNews_Detail dateNews_detail) {
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.GETACTIVITYDETAIL;
+        RequestParams params = new RequestParams(url);
+        params.addParameter("activity_id",dateNews_detail.activity_id);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                DateNews_detalis dateNews_detalis = gson.fromJson(result, DateNews_detalis.class);
+                if(dateNews_detalis.code == 200){
+                    telephone = dateNews_detalis.data.telephone;
+                    Intent intent = new Intent(mActivity, DateDetailActivity.class);
+                    intent.putExtra("activity_id", dateNews_detail.activity_id);
+                    intent.putExtra("picUrl", dateNews_detail.picture);
+                    intent.putExtra("title", dateNews_detail.title);
+                    intent.putExtra("content", dateNews_detail.content);
+                    intent.putExtra("readNum", dateNews_detail.readNum + "");
+                    intent.putExtra("agreeNum", dateNews_detail.agreeNum + "");
+                    intent.putExtra("commentNum", dateNews_detail.commentNum + "");
+                    intent.putExtra("endTime", dateNews_detail.endTime);
+                    intent.putExtra("startTime", dateNews_detail.startTime);
+                    intent.putExtra("memberNum", dateNews_detail.memberNum + "");
+                    intent.putExtra("type", dateNews_detail.type + "");
+                    intent.putExtra("place", dateNews_detail.place);
+                    intent.putExtra("telephone", telephone);
+                    mActivity.startActivity(intent);
+                }else{
+                    CommonUtils.showToastShort(getActivity(),"code is not 200");
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                CommonUtils.showToastShort(getActivity(),"咨询电话请求失败");
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
             }
         });
     }
@@ -414,8 +461,12 @@ public class DateTabDetails extends BaseMenuDetailPager implements ViewPager.OnP
                 holder = (ViewHolder) convertView.getTag();
             }
             DateNews.DateNews_Detail dateNews_detail = dateNews_details.get(position);
-            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + dateNews_detail.picture;
-            Picasso.with(mActivity).load(imageUrl).into(holder.ivPic);
+            if(TextUtils.isEmpty(dateNews_detail.picture)){
+                Picasso.with(mActivity).load(R.drawable.nopic1).into(holder.ivPic);
+            }else{
+                String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + dateNews_detail.picture;
+                Picasso.with(mActivity).load(imageUrl).into(holder.ivPic);
+            }
             holder.tvTitle.setText(dateNews_detail.title);
             holder.tvStartTime.setText(dateNews_detail.startTime);
             holder.tvPlace.setText(dateNews_detail.place);

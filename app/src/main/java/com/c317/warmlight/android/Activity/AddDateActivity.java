@@ -427,9 +427,10 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
                 newDateParams.proposer = getUserAccount();
                 newDateParams.coordinate=param;
                 String[] enrollInfos = enrollInfo.split("\\|");
-                if (enrollInfos.length == 2) {
-                    newDateParams.beginTime = enrollInfos[0];
-                    newDateParams.deadline = enrollInfos[1];
+                if (enrollInfos.length == 3) {
+                    newDateParams.telephone = enrollInfos[0];
+                    newDateParams.beginTime = enrollInfos[1];
+                    newDateParams.deadline = enrollInfos[2];
                     saveNewDateToServer(newDateParams, picFile);
                 } else {
                     Toast.makeText(AddDateActivity.this, "报名设置数据不完整",
@@ -489,7 +490,6 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
                 if (resultInfo.code == 201) {
                     Toast.makeText(AddDateActivity.this, "发布成功",
                             Toast.LENGTH_SHORT).show();
-                    finish();
                     CacheUtils.cleanCache(AddDateActivity.this, AppConstants.ENROLLSETTING);
                 } else {
                     Toast.makeText(AddDateActivity.this, resultInfo.desc.toString(),
@@ -513,6 +513,7 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
 
             }
         });
+        finish();
     }
 
     /**

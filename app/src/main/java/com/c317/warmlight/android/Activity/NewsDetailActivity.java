@@ -7,27 +7,33 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.c317.warmlight.android.R;
-import com.c317.warmlight.android.bean.Smallnews;
+import com.c317.warmlight.android.bean.Collect_Article_Detail;
+import com.c317.warmlight.android.bean.Collect_Article_Info;
+import com.c317.warmlight.android.common.AppConstants;
+import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
+import com.c317.warmlight.android.common.UserManage;
+import com.c317.warmlight.android.utils.CacheUtils;
+import com.c317.warmlight.android.utils.CommonUtils;
 import com.c317.warmlight.android.utils.WarmLightDataBaseHelper;
 import com.c317.warmlight.android.views.NewsWebView;
+import com.google.gson.Gson;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,7 +44,7 @@ import butterknife.ButterKnife;
  * 新闻详情页面
  */
 
-public class NewsDetailActivity extends Activity implements View.OnClickListener,NewsWebView.BottomListener, NewsWebView.onScrollListener {
+public class NewsDetailActivity extends Activity implements View.OnClickListener, NewsWebView.BottomListener, NewsWebView.onScrollListener {
 
     @Bind(R.id.wv_news_details)
     NewsWebView wvNewsDetails;
@@ -53,16 +59,14 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
     @Bind(R.id.ll_news_bottom)
     LinearLayout llNewsBottom;
     private String mUrl;
-    private String mArticleId;
+    private int mArticleId;
     private boolean iscollect;//是否收藏
     private WarmLightDataBaseHelper dataBaseHelper;
     private String mTitle;
-    private String mIntroduce;
-    private String mPubDate;
     private String mPictureURL;
-    private String mReadNum;
-    private String mAgreeNum;
     private String mSource;
+    private int mSaveID;
+    private String mLasttime;
 
     //滑动动画
     private GestureDetector mGestureDetector;
@@ -89,9 +93,8 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
         //初始化已收藏，未收藏
         ivNewsdetailsBack.setVisibility(View.VISIBLE);
         ivNewsdetailsComment.setVisibility(View.VISIBLE);
-
+        //底部动画
         mGestureDetector = new GestureDetector(this, new DetailGestureListener());
-
         wvNewsDetails.setBottomListener(this);
         wvNewsDetails.setScrollListener(this);
 
@@ -109,16 +112,14 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 if (!iscollect) {
-                    dataBaseHelper.updateCollectState(WarmLightDataBaseHelper.READ_TABLENAME, mArticleId, WarmLightDataBaseHelper.READ_ID, WarmLightDataBaseHelper.READ_ISCOLLECT);
+                    addCollect();
                     ivNewsdetailsUncollect.setVisibility(View.GONE);
                     ivNewsdetailsCollect.setVisibility(View.VISIBLE);
-                    Toast.makeText(NewsDetailActivity.this, "已收藏", Toast.LENGTH_SHORT).show();
                     iscollect = true;
                 } else {
-                    dataBaseHelper.unUpdateCollectState(WarmLightDataBaseHelper.READ_TABLENAME, mArticleId, WarmLightDataBaseHelper.READ_ID, WarmLightDataBaseHelper.READ_ISCOLLECT);
+                    unCollect();
                     ivNewsdetailsUncollect.setVisibility(View.VISIBLE);
                     ivNewsdetailsCollect.setVisibility(View.GONE);
-                    Toast.makeText(NewsDetailActivity.this, "取消收藏", Toast.LENGTH_SHORT).show();
                     iscollect = false;
                 }
             }
@@ -128,16 +129,14 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 if (!iscollect) {
-                    dataBaseHelper.updateCollectState(WarmLightDataBaseHelper.READ_TABLENAME, mArticleId, WarmLightDataBaseHelper.READ_ID, WarmLightDataBaseHelper.READ_ISCOLLECT);
+                    addCollect();
                     ivNewsdetailsUncollect.setVisibility(View.GONE);
                     ivNewsdetailsCollect.setVisibility(View.VISIBLE);
-                    Toast.makeText(NewsDetailActivity.this, "已收藏", Toast.LENGTH_SHORT).show();
                     iscollect = true;
                 } else {
-                    dataBaseHelper.unUpdateCollectState(WarmLightDataBaseHelper.READ_TABLENAME, mArticleId, WarmLightDataBaseHelper.READ_ID, WarmLightDataBaseHelper.READ_ISCOLLECT);
+                    unCollect();
                     ivNewsdetailsUncollect.setVisibility(View.VISIBLE);
                     ivNewsdetailsCollect.setVisibility(View.GONE);
-                    Toast.makeText(NewsDetailActivity.this, "取消收藏", Toast.LENGTH_SHORT).show();
                     iscollect = false;
                 }
             }
@@ -210,10 +209,100 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
 
                 return false;
             }
-
-
         });
     }
+
+
+    /**
+     * 取消收藏
+     *
+     * @params
+     * @author Du
+     * @Date 2018/4/13 8:45
+     **/
+    private void unCollect() {
+        if(mSaveID == 0){
+            mSaveID = dataBaseHelper.queryIsCollectSaveID(mArticleId+"");
+        }
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
+        RequestParams params = new RequestParams(url);
+        params.addParameter(AppConstants.SAVE_ID, mSaveID);
+        x.http().request(HttpMethod.DELETE, params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                Collect_Article_Detail collect_article_detail = gson.fromJson(result, Collect_Article_Detail.class);
+                if (collect_article_detail.code == 204) {
+                    CommonUtils.showToastShort(NewsDetailActivity.this, "取消收藏");
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                CommonUtils.showToastShort(NewsDetailActivity.this, "取消收藏失败");
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+
+
+
+
+
+    /**
+     * 添加收藏
+     * @params
+     * @author Du
+     * @Date 2018/4/13 8:27
+     **/
+    private void addCollect() {
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
+        RequestParams params = new RequestParams(url);
+        params.addParameter(AppConstants.ACCOUNT, UserManage.getInstance().getUserInfo(NewsDetailActivity.this).account);
+        params.addParameter(AppConstants.SAVE_CON, "w" + mArticleId);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                Collect_Article_Detail collect_article_detail = gson.fromJson(result, Collect_Article_Detail.class);
+                if (collect_article_detail.code == 201) {
+                    //缓存数据
+                    CommonUtils.showToastShort(NewsDetailActivity.this, "收藏成功");
+                    dataBaseHelper.InsertCollectInfoRead(collect_article_detail.data);
+                    dataBaseHelper.updateCollectState("read", mArticleId+"", "article_id", "isDel");
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                CommonUtils.showToastShort(NewsDetailActivity.this, "收藏失败");
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -228,46 +317,37 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
 
 
     /**
-    * 启动评论Activity
-    * @params
-    * @author Du
-    * @Date 2018/4/1 9:13
-    **/
+     * 启动评论Activity
+     *
+     * @params
+     * @author Du
+     * @Date 2018/4/1 9:13
+     **/
     private void commentActivity() {
-        Intent intent = new Intent(NewsDetailActivity.this,CommentActivity.class);//传ActivityId
-        intent.putExtra("searchID","w"+mArticleId);
+        Intent intent = new Intent(NewsDetailActivity.this, CommentActivity.class);//传ActivityId
+        intent.putExtra("searchID", "w" + mArticleId);
         startActivity(intent);
     }
+
 
     public void initData() {
         if (!TextUtils.isEmpty(getIntent().getStringExtra("url"))) {
             mUrl = getIntent().getStringExtra("url");
         }
         if (!TextUtils.isEmpty(getIntent().getStringExtra("article_id"))) {
-            mArticleId = getIntent().getStringExtra("article_id");
+            mArticleId = Integer.valueOf(getIntent().getStringExtra("article_id"));
         }
         if (!TextUtils.isEmpty(getIntent().getStringExtra("title"))) {
             mTitle = getIntent().getStringExtra("title");
         }
-        if (!TextUtils.isEmpty(getIntent().getStringExtra("introduce"))) {
-            mIntroduce = getIntent().getStringExtra("introduce");
-        }
-        if (!TextUtils.isEmpty(getIntent().getStringExtra("pubDate"))) {
-            mPubDate = getIntent().getStringExtra("pubDate");
+        if (!TextUtils.isEmpty(getIntent().getStringExtra("save_id"))) {
+            mSaveID = dataBaseHelper.queryIsCollectSaveID(mArticleId + "");
         }
         if (!TextUtils.isEmpty(getIntent().getStringExtra("pictureURL"))) {
             mPictureURL = getIntent().getStringExtra("pictureURL");
         }
-        if (!TextUtils.isEmpty(getIntent().getStringExtra("readNum"))) {
-            mReadNum = getIntent().getStringExtra("readNum");
-        }
-        if (!TextUtils.isEmpty(getIntent().getStringExtra("agreeNum"))) {
-            mAgreeNum = getIntent().getStringExtra("agreeNum");
-        }
-        if (!TextUtils.isEmpty(getIntent().getStringExtra("source"))) {
-            mSource = getIntent().getStringExtra("source");
-        }
     }
+
 
     /**
      * 初始查询新闻是否被收藏
@@ -277,30 +357,12 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
      * @Date 2018/3/14 16:50
      **/
     private boolean queryIsCollect() {
-        String isCollect = dataBaseHelper.queryIsCollectRead(mArticleId);
+        String isCollect = dataBaseHelper.queryIsCollectRead(mArticleId+"");
         if (!TextUtils.isEmpty(isCollect)) {
             if (isCollect.equals("1")) {
                 return true;
             } else {
                 return false;
-            }
-        } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Smallnews.Smallnews_Detail smallnews_detail = new Smallnews.Smallnews_Detail();
-                setDefaultData();
-                smallnews_detail.pubDate = sdf.parse(mPubDate);
-                smallnews_detail.article_id = Integer.parseInt(mArticleId);
-                smallnews_detail.title = mTitle;
-                smallnews_detail.introduce = mIntroduce;
-                smallnews_detail.pictureURL = mPictureURL;
-                smallnews_detail.source = mSource;
-                smallnews_detail.readNum = Integer.parseInt(mReadNum);
-                smallnews_detail.agreeNum = Integer.parseInt(mAgreeNum);
-                smallnews_detail.isCollect = 0;
-                dataBaseHelper.InsertCollectInfoRead(smallnews_detail);
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
         }
         return false;
@@ -315,29 +377,17 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
      * @Date 2018/3/20 23:00
      **/
     private void setDefaultData() {
-        if (TextUtils.isEmpty(mPubDate)) {
-            mPubDate = 0 + "";
-        }
-        if (TextUtils.isEmpty(mArticleId)) {
-            mArticleId = 0 + "";
-        }
         if (TextUtils.isEmpty(mTitle)) {
             mTitle = "mTitle is null";
         }
-        if (TextUtils.isEmpty(mIntroduce)) {
-            mIntroduce = "mIntroduce is null";
+        if (TextUtils.isEmpty(mSaveID + "")) {
+            mSaveID = 0;
         }
         if (TextUtils.isEmpty(mPictureURL)) {
             mPictureURL = R.drawable.musi01 + "";
         }
-        if (TextUtils.isEmpty(mSource)) {
-            mSource = "mSource is null";
-        }
-        if (TextUtils.isEmpty(mReadNum)) {
-            mReadNum = 0 + "";
-        }
-        if (TextUtils.isEmpty(mAgreeNum)) {
-            mAgreeNum = 0 + "";
+        if (TextUtils.isEmpty(mLasttime)) {
+            mLasttime = "1999-10-10";
         }
     }
 
@@ -386,7 +436,6 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
         isToolHide = true;
 
     }
-
 
 
     /**

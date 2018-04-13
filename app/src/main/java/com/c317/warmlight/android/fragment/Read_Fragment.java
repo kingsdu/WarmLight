@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.androidkun.PullToRefreshRecyclerView;
 import com.androidkun.callback.PullToRefreshListener;
+import com.c317.warmlight.android.Activity.BookDetailsActivity;
 import com.c317.warmlight.android.Activity.DailyAskDetailActivity;
 import com.c317.warmlight.android.Activity.DateDetailActivity;
 import com.c317.warmlight.android.Activity.NewsDetailActivity;
@@ -40,6 +41,7 @@ import com.c317.warmlight.android.bean.DailyAsk;
 import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.bean.OrangeGuess;
 import com.c317.warmlight.android.bean.Smallnews;
+import com.c317.warmlight.android.bean.TopBook;
 import com.c317.warmlight.android.bean.Topnews;
 import com.c317.warmlight.android.common.AppConstants;
 import com.c317.warmlight.android.common.AppNetConfig;
@@ -341,6 +343,7 @@ public class Read_Fragment extends BaseFragment implements PullToRefreshListener
             int memberNum = dateNews_detail.memberNum;
             int type = dateNews_detail.type;
             String place = dateNews_detail.place;
+            String picUrl = dateNews_detail.picture;
             Intent intent = new Intent(mActivity, DateDetailActivity.class);
             intent.putExtra("activity_id", activity_id);
             intent.putExtra("picture", picture);
@@ -354,6 +357,7 @@ public class Read_Fragment extends BaseFragment implements PullToRefreshListener
             intent.putExtra("memberNum", memberNum);
             intent.putExtra("type", type);
             intent.putExtra("place", place);
+            intent.putExtra("picUrl", picUrl);
             mActivity.startActivity(intent);
         }
 
@@ -491,16 +495,42 @@ public class Read_Fragment extends BaseFragment implements PullToRefreshListener
             container.addView(imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 String url = "";
-
                 @Override
                 public void onClick(View v) {
-                    String search_id = topnewsInfo.search_id;
+                    final String search_id = topnewsInfo.search_id;
                     if (CommonUtils.isLetter(search_id)) {
                         url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.GETTOPICINFO + AppNetConfig.PARAMETER + AppNetConfig.SEARCH_ID + AppNetConfig.EQUAL + search_id;
-                        Intent intent = new Intent(mActivity, TopDetailsActivity.class);
-                        intent.putExtra("url", url);
-                        intent.putExtra("search_id", search_id);
-                        mActivity.startActivity(intent);
+                        RequestParams params = new RequestParams(url);
+                        x.http().get(params, new Callback.CommonCallback<String>() {
+                            @Override
+                            public void onSuccess(String result) {
+                                Gson gson = new Gson();
+                                TopBook topBook = gson.fromJson(result, TopBook.class);
+                                if(topBook.code == 200){
+                                    Intent intent = new Intent(mActivity, BookDetailsActivity.class);
+                                    intent.putExtra("book_id", search_id);
+                                    intent.putExtra("title", topBook.data.title);
+                                    intent.putExtra("pictureURL", topBook.data.pictureURL);
+                                    intent.putExtra("author", topBook.data.author);
+                                    mActivity.startActivity(intent);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable ex, boolean isOnCallback) {
+
+                            }
+
+                            @Override
+                            public void onCancelled(CancelledException cex) {
+
+                            }
+
+                            @Override
+                            public void onFinished() {
+
+                            }
+                        });
                     } else {
                         url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.GETARTCONT + AppNetConfig.SEPARATOR + search_id;
                         Intent intent = new Intent(mActivity, NewsDetailActivity.class);
@@ -598,9 +628,10 @@ public class Read_Fragment extends BaseFragment implements PullToRefreshListener
                 holder = (CardViewHolder) convertView.getTag();
             }
             if (TextUtils.isEmpty(dateNews_detail.picture)) {
-                Picasso.with(mContext).load(R.drawable.musi01).into(holder.portraitView);
+                Picasso.with(mContext).load(R.drawable.nopic1).into(holder.portraitView);
             } else {
-                Picasso.with(mContext).load(dateNews_detail.picture).into(holder.portraitView);
+                String picUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + dateNews_detail.picture;
+                Picasso.with(mContext).load(picUrl).into(holder.portraitView);
             }
             holder.portraitView.setScaleType(ImageView.ScaleType.FIT_XY);
 

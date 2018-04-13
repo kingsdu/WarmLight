@@ -1,6 +1,7 @@
 package com.c317.warmlight.android.Activity;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.utils.CommonUtils;
+import com.c317.warmlight.android.utils.WarmLightDataBaseHelper;
 import com.c317.warmlight.android.views.CommentItemView;
 import com.google.gson.Gson;
 
@@ -64,8 +66,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     TextView tvTopbarTitle;
     private String searchID;
     private Comment commentItem;
-
+    private WarmLightDataBaseHelper dataBaseHelper;
     private CommentAdapter commentAdapter;
+    private int screenHeight;
+    private boolean isActive;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +81,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         ivBackMe.setOnClickListener(this);
         ivBackMe.setVisibility(View.VISIBLE);
         searchID = getIntent().getStringExtra("searchID");
+        dataBaseHelper = WarmLightDataBaseHelper.getDatebaseHelper(this);
         initData();
     }
 
@@ -133,7 +138,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
 
     /**
-     * 一级评论
+     * 进行一级评论
      *
      * @params
      * @author Du
@@ -158,7 +163,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         CommonUtils.showToastShort(CommentActivity.this, "评论成功");
                     }
                     etReadInput.setText("");
-                    showInputLan(false);
+                    if(isActive){
+                        showInputLan(false);
+                    }
                 }
 
                 @Override
@@ -250,9 +257,18 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             showCommentView(position, flag);
         }
 
-        //弹出底部评论框，并监听发送按钮
+
+
+        /**
+        * 进行二级评论
+        * @params
+        * @author Du
+        * @Date 2018/4/10 14:40
+        **/
         private void showCommentView(final int position, boolean flag) {
-            showInputLan(flag);
+            if(!isActive){
+                showInputLan(flag);
+            }
             llReadComment.findViewById(R.id.btn_read_submit).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -279,7 +295,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                     CommonUtils.showToastShort(CommentActivity.this, "评论成功");
                                 }
                                 et.setText("");
-                                showInputLan(false);
+                                if(isActive){
+                                    showInputLan(false);
+                                }
                             }
 
                             @Override
@@ -304,6 +322,54 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //获取当前屏幕内容的高度
+        screenHeight = getWindow().getDecorView().getHeight();
+        getWindow().getDecorView().addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                //获取View可见区域的bottom
+                Rect rect = new Rect();
+                getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+                if(bottom!=0 && oldBottom!=0 && bottom - rect.bottom <= 0){
+                    isActive = false;//隐藏
+                }else {
+                    isActive = true;//弹出
+                }
+            }
+        });
+    }
+
+    /**
+    * 是否是文章
+    * @params
+    * @author Du
+    * @Date 2018/4/10 14:36
+    **/
+    private boolean isArticle(String searchID){
+        for(int i=0;i<searchID.length();i++){
+            if('w' == searchID.charAt(i)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private void saveArticleToDB(String searchID) {
+        String articleId = searchID.substring(1,searchID.length());
+//        dataBaseHelper.updateCommentState(WarmLightDataBaseHelper.READ_TABLENAME, articleId, WarmLightDataBaseHelper.READ_ID, WarmLightDataBaseHelper.READ_ISCOMMENT);
+    }
+
+
+    /**
+    * 显示输入法 True显示  False则不显示
+    * @params
+    * @author Du
+    * @Date 2018/4/10 14:22
+    **/
     private void showInputLan(boolean flag) {
         final boolean isFocus = flag;
         (new Handler()).postDelayed(new Runnable() {
@@ -313,7 +379,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 InputMethodManager imm = (InputMethodManager)
                         CommentActivity.this.getSystemService(INPUT_METHOD_SERVICE);
                 if (isFocus) {
-                    //显示输入法
                     imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                     etReadInput.setFocusable(true);
                     etReadInput.requestFocus();

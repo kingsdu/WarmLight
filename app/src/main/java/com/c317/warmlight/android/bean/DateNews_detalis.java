@@ -14,6 +14,7 @@ import java.util.Date;
 public class DateNews_detalis {
 
     public DateNews_content data;
+    public int code;
 
     public static class DateNews_content{
         public String activity_id;
