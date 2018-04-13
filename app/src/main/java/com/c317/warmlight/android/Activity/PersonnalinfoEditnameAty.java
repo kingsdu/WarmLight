@@ -60,7 +60,6 @@ public class PersonnalinfoEditnameAty extends Activity implements View.OnClickLi
         ivBackMe.setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

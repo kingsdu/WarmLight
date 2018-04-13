@@ -208,6 +208,8 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
                 .rationale(rationaleListener)
                 .callback(this)
                 .start();
+
+//        updatecoordinate();
     }
 
     /**
@@ -490,6 +492,7 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
                 if (resultInfo.code == 201) {
                     Toast.makeText(AddDateActivity.this, "发布成功",
                             Toast.LENGTH_SHORT).show();
+                    finish();
                     CacheUtils.cleanCache(AddDateActivity.this, AppConstants.ENROLLSETTING);
                 } else {
                     Toast.makeText(AddDateActivity.this, resultInfo.desc.toString(),
@@ -513,7 +516,6 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
 
             }
         });
-        finish();
     }
 
     /**

@@ -13,6 +13,7 @@ public class GroupChatInfo {
         public int group_id;
         public String groupName;
         public Boolean isSingle;
+        public String founder;
 
         public String getPicture() {
             return picture;
@@ -40,6 +41,13 @@ public class GroupChatInfo {
         }
         public void setIsSingle(Boolean isSingle) {
             this.isSingle = isSingle;
+        }
+
+        public String getFounder() {
+            return founder;
+        }
+        public void setFounder(String founder) {
+            this.founder = founder;
         }
     }
 }

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:background="#FAFAFA"
         android:orientation="vertical">
-    <include layout="@layout/common_top"></include>
+        <include layout="@layout/common_top"></include>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,7 +28,7 @@
 
         </LinearLayout>
         <RelativeLayout
-            android:id="@+id/rl_groupchatset_groupname"
+            android:id="@+id/rl_isnotadminset_groupchat"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
@@ -36,7 +36,7 @@
             android:divider="@drawable/divide_shape">
 
             <TextView
-                android:id="@+id/tv_groupchatset_groupname"
+                android:id="@+id/tv_isnotadminset_groupchat"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:background="#00000000"
@@ -47,29 +47,71 @@
                 android:textSize="17sp" />
 
             <TextView
-                android:id="@+id/tv_groupchatset_groupname1"
+                android:id="@+id/tv_isnotadminset_groupchat1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_toRightOf="@+id/tv_groupchatset_groupname"
+                android:layout_toRightOf="@+id/tv_isnotadminset_groupchat"
                 android:gravity="center"
                 android:text="XXX"
                 android:textColor="#646464"
                 android:textSize="16sp" />
-
         </RelativeLayout>
         <RelativeLayout
-            android:id="@+id/rl_exit_me"
+            android:id="@+id/rl_groupmember_groupchat"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:divider="@drawable/divide_shape" >
+            <TextView
+                android:id="@+id/tv_groupmember_groupchat"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:gravity="center"
+                android:paddingLeft="8dp"
+                android:text="群成员: "
+                android:textColor="#99CCFF"
+                android:textSize="17sp" />
+            <TextView
+                android:id="@+id/tv_groupmember_num"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:gravity="center"
+                android:textSize="17dp"
+                android:textColor="#99CCFF"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@+id/ll_groupmember_actionright"
+                />
+            <LinearLayout
+                android:id="@+id/ll_groupmember_actionright"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal" >
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/action_right"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_exitgroup_groupchat"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="30dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
             android:background="@color/record_red"
             android:gravity="center">
 
             <TextView
-                android:id="@+id/tv_exit_me"
+                android:id="@+id/tv_exitgroup_groupchat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="15dp"

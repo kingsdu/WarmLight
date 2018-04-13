@@ -94,6 +94,12 @@
 
         <activity android:name="com.c317.warmlight.android.Activity.GroupChatEditGroupnameAty"></activity>
 
+        <activity android:name="com.c317.warmlight.android.Activity.isAdminGroupChatSettingAty"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.isnotAdminGroupChatSettingAty"></activity>
+
+        <activity android:name="com.c317.warmlight.android.Activity.GroupMemberActivity"></activity>
+
         <activity
             android:name="com.c317.warmlight.android.Activity.SettingMyDateActivity"
             android:theme="@style/Theme.PageIndicatorDefaults"></activity>

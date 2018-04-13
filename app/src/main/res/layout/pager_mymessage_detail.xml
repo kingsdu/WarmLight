@@ -50,11 +50,11 @@
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
+
     <ListView
         android:id="@+id/lv_mymessage_chatlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@color/gray_gray"
-        android:dividerHeight="2px">
-        </ListView>
+        android:dividerHeight="2px"></ListView>
 </LinearLayout>

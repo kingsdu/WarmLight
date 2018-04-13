@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,10 +32,10 @@ import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
-import com.c317.warmlight.android.tabpager.DateTabDetails;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.squareup.picasso.Picasso;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -64,9 +65,9 @@ public class MapActivity extends Activity {
     TextView tvBaiduposPosition;
     @Bind(R.id.mv_baidumap_mapview)
     MapView mvBaidumapMapview;
-
     @Bind(R.id.pull_coordinatedate_refresh)
     PullToRefreshListView pullCoordinatedateRefresh;
+
     /**
      * 定位SDK核心类
      */
@@ -97,6 +98,7 @@ public class MapActivity extends Activity {
     private CoordinateDateAdapter coordinateDateAdapter;
     List<LatLng> latLngs = new ArrayList<>();
     public String[] coordinates;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +106,7 @@ public class MapActivity extends Activity {
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.baidumap_aty);
         ButterKnife.bind(this);
+        pullCoordinatedateRefresh.setMode(PullToRefreshBase.Mode.BOTH);//上拉下拉都支持
         ivBackMe.setVisibility(View.VISIBLE);
         tvTopbarTitle.setText("友约地图");
         /**
@@ -130,7 +133,7 @@ public class MapActivity extends Activity {
         locationClient.setLocOption(option);
         //开启定位
         locationClient.start();
-
+        pullCoordinatedateRefresh.setMode(PullToRefreshBase.Mode.BOTH);//上拉下拉都支持
         initData();
 
         ivBackMe.setOnClickListener(new View.OnClickListener() {
@@ -167,9 +170,11 @@ public class MapActivity extends Activity {
         }
     }
 
-    public void initData(){
-        getDataFromServer(PAGE);
+    public void initData() {
+        getDataFromServer();
+
         pullCoordinatedateRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
                 getDataFromServerPullDown();
@@ -181,14 +186,14 @@ public class MapActivity extends Activity {
                     PAGE++;//数据页数增加
                     UPPAGESIZE++;//总页数
                 }
-                getDataFromServer(PAGE);
+                getDataFromServer();
             }
         });
         pullCoordinatedateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MapActivity.this, DateDetailActivity.class);
-                DateNews.DateNews_Detail dateNews_detail = coordinatedateNews_details.get(position - 1);
+                DateNews.DateNews_Detail dateNews_detail = coordinatedateNews_details.get(position-1);
                 intent.putExtra("activity_id", dateNews_detail.activity_id);
                 intent.putExtra("picUrl", dateNews_detail.picture);
                 intent.putExtra("title", dateNews_detail.title);
@@ -205,11 +210,12 @@ public class MapActivity extends Activity {
             }
         });
     }
+
     /**
      * 获取友约活动列表
      */
-    private void getDataFromServer(final int PAGE) {
-        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYLIST;
+    private void getDataFromServer() {
+        String url = "http://14g97976j3.51mypc.cn:10759/youyue/getActivityList";
         RequestParams params = new RequestParams(url);
         params.addParameter("isCoor", 1);
         params.addParameter("page", PAGE);
@@ -218,7 +224,6 @@ public class MapActivity extends Activity {
             public void onSuccess(String result) {
                 Gson gson = new Gson();
                 DateNews dateNews = gson.fromJson(result, DateNews.class);
-
                 if (UPPAGESIZE < dateNews.data.total) {
                     processData(result, true);
                     isHaveNextPage = true;
@@ -228,7 +233,6 @@ public class MapActivity extends Activity {
                 }
                 GetCoordinatePoint();
                 pullCoordinatedateRefresh.onRefreshComplete();
-
             }
 
             @Override
@@ -250,19 +254,19 @@ public class MapActivity extends Activity {
     }
 
 
-    private void processData(String cache, boolean isMore){
-        if (isFirst){
+    private void processData(String cache, boolean isMore) {
+        if (isFirst) {
             if (isMore) {
                 Gson gson = new Gson();
                 dateNews_info = gson.fromJson(cache, DateNews.class);
                 coordinatedateNews_details.addAll(dateNews_info.data.detail);
                 coordinateDateAdapter = new CoordinateDateAdapter();
                 pullCoordinatedateRefresh.setAdapter(coordinateDateAdapter);
-            }else {
+            } else {
                 //第一次，无数据
             }
             isFirst = false;
-        }else{
+        } else {
             if (isMore) {
                 Gson gson = new Gson();
                 dateNews_info = gson.fromJson(cache, DateNews.class);
@@ -274,6 +278,7 @@ public class MapActivity extends Activity {
                 //非第一次，无数据
             }
         }
+        pullCoordinatedateRefresh.onRefreshComplete();
     }
 
     /**
@@ -296,20 +301,20 @@ public class MapActivity extends Activity {
     /**
      * 得到点标记
      */
-    public final List<OverlayOptions>GetCoordinatePoint(){
+    public final List<OverlayOptions> GetCoordinatePoint() {
         baiduMap.clear();
         //创建OverlayOptions的集合
         List<OverlayOptions> markerList = new ArrayList<OverlayOptions>();
         List<LatLng> latLngs = new ArrayList<>();
         int markerSize = 0;
-        for(int i = 0; i < coordinatedateNews_details.size(); i++){
+        for (int i = 0; i < coordinatedateNews_details.size(); i++) {
             String[] coordinates = coordinatedateNews_details.get(i).getCoordinate().split(",");
             LatLng point = new LatLng(Double.valueOf(coordinates[0]), Double.valueOf(coordinates[1]));
             latLngs.add(point);
             Log.e("bbb", String.valueOf(point));
         }
 
-        for (int i = 0; i < latLngs.size()&& markerSize < 5; i++) {
+        for (int i = 0; i < latLngs.size() && markerSize < 5; i++) {
 //            if (coordinatedateNews_details.get(i).coordinate == null) {
 //                continue;
 //            }
@@ -330,10 +335,10 @@ public class MapActivity extends Activity {
     }
 
 
-
-    private void getDataFromServerPullDown(){
+    private void getDataFromServerPullDown() {
         String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYLIST;
         RequestParams params = new RequestParams(url);
+        params.addParameter("isCoor", 1);
         params.addParameter("page", startPage);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
@@ -342,18 +347,15 @@ public class MapActivity extends Activity {
                 DateNews dateNews = gson.fromJson(result, DateNews.class);
                 //判断下一页是否还有数据
                 if (UPPAGESIZE < dateNews.data.total) {
-                    processData(result, true);
-                    isHaveNextPage = true;
+                    processDataPullDown(result);
                 } else {
-                    //无新数据
-                    isHaveNextPage = false;
                 }
                 pullCoordinatedateRefresh.onRefreshComplete();
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-
+                Toast.makeText(MapActivity.this, "onError", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -366,6 +368,26 @@ public class MapActivity extends Activity {
 
             }
         });
+    }
+
+    /**
+     * 下拉刷新数据，更新数据
+     *
+     * @params
+     * @author Du
+     * @Date 2018/3/27 14:46
+     **/
+    private void processDataPullDown(String result) {
+        //重新开始加载
+        coordinatedateNews_details.clear();
+        PAGE = 1;
+        UPPAGESIZE = 0;
+        //加载新数据
+        Gson gson = new Gson();
+        dateNews_info = gson.fromJson(result, DateNews.class);
+        coordinatedateNews_details.addAll(dateNews_info.data.detail);
+        coordinateDateAdapter = new CoordinateDateAdapter();
+        pullCoordinatedateRefresh.setAdapter(coordinateDateAdapter);
     }
 
     private class CoordinateDateAdapter extends BaseAdapter {
@@ -392,23 +414,33 @@ public class MapActivity extends Activity {
             if (convertView == null) {
                 convertView = View.inflate(MapActivity.this, R.layout.list_item_coordinatedates, null);
                 holder = new ViewHolder();
-                holder.ivitemTitle = (ImageView) convertView.findViewById(R.id.iv_coordinatedate_itemTitle);
-                holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_coordinatedate_itemTitle);
-                holder.ivLocate = (ImageView) convertView.findViewById(R.id.iv_coordinatedate_locate);
-                holder.tvPlace = (TextView) convertView.findViewById(R.id.tv_coordinatedate_itemPlace);
-                holder.ivitemroute = (ImageView) convertView.findViewById(R.id.iv_coordinatedate_route);
+                holder.ivPic = (ImageView) convertView.findViewById(R.id.iv_coordate_itemPic);
+                holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_coordate_itemTitle);
+                holder.tvStartTime = (TextView) convertView.findViewById(R.id.tv_coordate_itemStartTime);
+                holder.tvPlace = (TextView) convertView.findViewById(R.id.tv_coordate_itemPlace);
+                holder.tvMember = (TextView) convertView.findViewById(R.id.tv_coordate_itemMembernum);
+                holder.ivTime = (ImageView) convertView.findViewById(R.id.iv_coordate_clock);
+                holder.ivLocate = (ImageView) convertView.findViewById(R.id.iv_coordate_locate);
+                holder.ivJoinPeople = (ImageView) convertView.findViewById(R.id.iv_coordate_joinpeople);
+                holder.btnnavigation = (Button) convertView.findViewById(R.id.btn_coordate_itemnavigation);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
             final DateNews.DateNews_Detail dateNews_detail = coordinatedateNews_details.get(position);
-            holder.ivitemTitle.setImageResource(R.drawable.sign);
+            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + dateNews_detail.picture;
+            Picasso.with(MapActivity.this).load(imageUrl).into(holder.ivPic);
             holder.tvTitle.setText(dateNews_detail.title);
-            holder.ivLocate.setImageResource(R.drawable.locate);
+            holder.tvStartTime.setText(dateNews_detail.startTime);
             holder.tvPlace.setText(dateNews_detail.place);
-            holder.ivitemroute.setImageResource(R.drawable.icon_home_route);
+            holder.tvMember.setText(String.valueOf(dateNews_detail.memberNum));
+            holder.tvStartTime.setText(dateNews_detail.startTime);
+            holder.ivTime.setImageResource(R.drawable.time);
+            holder.ivLocate.setImageResource(R.drawable.locate);
+            holder.ivJoinPeople.setImageResource(R.drawable.join_people);
 
-            holder.ivitemroute.setOnClickListener(new View.OnClickListener() {
+
+            holder.btnnavigation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     invokingBD(dateNews_detail.coordinate);
@@ -418,7 +450,7 @@ public class MapActivity extends Activity {
         }
 
 
-        public void invokingBD(String coordinate){
+        public void invokingBD(String coordinate) {
             Intent intent = null;
 //            for(int i = 0; i < coordinatedateNews_details.size(); i++){
 //                String[] coordinates = coordinatedateNews_details.get(i).getCoordinate().split(",");
@@ -429,17 +461,17 @@ public class MapActivity extends Activity {
             try {
                 intent = Intent.getIntent("intent://map/direction?" +
                         //"origin=latlng:"+"34.264642646862,108.95108518068&" +   //起点  此处不传值默认选择当前位置
-                        "destination=latlng:"+coordinates[0]+","+coordinates[1]+"|name:我的目的地"+        //终点
+                        "destination=latlng:" + coordinates[0] + "," + coordinates[1] + "|name:我的目的地" +        //终点
                         "&mode=driving&" +          //导航路线方式
                         "region=武汉" +           //
                         "&src=慧医#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
-                if(isInstallByread("com.baidu.BaiduMap")){
+                if (isInstallByread("com.baidu.BaiduMap")) {
                     startActivity(intent); //启动调用
-                    Log.e("GasStation", "百度地图客户端已经安装") ;
-                }else{
+                    Log.e("GasStation", "百度地图客户端已经安装");
+                } else {
                     Toast.makeText(MapActivity.this, "没有安装百度地图客户端", Toast.LENGTH_SHORT).show();
                 }
-            }catch (URISyntaxException e) {
+            } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
 
@@ -448,6 +480,7 @@ public class MapActivity extends Activity {
 
         /**
          * 判断是否安装目标应用
+         *
          * @param packageName 目标应用安装后的包名
          * @return 是否已安装目标应用
          */
@@ -459,11 +492,15 @@ public class MapActivity extends Activity {
     }
 
     static class ViewHolder {
+        public ImageView ivPic;
         public TextView tvTitle;
+        public TextView tvStartTime;
         public TextView tvPlace;
+        public TextView tvMember;
+        public ImageView ivTime;
         public ImageView ivLocate;
-        public ImageView ivitemTitle;
-        public ImageView ivitemroute;
+        public ImageView ivJoinPeople;
+        public Button btnnavigation;
     }
 
     @Override

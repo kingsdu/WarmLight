@@ -77,6 +77,7 @@ public class GroupChat_Fragment extends Fragment implements
                 GroupChatInfo.GroupChatInfo_Content groupChatinfo_content= groupchatdata.get(position);
                 intent.putExtra("groupName", groupChatinfo_content.groupName);
                 intent.putExtra("group_id", groupChatinfo_content.group_id);
+                intent.putExtra("founder", groupChatinfo_content.founder);
                 getActivity().startActivity(intent);
             }
         });
