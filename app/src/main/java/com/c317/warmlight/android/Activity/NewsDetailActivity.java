@@ -65,7 +65,7 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
     private String mTitle;
     private String mPictureURL;
     private String mSource;
-    private int mSaveID;
+    private int mSaveID = 0;
     private String mLasttime;
 
     //滑动动画
@@ -235,6 +235,7 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
                 Collect_Article_Detail collect_article_detail = gson.fromJson(result, Collect_Article_Detail.class);
                 if (collect_article_detail.code == 204) {
                     CommonUtils.showToastShort(NewsDetailActivity.this, "取消收藏");
+                    dataBaseHelper.unUpdateCollectState("read", mArticleId+"", "article_id", "isDel");
                 }
             }
 
@@ -337,14 +338,9 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
         if (!TextUtils.isEmpty(getIntent().getStringExtra("article_id"))) {
             mArticleId = Integer.valueOf(getIntent().getStringExtra("article_id"));
         }
-        if (!TextUtils.isEmpty(getIntent().getStringExtra("title"))) {
-            mTitle = getIntent().getStringExtra("title");
-        }
-        if (!TextUtils.isEmpty(getIntent().getStringExtra("save_id"))) {
+        mSaveID = getIntent().getIntExtra("save_id", 0);
+        if (mSaveID == 0) {
             mSaveID = dataBaseHelper.queryIsCollectSaveID(mArticleId + "");
-        }
-        if (!TextUtils.isEmpty(getIntent().getStringExtra("pictureURL"))) {
-            mPictureURL = getIntent().getStringExtra("pictureURL");
         }
     }
 
@@ -368,28 +364,6 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
         return false;
     }
 
-
-    /**
-     * 设置为空
-     *
-     * @params
-     * @author Du
-     * @Date 2018/3/20 23:00
-     **/
-    private void setDefaultData() {
-        if (TextUtils.isEmpty(mTitle)) {
-            mTitle = "mTitle is null";
-        }
-        if (TextUtils.isEmpty(mSaveID + "")) {
-            mSaveID = 0;
-        }
-        if (TextUtils.isEmpty(mPictureURL)) {
-            mPictureURL = R.drawable.musi01 + "";
-        }
-        if (TextUtils.isEmpty(mLasttime)) {
-            mLasttime = "1999-10-10";
-        }
-    }
 
 
     @Override

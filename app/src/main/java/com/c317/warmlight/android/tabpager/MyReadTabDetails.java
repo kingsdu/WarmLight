@@ -2,6 +2,7 @@ package com.c317.warmlight.android.tabpager;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -59,10 +60,8 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     private int mType;
     private String mUrl;
     private String account;
-    private List<Collect_Article_Info.Collect_Article_Details> collect_article_detailses;
-    private String lastTime;
-    public static final int QUERY_LASTTIME = 0;
     private WarmLightDataBaseHelper dataBaseHelper;
+    private Collect_Article_Info collect_article_info;
 
     public MyReadTabDetails(Activity activity, int type) {
         super(activity);
@@ -91,15 +90,12 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.GETARTCONT + AppNetConfig.SEPARATOR;
-                Collect_Article_Info.Collect_Article_Details collect_article_details = collect_article_detailses.get(position - 1);
+                Collect_Article_Info.Collect_Article_Details collect_article_details = collect_article_info.data.get(position-1);
                 String article_id = String.valueOf(collect_article_details.article_id);
                 Intent intent = new Intent(mActivity, NewsDetailActivity.class);
                 intent.putExtra("url", url + article_id);
                 intent.putExtra("article_id", article_id);
-                intent.putExtra("title", collect_article_details.title);
                 intent.putExtra("save_id", collect_article_details.save_id);
-                intent.putExtra("lastTime", collect_article_details.lastTime);
-                intent.putExtra("pictureURL", collect_article_details.pictureURL);
                 mActivity.startActivity(intent);
             }
         });
@@ -110,72 +106,16 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     @Override
     public void initData() {
         super.initData();
-        isNeedQuery();
-    }
-
-
-    private void getData() {
         if (mType == 0) {
-            if (!TextUtils.isEmpty(lastTime)) {
-                mUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
-                if (compareLastTime()) {
-                    //有新数据
-                    getUserCollect(mUrl);
-                }else {
-                    //无新数据
-                    String cache = CacheUtils.getCache(mUrl, mActivity);
-                    if (!TextUtils.isEmpty(cache)) {
-                        processCollectData(cache, false);
-                    } else {
-                        //第一次进入
-                        getUserCollect(mUrl);
-                    }
-                }
-            }
+            getUserCollect();
         }
-        else if (mType == 1) {
-            //获取用户评论对象
-            mUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.GETMYCOMMENTFOR;
-            getUserComment(mUrl);
-        }
+//        else if (mType == 1) {
+//            //获取用户评论对象
+//            getUserComment();
+//        }
     }
 
 
-    /**
-     * 比较时间
-     *
-     * @params
-     * @author Du
-     * @Date 2018/4/13 9:39
-     **/
-    private boolean compareLastTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        List<Collect_Article_Info.Collect_Article_Details> collect_article_detailses = dataBaseHelper.queryMultiIsCollectRead();
-        String dateLastTime = collect_article_detailses.get(0).lastTime;
-        try {
-            Date parse = sdf.parse(dateLastTime);//sqllite数据库时间
-            Date dateparse = sdf.parse(lastTime);//后台数据库当前时间
-            if (parse.getTime() < dateparse.getTime()) {
-                //有新的数据，需要更新
-                return true;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-
-    private Handler handler = new Handler() {
-
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case QUERY_LASTTIME:
-                    getData();
-                    break;
-            }
-        }
-    };
 
 
     /**
@@ -185,18 +125,7 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
      * @author Du
      * @Date 2018/4/13 9:27
      **/
-    private void isNeedQuery() {
-        //请求网络，比较时间，确定
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Message msg = new Message();
-                msg.what = QUERY_LASTTIME;
-                getUserCollect(mUrl);
-                handler.sendMessage(msg);
-            }
-        }).start();
-    }
+
 
 
     private void processCollectData(String cache, boolean isMore) {
@@ -208,8 +137,9 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     }
 
 
-    private void getUserCollect(final String url) {
-        RequestParams params = new RequestParams(url);
+    private void getUserCollect() {
+        mUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
+        RequestParams params = new RequestParams(mUrl);
         params.addParameter("account", UserManage.getInstance().getUserInfo(mActivity).account);
         params.addParameter("type", "w");
         x.http().get(params, new Callback.CommonCallback<String>() {
@@ -217,10 +147,8 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
             @Override
             public void onSuccess(String result) {
                 Gson gson = new Gson();
-                Collect_Article_Info collect_article_info = gson.fromJson(result, Collect_Article_Info.class);
+                collect_article_info = gson.fromJson(result, Collect_Article_Info.class);
                 if (collect_article_info.code == 200) {
-                    lastTime = collect_article_info.data.get(0).lastTime;
-                    CacheUtils.setCache(url, result, mActivity);
                     processCollectData(result, true);
                 }
             }
@@ -243,8 +171,9 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     }
 
 
-    private void getUserComment(String url) {
-        RequestParams params = new RequestParams(url);
+    private void getUserComment() {
+        mUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.GETMYCOMMENTFOR;
+        RequestParams params = new RequestParams(mUrl);
         params.addParameter("userID", UserManage.getInstance().getUserInfo(mActivity).user_id);
         x.http().get(params, new Callback.CommonCallback<String>() {
 
@@ -331,7 +260,6 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
             Picasso.with(mActivity).load(collect_article_details.pictureURL).into(holder.ivPic);
             holder.tvTitle.setText(collect_article_details.title);
             holder.tvTitle.setTextColor(UIUtils.getcolor(R.color.back_orange));
-            holder.tvIntro.setTextColor(UIUtils.getcolor(R.color.back_orange));
             return convertView;
         }
     }
@@ -391,3 +319,29 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     }
 
 }
+
+
+
+//    /**
+//     * 比较时间
+//     *
+//     * @params
+//     * @author Du
+//     * @Date 2018/4/13 9:39
+//     **/
+//    private boolean compareLastTime(String lastTime) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        List<Collect_Article_Info.Collect_Article_Details> collect_article_detailses = dataBaseHelper.queryMultiIsCollectRead();
+//        String dateLastTime = collect_article_detailses.get(0).lastTime;
+//        try {
+//            Date parse = sdf.parse(dateLastTime);//sqllite数据库时间
+//            Date dateparse = sdf.parse(lastTime);//后台数据库当前时间
+//            if (parse.getTime() < dateparse.getTime()) {
+//                //有新的数据，需要更新
+//                return true;
+//            }
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }

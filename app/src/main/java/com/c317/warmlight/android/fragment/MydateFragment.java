@@ -12,10 +12,17 @@ import android.widget.TextView;
 import com.c317.warmlight.android.Activity.SettingMyDateActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.base.BaseFragment;
+import com.c317.warmlight.android.bean.Collect_Article_Info;
 import com.c317.warmlight.android.common.AppNetConfig;
+import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.tabpager.MyDateTabDetails;
 import com.c317.warmlight.android.tabpager.MyReadTabDetails;
+import com.google.gson.Gson;
 import com.viewpagerindicator.TabPageIndicator;
+
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import java.util.ArrayList;
 
@@ -44,6 +51,7 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
     private String mType;
     private static final String TAG_READ = "TAG_READ";
     private static final String TAG_DATE = "TAG_DATE";
+    private String lastTime = null;
 
     public MydateFragment(String type){
         mType = type;
@@ -89,6 +97,7 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
             tpMyIndicator.setViewPager(vpMyViewpager);
             tpMyIndicator.setOnPageChangeListener(this);//此处必须给指示器设置监听，而不是mViewPager
         }else if(mType.equals(TAG_READ)){
+            getLastTime();
             tvTopbarTitle.setText("我的有读");
             mReadPagers = new ArrayList<>();
             for(int i=0;i<tabInfoRead.length;i++){
@@ -100,6 +109,46 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
             tpMyIndicator.setViewPager(vpMyViewpager);
             tpMyIndicator.setOnPageChangeListener(this);//此处必须给指示器设置监听，而不是mViewPager
         }
+    }
+
+
+    /**
+    * 获取收藏的评论信息
+    * @params
+    * @author Du
+    * @Date 2018/4/14 9:25
+    **/
+    private void getLastTime() {
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
+        RequestParams params = new RequestParams(url);
+        params.addParameter("account", UserManage.getInstance().getUserInfo(mActivity).account);
+        params.addParameter("type", "w");
+        x.http().get(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                Collect_Article_Info collect_article_info = gson.fromJson(result, Collect_Article_Info.class);
+                if (collect_article_info.code == 200) {
+                    lastTime = collect_article_info.data.get(collect_article_info.data.size()-1).lastTime;
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
     @Override
