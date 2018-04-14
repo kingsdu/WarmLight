@@ -124,7 +124,7 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
                     Intent intent = new Intent(mActivity, DateDetailActivity.class);
                     DateNews.DateNews_Detail dateNews_detail = mDatadetail.get(position - 1);
                     intent.putExtra("activity_id", dateNews_detail.activity_id);
-                    intent.putExtra("picUrl", dateNews_detail.picture);
+                    intent.putExtra("picUrl", dateNews_detail.activity_id + ".jpg");
                     intent.putExtra("title", dateNews_detail.title);
                     intent.putExtra("content", dateNews_detail.content);
                     intent.putExtra("readNum", dateNews_detail.readNum + "");
@@ -393,7 +393,7 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
                 holder = (ViewHolder) convertView.getTag();
             }
             final DateNews.DateNews_Detail DateNews_Details = (DateNews.DateNews_Detail) getItem(position);
-            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + DateNews_Details.picture;
+            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYS + AppNetConfig.SEPARATOR + DateNews_Details.activity_id + ".jpg";
             Picasso.with(mActivity).load(imageUrl).into(holder.ivPic);
             holder.tvTitle.setText(DateNews_Details.title);
             holder.tvStartTime.setText(DateNews_Details.startTime);

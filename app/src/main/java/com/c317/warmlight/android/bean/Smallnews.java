@@ -12,6 +12,7 @@ import java.util.Date;
 public class Smallnews {
 
     public Smallnews_Info data;
+    public int code;
 
     public static class Smallnews_Info {
         public int total;
@@ -29,6 +30,5 @@ public class Smallnews {
         public int readNum;
         public int agreeNum;
         public int isCollect;
-        public int isComment;
     }
 }

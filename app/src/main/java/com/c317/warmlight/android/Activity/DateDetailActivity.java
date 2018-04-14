@@ -139,10 +139,10 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         ivAllComment.setVisibility(View.VISIBLE);
         ivAllComment.setOnClickListener(this);
         tvJoinIn.setOnClickListener(this);
-        if(TextUtils.isEmpty(getIntent().getStringExtra("picUrl"))){
+        if (TextUtils.isEmpty(getIntent().getStringExtra("picUrl"))) {
             picUrl = null;
-        }else{
-            picUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + getIntent().getStringExtra("picUrl");
+        } else {
+            picUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYS + AppNetConfig.SEPARATOR+ getIntent().getStringExtra("picUrl");
         }
         account = UserManage.getInstance().getUserInfo(DateDetailActivity.this).account;
         ectractPutEra();
@@ -157,7 +157,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         tvJoinIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                join(UserManage.getInstance().getUserInfo(DateDetailActivity.this).account,group_id);
+                join(UserManage.getInstance().getUserInfo(DateDetailActivity.this).account, group_id);
             }
         });
         llDataCollect.setOnClickListener(new View.OnClickListener() {
@@ -287,7 +287,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
                 Gson gson = new Gson();
                 dateNews_detalis = gson.fromJson(result, DateNews_detalis.class);
                 setDataView(dateNews_detalis.data);
-                group_id=dateNews_detalis.data.group_id;
+                group_id = dateNews_detalis.data.group_id;
             }
 
             @Override
@@ -312,9 +312,9 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         String dataTime = "活动时间：" + dateNewsContent.startTime + " - " + dateNewsContent.endTime.substring(dateNewsContent.endTime.indexOf(" ") + 1, dateNewsContent.endTime.length());
         String joinTime = "报名时间：" + dateNewsContent.beginTime + " - " + dateNewsContent.deadline.substring(dateNewsContent.deadline.indexOf(" ") + 1, dateNewsContent.deadline.length());
         String joinPeople = "已报名：" + dateNewsContent.memberNum + "/" + dateNewsContent.memberTotalNum + "人";
-        if(TextUtils.isEmpty(picUrl)){
+        if (TextUtils.isEmpty(picUrl)) {
             Picasso.with(mActivity).load(R.drawable.nopic1).into(ivDatePicture);
-        }else{
+        } else {
             Picasso.with(mActivity).load(picUrl).into(ivDatePicture);
         }
         tvDateTitle.setText(dateNewsContent.title);
@@ -371,22 +371,23 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
     }
 
     /**
-    * 进入评论页面
-    * @params
-    * @author Du
-    * @Date 2018/4/2 16:20
-    **/
+     * 进入评论页面
+     *
+     * @params
+     * @author Du
+     * @Date 2018/4/2 16:20
+     **/
     private void enterCommentAty() {
-        Intent intent = new Intent(DateDetailActivity.this,CommentActivity.class);
-        intent.putExtra("searchID","a"+mActivityid);
+        Intent intent = new Intent(DateDetailActivity.this, CommentActivity.class);
+        intent.putExtra("searchID", "a" + mActivityid);
         startActivity(intent);
     }
 
 
     private void callPhone() {
-        if(TextUtils.isEmpty(telephone)){
-            CommonUtils.showToastShort(getApplicationContext(),"新建友约时未输入咨询电话");
-        }else{
+        if (TextUtils.isEmpty(telephone)) {
+            CommonUtils.showToastShort(getApplicationContext(), "新建友约时未输入咨询电话");
+        } else {
             Uri uri = Uri.parse("tel:" + telephone);
             Intent intent = new Intent(Intent.ACTION_CALL, uri);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -395,7 +396,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
     }
 
 
-    private void join(final String account,final int group_id){
+    private void join(final String account, final int group_id) {
         RequestParams params = new RequestParams(AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.MY + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTGROUPMEMBER);
         params.addParameter("account", account);
         params.addParameter("group_id", group_id);
@@ -405,11 +406,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
                 //成功
                 Gson gson = new Gson();
                 Result resultInfo = gson.fromJson(result, Result.class);
-//                if (resultInfo.code == 200) {
-                    Toast.makeText(DateDetailActivity.this, "报名成功，请关注“我的消息”中的“群聊", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(AddActivity.this, resultInfo.desc, Toast.LENGTH_SHORT).show();
-//                }
+                Toast.makeText(DateDetailActivity.this, "报名成功，请关注“我的消息”中的“群聊", Toast.LENGTH_SHORT).show();
             }
 
             @Override

@@ -1,6 +1,7 @@
 package com.c317.warmlight.android.bean;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Administrator on 2018/4/12.
@@ -9,13 +10,18 @@ import java.util.ArrayList;
 public class User_Comment_Info {
 
     public int code;
-    public User_Comment_Details data;
+    public ArrayList<User_Comment_Details> data;
 
     public static class User_Comment_Details{
-        public ArrayList<String> article;
-        public ArrayList<String> book;
-        public ArrayList<String> activity;
-        public ArrayList<String> question;
+        public int article_id;
+        public String title;
+        public Date pubDate;
+        public String source;
+        public String introduce;
+        public String pictureURL;
+        public int readNum;
+        public int agreeNum;
+        public int isCollect;
     }
 
 }

@@ -62,6 +62,8 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     private String account;
     private WarmLightDataBaseHelper dataBaseHelper;
     private Collect_Article_Info collect_article_info;
+    private boolean isFlag = true;
+    private User_Comment_Info user_comment_info;
 
     public MyReadTabDetails(Activity activity, int type) {
         super(activity);
@@ -89,14 +91,26 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
         pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.GETARTCONT + AppNetConfig.SEPARATOR;
-                Collect_Article_Info.Collect_Article_Details collect_article_details = collect_article_info.data.get(position-1);
-                String article_id = String.valueOf(collect_article_details.article_id);
-                Intent intent = new Intent(mActivity, NewsDetailActivity.class);
-                intent.putExtra("url", url + article_id);
-                intent.putExtra("article_id", article_id);
-                intent.putExtra("save_id", collect_article_details.save_id);
-                mActivity.startActivity(intent);
+                if(isFlag){
+                    //收藏信息
+                    String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.GETARTCONT + AppNetConfig.SEPARATOR;
+                    Collect_Article_Info.Collect_Article_Details collect_article_details = collect_article_info.data.get(position-1);
+                    String article_id = String.valueOf(collect_article_details.article_id);
+                    Intent intent = new Intent(mActivity, NewsDetailActivity.class);
+                    intent.putExtra("url", url + article_id);
+                    intent.putExtra("article_id", article_id);
+                    intent.putExtra("save_id", collect_article_details.save_id);
+                    mActivity.startActivity(intent);
+                }else{
+                    //评论信息
+                    String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.GETARTCONT + AppNetConfig.SEPARATOR;
+                    User_Comment_Info.User_Comment_Details user_comment_details = user_comment_info.data.get(position - 1);
+                    String article_id = String.valueOf(user_comment_details.article_id);
+                    Intent intent = new Intent(mActivity, NewsDetailActivity.class);
+                    intent.putExtra("url", url + article_id);
+                    intent.putExtra("article_id", article_id);
+                    mActivity.startActivity(intent);
+                }
             }
         });
         return view;
@@ -107,12 +121,13 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     public void initData() {
         super.initData();
         if (mType == 0) {
+            isFlag = true;
             getUserCollect();
         }
-//        else if (mType == 1) {
-//            //获取用户评论对象
-//            getUserComment();
-//        }
+        else if (mType == 1) {
+            isFlag = false;
+            getUserComment();
+        }
     }
 
 
@@ -125,9 +140,6 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
      * @author Du
      * @Date 2018/4/13 9:27
      **/
-
-
-
     private void processCollectData(String cache, boolean isMore) {
         Gson gson = new Gson();
         Collect_Article_Info collect_article_info = gson.fromJson(cache, Collect_Article_Info.class);
@@ -175,15 +187,15 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
         mUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.GETMYCOMMENTFOR;
         RequestParams params = new RequestParams(mUrl);
         params.addParameter("userID", UserManage.getInstance().getUserInfo(mActivity).user_id);
+        params.addParameter("type","w");
         x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String result) {
                 Gson gson = new Gson();
-                User_Comment_Info user_comment_info = gson.fromJson(result, User_Comment_Info.class);
+                user_comment_info = gson.fromJson(result, User_Comment_Info.class);
                 if (user_comment_info.code == 200) {
-                    //缓存
-
+                    pullMydateRefresh.setAdapter(new MyCommentAdapter(user_comment_info));
                 }
             }
 
@@ -265,51 +277,49 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     }
 
 
-//    private class MyCommentAdapter extends BaseAdapter {
-//
-//        private User_Comment_Info user_comment_info;
-//
-//        public MyCommentAdapter(User_Comment_Info user_comment_info){
-//            this.user_comment_info = user_comment_info;
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return user_comment_info.data.activity.size();
-//        }
-//
-//        @Override
-//        public Object getItem(int position) {
-//            return smallnews_details_comment.get(position);
-//        }
-//
-//        @Override
-//        public long getItemId(int position) {
-//            return position;
-//        }
-//
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//            ViewHolder holder;
-//            if (convertView == null) {
-//                convertView = View.inflate(mActivity, R.layout.list_my_reads, null);
-//                holder = new ViewHolder();
-//                holder.ivPic = (ImageView) convertView.findViewById(R.id.iv_myread_itemPic);
-//                holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_myread_itemTitle);
-//                convertView.setTag(holder);
-//            } else {
-//                holder = (ViewHolder) convertView.getTag();
-//            }
-//            Smallnews.Smallnews_Detail smallnews_detail = smallnews_details_comment.get(position);
-//            Picasso.with(mActivity).load(smallnews_detail.pictureURL).into(holder.ivPic);
-//            holder.tvTitle.setText(smallnews_detail.title);
-//            holder.tvTitle.setTextColor(UIUtils.getcolor(R.color.back_orange));
-//            holder.tvIntro.setText(smallnews_detail.introduce);
-//            holder.tvIntro.setTextColor(UIUtils.getcolor(R.color.back_orange));
-//            return convertView;
-//        }
-//
-//    }
+    private class MyCommentAdapter extends BaseAdapter {
+
+        private User_Comment_Info user_comment_info;
+
+        public MyCommentAdapter(User_Comment_Info user_comment_info){
+            this.user_comment_info = user_comment_info;
+        }
+
+        @Override
+        public int getCount() {
+            return user_comment_info.data.size();
+        }
+
+        @Override
+        public User_Comment_Info.User_Comment_Details getItem(int position) {
+            return user_comment_info.data.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+            if (convertView == null) {
+                convertView = View.inflate(mActivity, R.layout.list_my_reads, null);
+                holder = new ViewHolder();
+                holder.ivPic = (ImageView) convertView.findViewById(R.id.iv_myread_itemPic);
+                holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_myread_itemTitle);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            User_Comment_Info.User_Comment_Details User_Comment_Details = getItem(position);
+            Picasso.with(mActivity).load(User_Comment_Details.pictureURL).into(holder.ivPic);
+            holder.tvTitle.setText(User_Comment_Details.title);
+            holder.tvTitle.setTextColor(UIUtils.getcolor(R.color.back_orange));
+            return convertView;
+        }
+
+    }
 
 
     static class ViewHolder {
