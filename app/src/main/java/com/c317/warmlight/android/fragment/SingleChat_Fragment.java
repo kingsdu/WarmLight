@@ -18,7 +18,9 @@ import android.widget.Toast;
 import com.c317.warmlight.android.Activity.GroupChatActivity;
 import com.c317.warmlight.android.Activity.SingleChatActivity;
 import com.c317.warmlight.android.R;
+import com.c317.warmlight.android.bean.AccountUsername;
 import com.c317.warmlight.android.bean.NewfriendInfo;
+import com.c317.warmlight.android.bean.Result;
 import com.c317.warmlight.android.bean.SinglechatGroup;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.UserManage;
@@ -49,6 +51,7 @@ public class SingleChat_Fragment extends Fragment implements
     private String account;
     private Boolean isFriend;
     private NewfriendInfo newfriendinfo;
+    private AccountUsername accountusername;
     private ArrayList<NewfriendInfo.NewfriendInfo_Content> truefrienddata = new ArrayList();
     public int group_id;
     public int Friend_id;
@@ -92,9 +95,10 @@ public class SingleChat_Fragment extends Fragment implements
                 for(int i=0;i<newfriendinfo.data.size();i++){
                     if(newfriendinfo.data.get(i).isFriend){
                         truefrienddata.add(newfriendinfo.data.get(i));
+                        getusername(newfriendinfo.data.get(i).account);
                     }
-
                 }
+
                 SingleChatListAdapter singlechatlistAdapter = new SingleChatListAdapter();
 //                singlechatlistAdapter.notifyDataSetChanged();
                 lvMymessageChatlist.setAdapter(singlechatlistAdapter);
@@ -117,7 +121,74 @@ public class SingleChat_Fragment extends Fragment implements
         });
     }
 
+    public enum Username{;
 
+        private final String account;
+        private final String username;
+
+        public String getAccount() {
+            return account;
+        }
+        public String getUsername() {
+            return username;
+        }
+        Username(String account, String username) {
+            this.account = account;
+            this.username = username;
+        }
+
+        /**
+         * 根据key获取value
+         *
+         * @param key
+         *            : 键值key
+         * @return String
+         */
+        public static String getValueByKey(String key) {
+            Username[] enums = Username.values();
+            for (int i = 0; i < enums.length; i++) {
+//                if (enums[i].getKey().equals(key)) {
+//                    return enums[i].getValue();
+//                }
+            }
+            return "";
+        }
+    }
+
+    private void getusername(final String friendaccount){
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.MY + AppNetConfig.SEPARATOR + AppNetConfig.GETFRIENDNAME;
+        RequestParams params = new RequestParams(url);
+        params.addParameter("account", account);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                accountusername = gson.fromJson(result, AccountUsername.class);
+//                    AprrovalStatus[] enums = AprrovalStatus.values();
+//                    for (int i = 0; i < enums.length; i++) {
+//                        if (enums[i].getKey().equals(friendaccount)) {
+//                            return enums[i].getValue();
+//                        }
+//                    }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
     /**
      * 创建单聊群组
      * @param account

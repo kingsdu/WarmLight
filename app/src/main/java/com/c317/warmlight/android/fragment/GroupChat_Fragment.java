@@ -161,7 +161,6 @@ public class GroupChat_Fragment extends Fragment implements
                 Picasso.with(getActivity()).load(imageUrl).into(holder.ivPic);
             }
             holder.tvgroupname.setText(GroupChatInfo_Contents.groupName);
-
 //            for(int i=0;i<truefrienddata.size();i++){
 //            String picname = "icon/" + NewfriendInfo_Contents.account + "_thumbnail.jpg";
 //            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + picname;
@@ -180,7 +179,6 @@ public class GroupChat_Fragment extends Fragment implements
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-
     }
 
     @Override
