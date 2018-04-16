@@ -42,7 +42,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
+                android:text=""
                 android:id="@+id/tv_addrName"
                 android:textColor="@color/black"
                 android:layout_above="@+id/go_button"
@@ -51,7 +51,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
+                android:text=""
                 android:id="@+id/tv_coordinate"
                 android:textColor="@color/black"
                 android:layout_alignParentLeft="true"

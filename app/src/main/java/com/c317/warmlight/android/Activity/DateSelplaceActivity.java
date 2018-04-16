@@ -297,10 +297,12 @@ public class DateSelplaceActivity extends Activity implements OnGetGeoCoderResul
      */
     private void savecoordinate() {
         String coordinate =tvCoordinate.getText().toString();
+        String nullcoordinate = null;
         if (!TextUtils.isEmpty(coordinate)) {
 //            Editname(UserManage.getInstance().getUserInfo(DateSelplaceActivity.this).account, coordinate);
             SharedPrefUtility.setParam(this, AppConstants.COORDINATE, coordinate);
         } else {
+            SharedPrefUtility.setParam(this, AppConstants.COORDINATE, nullcoordinate);
             CommonUtils.showToastShort(this, "选择友约地点为空");
         }
         finish();

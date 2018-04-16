@@ -177,7 +177,13 @@ public class MapActivity extends Activity {
 
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
+//                if(PAGE>=1){
+//                    PAGE--;//数据页数增加
+//                    UPPAGESIZE--;
+//                }
+//                getDataFromServer();
                 getDataFromServerPullDown();
+                GetCoordinatePoint();
             }
 
             @Override
@@ -259,6 +265,7 @@ public class MapActivity extends Activity {
             if (isMore) {
                 Gson gson = new Gson();
                 dateNews_info = gson.fromJson(cache, DateNews.class);
+                coordinatedateNews_details.clear();
                 coordinatedateNews_details.addAll(dateNews_info.data.detail);
                 coordinateDateAdapter = new CoordinateDateAdapter();
                 pullCoordinatedateRefresh.setAdapter(coordinateDateAdapter);
@@ -271,6 +278,7 @@ public class MapActivity extends Activity {
                 Gson gson = new Gson();
                 dateNews_info = gson.fromJson(cache, DateNews.class);
                 if (!haveRepeat(dateNews_info)) {
+                    coordinatedateNews_details.clear();
                     coordinatedateNews_details.addAll(dateNews_info.data.detail);
                     coordinateDateAdapter.notifyDataSetChanged();
                 }
@@ -302,6 +310,7 @@ public class MapActivity extends Activity {
      * 得到点标记
      */
     public final List<OverlayOptions> GetCoordinatePoint() {
+
         baiduMap.clear();
         //创建OverlayOptions的集合
         List<OverlayOptions> markerList = new ArrayList<OverlayOptions>();
@@ -310,6 +319,7 @@ public class MapActivity extends Activity {
         for (int i = 0; i < coordinatedateNews_details.size(); i++) {
             String[] coordinates = coordinatedateNews_details.get(i).getCoordinate().split(",");
             LatLng point = new LatLng(Double.valueOf(coordinates[0]), Double.valueOf(coordinates[1]));
+
             latLngs.add(point);
             Log.e("bbb", String.valueOf(point));
         }
@@ -350,6 +360,7 @@ public class MapActivity extends Activity {
                     processDataPullDown(result);
                 } else {
                 }
+
                 pullCoordinatedateRefresh.onRefreshComplete();
             }
 

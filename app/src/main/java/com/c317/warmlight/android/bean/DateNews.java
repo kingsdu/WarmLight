@@ -36,12 +36,20 @@ public class DateNews {
         public String coordinate;
         public int type;
         public int isCollect;
+        public double distance;
 
         public String getCoordinate() {
             return coordinate;
         }
         public void setCoordinate(String coordinate) {
             this.coordinate = coordinate;
+        }
+
+        public  void setDistance(double distance){
+            this.distance=distance;
+        }
+        public double getDistance(){
+            return distance;
         }
     }
 

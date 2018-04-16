@@ -47,6 +47,7 @@ import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.utils.CacheUtils;
 import com.c317.warmlight.android.utils.CommonUtils;
 import com.c317.warmlight.android.utils.ImageLoader;
+import com.c317.warmlight.android.utils.PrefUtils;
 import com.c317.warmlight.android.utils.SharedPrefUtility;
 import com.c317.warmlight.android.utils.UtilImags;
 import com.google.gson.Gson;
@@ -157,6 +158,7 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
         Application_my.getInstance().addActivity(this);
         setContentView(R.layout.adddate_date_aty);
         ButterKnife.bind(this);
+        SharedPrefUtility.removeParam(AddDateActivity.this,AppConstants.COORDINATE);
         //初始化顶部
         ivBackMe.setVisibility(View.VISIBLE);
         tvTopbarTitle.setText("新建友约");
@@ -209,7 +211,6 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
                 .callback(this)
                 .start();
 
-//        updatecoordinate();
     }
 
     /**
@@ -248,6 +249,7 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btn_date_release:
                 releaseDate();
+
                 break;
             case R.id.rl_date_jointype:
                 setDateType();
@@ -420,7 +422,9 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
 
 
     public void releaseDate() {
+
         String param = (String) SharedPrefUtility.getParam(this, AppConstants.COORDINATE, AppConstants.COORDINATE);
+
         String enrollInfo = getEnrollInfo();
         CacheUtils.cleanCache(AddDateActivity.this, AppConstants.ENROLLSETTING);//清除页面缓存
         if (!TextUtils.isEmpty(getUserAccount())) {
@@ -437,6 +441,7 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
                     newDateParams.beginTime = enrollInfos[0];
                     newDateParams.deadline = enrollInfos[1];
                     saveNewDateToServer(newDateParams, picFile);
+
                 }
                 else {
                     Toast.makeText(AddDateActivity.this, "报名设置数据不完整",
@@ -630,7 +635,6 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
 //            SharedPrefUtility.setParam(this, AppConstants.COORDINATE, coordinate);
 //        }
 //    }
-
 
 
 }
