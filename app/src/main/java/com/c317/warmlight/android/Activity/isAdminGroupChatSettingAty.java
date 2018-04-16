@@ -60,11 +60,12 @@ public class isAdminGroupChatSettingAty extends Activity implements View.OnClick
         Application_my.getInstance().addActivity(this);
         setContentView(R.layout.groupchat_isadminsetting_aty);
         ButterKnife.bind(this);
+        SharedPrefUtility.removeParam(isAdminGroupChatSettingAty.this,AppConstants.GROUPNAME);
         ectractPutEra();
         //顶部按钮初始化
         ivBackMe.setVisibility(View.VISIBLE);
         tvTopbarTitle.setText("聊天设置");
-        tvIsadminsetGroupchat1.setText(mGroupName);
+
         account = UserManage.getInstance().getUserInfo(isAdminGroupChatSettingAty.this).account;
         getGroupMemberNum();
         initData();
@@ -114,7 +115,13 @@ public class isAdminGroupChatSettingAty extends Activity implements View.OnClick
 
     private void initData() {
         String groupName = (String) SharedPrefUtility.getParam(this, AppConstants.GROUPNAME, AppConstants.GROUPNAME);
-
+        if((groupName.equals(AppConstants.GROUPNAME)) ){
+            tvIsadminsetGroupchat1.setText(mGroupName);
+        }else{
+            if (!(groupName.equals(AppConstants.GROUPNAME))) {
+                tvIsadminsetGroupchat1.setText(groupName);
+            }
+        }
     }
 
     @Override

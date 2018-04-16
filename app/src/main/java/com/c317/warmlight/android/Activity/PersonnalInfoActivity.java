@@ -114,6 +114,7 @@ public class PersonnalInfoActivity extends Activity implements View.OnClickListe
         Application_my.getInstance().addActivity(this);
         setContentView(R.layout.my_personnalinfo_aty);
         ButterKnife.bind(this);
+
         //顶部图标
         ivBackMe.setVisibility(View.VISIBLE);
         tvTopbarTitle.setText("个人信息");

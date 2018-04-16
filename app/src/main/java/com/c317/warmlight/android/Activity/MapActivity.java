@@ -183,7 +183,7 @@ public class MapActivity extends Activity {
 //                }
 //                getDataFromServer();
                 getDataFromServerPullDown();
-                GetCoordinatePoint();
+//                GetCoordinatePoint();
             }
 
             @Override

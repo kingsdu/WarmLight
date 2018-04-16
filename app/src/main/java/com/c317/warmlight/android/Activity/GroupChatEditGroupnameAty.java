@@ -51,7 +51,7 @@ public class GroupChatEditGroupnameAty extends Activity implements View.OnClickL
         ButterKnife.bind(this);
         ectractPutEra();
         account = UserManage.getInstance().getUserInfo(GroupChatEditGroupnameAty.this).account;
-        etEditgroupnameGroupchat.setText(mGroupName);//快速加载
+        getGroupName();
         //顶部图标
         ivBackMe.setVisibility(View.VISIBLE);
         tvTopbarTitle.setText("编辑群名称");
@@ -65,12 +65,15 @@ public class GroupChatEditGroupnameAty extends Activity implements View.OnClickL
         mGroupName = getIntent().getStringExtra("groupName");
     }
 
-//    private void getGroupName(){
-//        String param = (String) SharedPrefUtility.getParam(this, AppConstants.GROUPNAME, AppConstants.GROUPNAME);
-//        if (!TextUtils.isEmpty(param) && param.equals(AppConstants.GROUPNAME)) {
-//            etEditgroupnameGroupchat.setText(mGroupName);//快速加载
-//        }
-//    }
+    private void getGroupName(){
+        String param = (String) SharedPrefUtility.getParam(this, AppConstants.GROUPNAME, AppConstants.GROUPNAME);
+        if (!TextUtils.isEmpty(param) && param.equals(AppConstants.GROUPNAME)) {
+            etEditgroupnameGroupchat.setText(mGroupName);//快速加载
+        }
+        if (!TextUtils.isEmpty(param)) {
+            etEditgroupnameGroupchat.setText(param);//快速加载
+        }
+    }
 
     @Override
     public void onClick(View v) {
