@@ -13,44 +13,55 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-
-    <!-- 输入框、留言按钮 -->
     <LinearLayout
-        android:id="@+id/ll_read_comment"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/white"
-        android:layout_marginLeft="10dp"
-        android:orientation="horizontal">
-        <!-- 输入框 -->
-        <EditText
-            android:id="@+id/et_read_input"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@color/gray_gray"
-            android:gravity="center_vertical"
-            android:inputType="textMultiLine"
-            android:textColor="@color/black"
-            android:maxLength="100"
-            android:maxLines="6"
-            android:hint="添加评论..."
-            android:minHeight="40dp"/>
-        <!-- 留言按钮 -->
-        <Button
-            android:id="@+id/btn_read_submit"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="10dp"
+        android:layout_height="wrap_content"
+        android:showDividers="beginning"
+        android:divider="@drawable/divide_shape"
+        android:orientation="vertical">
+
+        <!-- 输入框、留言按钮 -->
+        <LinearLayout
+            android:id="@+id/ll_read_comment"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/date_saveset_bg"
-            android:text="评论"
-            android:textColor="#000000" />
+            android:orientation="horizontal">
+
+            <!-- 输入框 -->
+            <EditText
+                android:id="@+id/et_read_input"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:inputType="textMultiLine"
+                android:textColor="@color/black"
+                android:maxLength="100"
+                android:maxLines="6"
+                android:hint="添加评论..."
+                android:minHeight="40dp"/>
+            <!-- 留言按钮 -->
+            <Button
+                android:id="@+id/btn_read_submit"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/date_saveset_bg"
+                android:text="评论"
+                android:textColor="#000000" />
+
+        </LinearLayout>
 
     </LinearLayout>
+
+
 
 </LinearLayout>

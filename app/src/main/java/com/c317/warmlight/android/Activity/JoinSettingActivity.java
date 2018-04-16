@@ -21,6 +21,7 @@ import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.common.AppConstants;
 import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.utils.CacheUtils;
+import com.c317.warmlight.android.utils.CommonUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -141,7 +142,7 @@ public class JoinSettingActivity extends Activity {
                             Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(JoinSettingActivity.this, "报名设置不能为空",
+                    Toast.makeText(JoinSettingActivity.this, "报名设置字段输入有误",
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -167,11 +168,29 @@ public class JoinSettingActivity extends Activity {
             Toast.makeText(JoinSettingActivity.this, "报名截至时间不能为空",
                     Toast.LENGTH_SHORT).show();
             return null;
+        }else if(TextUtils.isEmpty(etDateContactpho.getText().toString())){
+            CommonUtils.showToastShort(JoinSettingActivity.this,"咨询电话不能为空");
         } else {
-            sb.append(tvDateEnrollstashowtime.getText());
-            sb.append("|");
-            sb.append(tvDateEnrollendshowtime.getText());
-            return sb.toString();
+            if(!checkCellphone(etDateContactpho.getText().toString())){
+                CommonUtils.showToastShort(JoinSettingActivity.this,"请输入合理手机号");
+            }else{
+                sb.append(etDateContactpho.getText().toString());
+                sb.append("|");
+                sb.append(tvDateEnrollstashowtime.getText().toString());
+                sb.append("|");
+                sb.append(tvDateEnrollendshowtime.getText().toString());
+                return sb.toString();
+            }
+        }
+        return null;
+    }
+
+    public static boolean checkCellphone(String cellphone) {
+        String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$";
+        if(cellphone.matches(regex)){
+            return true;
+        }else{
+            return false;
         }
     }
 

@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.c317.warmlight.android.bean.Collect_Article_Detail;
+import com.c317.warmlight.android.bean.Collect_Article_Info;
 import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.bean.DateNews_detalis;
 import com.c317.warmlight.android.bean.GroupNewsDTO;
@@ -56,14 +58,12 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
      */
     public static final String READ_TABLENAME = "read";
     public static final String READ_ID = "article_id";
+    public static final String READ_SAVE_ID = "save_id";
+    public static final String READ_ISDEL = "isDel";
+    public static final String READ_LASTTIME = "lastTime";
     public static final String READ_TITLE = "title";
     public static final String READ_PICTUREURL = "pictureURL";
-    public static final String READ_INTRODUCE = "introduce";
-    public static final String READ_SOURCE = "source";
-    public static final String READ_PUBDATE = "pubDate";
-    public static final String READ_READNUM = "readNum";
-    public static final String READ_AGREENUM = "agreeNum";
-    public static final String READ_ISCOLLECT = "iscollect";
+
 
     /**
      * 群消息表及字段
@@ -115,35 +115,30 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
         /**
          * 创建有读表
          * */
-
         sql = "create table " + READ_TABLENAME + "("
                 + READ_ID + " integer primary key autoincrement, "
+                + READ_SAVE_ID + " integer, "
+                + READ_ISDEL + " text, "
+                + READ_LASTTIME + " text, "
                 + READ_TITLE + " text, "
-                + READ_PICTUREURL + " text, "
-                + READ_INTRODUCE + " text, "
-                + READ_SOURCE + " text, "
-                + READ_PUBDATE + " text, "
-                + READ_READNUM + " integer, "
-                + READ_AGREENUM + " integer, "
-                + READ_ISCOLLECT + " integer)";
+                + READ_PICTUREURL + " text)";
         db.execSQL(sql);
 
         /**
          * 创建群消息表
          */
-        sql="create table "+ GROUPMESSAGE_TABLENAME +"("
-                 + GROUPMESSAGE_CHATID + " integer primary key autoincrement, "
-                 + GROUPMESSAGE_LASTTIME + " text ,"
-                 + GROUPMESSAGE_ACCOUNT + " text ,"
-                 + GROUPMESSAGE_GROUPID + " integer, "
-                 + GROUPMESSAGE_CHATTIME + " text ,"
-                 + GROUPMESSAGE_CONTENT + " text ,"
-                 + GROUPMESSAGE_ISREAD + " integer, UNIQUE("
-                 + GROUPMESSAGE_CONTENT + ", " + GROUPMESSAGE_CHATTIME + ", "
-                 + GROUPMESSAGE_CHATID + ") ON CONFLICT REPLACE )";
+        sql = "create table " + GROUPMESSAGE_TABLENAME + "("
+                + GROUPMESSAGE_CHATID + " integer primary key autoincrement, "
+                + GROUPMESSAGE_LASTTIME + " text ,"
+                + GROUPMESSAGE_ACCOUNT + " text ,"
+                + GROUPMESSAGE_GROUPID + " integer, "
+                + GROUPMESSAGE_CHATTIME + " text ,"
+                + GROUPMESSAGE_CONTENT + " text ,"
+                + GROUPMESSAGE_ISREAD + " integer, UNIQUE("
+                + GROUPMESSAGE_CONTENT + ", " + GROUPMESSAGE_CHATTIME + ", "
+                + GROUPMESSAGE_CHATID + ") ON CONFLICT REPLACE )";
         db.execSQL(sql);
     }
-
 
 
     /**
@@ -180,19 +175,18 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public void InsertCollectInfoRead(Smallnews.Smallnews_Detail smallnews_detail) {
+    public void InsertCollectInfoRead(Collect_Article_Detail.Collect_Article_Item collect_article_item) {
         try {
             db.beginTransaction();
             ContentValues cv = new ContentValues();
-            cv.put(READ_ID, smallnews_detail.article_id);
-            cv.put(READ_TITLE, smallnews_detail.title);
-            cv.put(READ_PICTUREURL, smallnews_detail.pictureURL);
-            cv.put(READ_INTRODUCE, smallnews_detail.introduce);
-            cv.put(READ_SOURCE, smallnews_detail.source);
-            cv.put(READ_PUBDATE, sdf.format(smallnews_detail.pubDate));
-            cv.put(READ_READNUM, smallnews_detail.readNum);
-            cv.put(READ_AGREENUM, smallnews_detail.agreeNum);
-            cv.put(READ_ISCOLLECT, smallnews_detail.isCollect);
+            cv.put(READ_ID, collect_article_item.article_id);
+            cv.put(READ_SAVE_ID, collect_article_item.save_id);
+            cv.put(READ_PICTUREURL, collect_article_item.pictureURL);
+            if(collect_article_item.isDelete == false){
+                cv.put(READ_ISDEL, 0);
+            }
+            cv.put(READ_LASTTIME, collect_article_item.lastTime);
+            cv.put(READ_TITLE, collect_article_item.title);
             db.insert(READ_TABLENAME, null, cv);
             db.setTransactionSuccessful();
         } catch (Exception e) {
@@ -201,6 +195,7 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
     }
+
 
     /**
      * 根据列名、id，更新已收藏
@@ -217,6 +212,23 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
         return db.update(tableName, cv, where, whereValue);
     }
 
+
+    /**
+     * 根据列名、id，更新已评论
+     *
+     * @params tableName：数据库名称  id：id值、idName：id名称、isCommentName：isComment名称
+     * @author Du
+     * @Date 2018/4/10 14:07
+     **/
+    public int updateCommentState(String tableName, String id, String idName, String isCommentName) {
+        String where = idName + " = ? ";
+        String[] whereValue = {id + ""};
+        ContentValues cv = new ContentValues();
+        cv.put(isCommentName, "1");
+        return db.update(tableName, cv, where, whereValue);
+    }
+
+
     /**
      * 根据列名、id，取消已收藏
      *
@@ -232,6 +244,24 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
         return db.update(tableName, cv, where, whereValue);
     }
 
+
+    /**
+     * 根据列名、id，取消已评论
+     *
+     * @params tableName：数据库名称  id：id值、idName：id名称、isCommentName：isComment名称
+     * @author Du
+     * @Date 2018/3/14 22:34
+     **/
+
+    public int unUpdateCommentState(String tableName, String id, String idName, String isCommentName) {
+        String where = idName + " = ? ";
+        String[] whereValue = {id + ""};
+        ContentValues cv = new ContentValues();
+        cv.put(isCommentName, "0");
+        return db.update(tableName, cv, where, whereValue);
+    }
+
+
     /**
      * 根据tableName、id、dateName,查询是否收藏  -- 有读
      *
@@ -240,6 +270,59 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
      * @Date 2018/3/13 22:15
      **/
     public String queryIsCollectRead(String id) {
+        String isCollect = null;
+        String where = READ_ID + " = ? ";
+        String[] whereValue = {id + ""};
+        Cursor cursor = db.query(READ_TABLENAME, null, where, whereValue,
+                null, null, null);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+        }
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            isCollect = cursor.getString(2);//isDel
+        }
+        cursor.close();
+        return isCollect;
+    }
+
+
+
+
+    /**
+     * 查询存储的SaveID
+     *
+     * @params tableName：数据库名称  id：id值、idName：id名称
+     * @author Du
+     * @Date 2018/3/13 22:15
+     **/
+    public int queryIsCollectSaveID(String id) {
+        int isCollect = 0;
+        String where = READ_ID + " = ? ";
+        String[] whereValue = {id};
+        Cursor cursor = db.query(READ_TABLENAME, null, where, whereValue,
+                null, null, null);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+        }
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            isCollect = cursor.getInt(1);//SaveId
+        }
+        cursor.close();
+        return isCollect;
+    }
+
+
+
+    /**
+     * 根据tableName、id、dateName,查询是否评论  -- 有读
+     *
+     * @params tableName：数据库名称  id：id值、idName：id名称
+     * @author Du
+     * @Date 2018/3/13 22:15
+     **/
+    public String queryIsCommentRead(String id) {
         String isCollect = null;
         String where = READ_ID + " = ? ";
         String[] whereValue = {id + ""};
@@ -321,45 +404,78 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-
     /**
-     * 查询所有收藏多条数据   --  有读
+     * 查询所有收藏,多条数据   --  有读
      *
      * @params
      * @author Du
      * @Date 2018/3/17 22:24
      **/
-    public List<Smallnews.Smallnews_Detail> queryMultiIsCollectRead(String id) {
-        List<Smallnews.Smallnews_Detail> smallnews_details = new ArrayList<>();
-        String where = READ_ISCOLLECT + " = ? ";
-        String[] whereValue = {id + ""};
-        Cursor cursor = db.query(READ_TABLENAME, null, where, whereValue,
+    public List<Collect_Article_Info.Collect_Article_Details> queryMultiIsCollectRead() {
+        List<Collect_Article_Info.Collect_Article_Details> collect_article_detailses = new ArrayList<>();
+        Cursor cursor = db.query(READ_TABLENAME, null, null, null,
                 null, null, null);
         if (cursor.getCount() == 0) {
             cursor.close();
         }
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            try {
-                Smallnews.Smallnews_Detail smallnews_detail = new Smallnews.Smallnews_Detail();
-                smallnews_detail.article_id = cursor.getInt(0);
-                smallnews_detail.title = cursor.getString(1);
-                smallnews_detail.pictureURL = cursor.getString(2);
-                smallnews_detail.introduce = cursor.getString(3);
-                smallnews_detail.source = cursor.getString(4);
-                smallnews_detail.pubDate = sdf.parse(cursor.getString(5));
-                smallnews_detail.readNum = cursor.getInt(6);
-                smallnews_detail.agreeNum = cursor.getInt(7);
-                smallnews_detail.isCollect = cursor.getInt(8);
-                smallnews_details.add(smallnews_detail);
-                cursor.moveToNext();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            Collect_Article_Info.Collect_Article_Details collect_article_details = new Collect_Article_Info.Collect_Article_Details();
+            collect_article_details.article_id = cursor.getInt(0);
+            collect_article_details.save_id = cursor.getInt(1);
+            collect_article_details.pictureURL = cursor.getString(2);
+            collect_article_details.isDel = cursor.getInt(3);
+            collect_article_details.lastTime = cursor.getString(4);
+            collect_article_details.title = cursor.getString(5);
+            collect_article_details.pictureURL = cursor.getString(6);
+            collect_article_detailses.add(collect_article_details);
+            cursor.moveToNext();
         }
         cursor.close();
-        return smallnews_details;
+        return collect_article_detailses;
     }
+
+
+
+//    /**
+//     * 查询所有评论数据（多条）  --  有读
+//     *
+//     * @params
+//     * @author Du
+//     * @Date 2018/3/17 22:24
+//     **/
+//    public List<Smallnews.Smallnews_Detail> queryMultiIsCommentRead(String id) {
+//        List<Smallnews.Smallnews_Detail> smallnews_details = new ArrayList<>();
+//        String where = READ_ISCOMMENT + " = ? ";
+//        String[] whereValue = {id + ""};
+//        Cursor cursor = db.query(READ_TABLENAME, null, where, whereValue,
+//                null, null, null);
+//        if (cursor.getCount() == 0) {
+//            cursor.close();
+//        }
+//        cursor.moveToFirst();
+//        while (!cursor.isAfterLast()) {
+//            try {
+//                Smallnews.Smallnews_Detail smallnews_detail = new Smallnews.Smallnews_Detail();
+//                smallnews_detail.article_id = cursor.getInt(0);
+//                smallnews_detail.title = cursor.getString(1);
+//                smallnews_detail.pictureURL = cursor.getString(2);
+//                smallnews_detail.introduce = cursor.getString(3);
+//                smallnews_detail.source = cursor.getString(4);
+//                smallnews_detail.pubDate = sdf.parse(cursor.getString(5));
+//                smallnews_detail.readNum = cursor.getInt(6);
+//                smallnews_detail.agreeNum = cursor.getInt(7);
+//                smallnews_detail.isCollect = cursor.getInt(8);
+//                smallnews_detail.isComment = cursor.getInt(9);
+//                smallnews_details.add(smallnews_detail);
+//                cursor.moveToNext();
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        cursor.close();
+//        return smallnews_details;
+//    }
 
 
     /* 以下开始是操作 群消息表 */
@@ -367,10 +483,10 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
     /**
      * 批量插入群消息
      */
-    public void batchInsertGroupNews(Collection<GroupNewsDTO.GroupNewsDTO_Content> newsDTOs_contents){
-        try{
+    public void batchInsertGroupNews(Collection<GroupNewsDTO.GroupNewsDTO_Content> newsDTOs_contents) {
+        try {
             db.beginTransaction();
-            for (GroupNewsDTO.GroupNewsDTO_Content newmessage : newsDTOs_contents){
+            for (GroupNewsDTO.GroupNewsDTO_Content newmessage : newsDTOs_contents) {
                 ContentValues cv = new ContentValues();
                 cv.put(GROUPMESSAGE_CHATID, newmessage.getChat_id());
                 cv.put(GROUPMESSAGE_LASTTIME, newmessage.getLastTime());
@@ -392,11 +508,11 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
     /**
      * 查询多条已读群消息
      */
-    public List<GroupNewsDTO.GroupNewsDTO_Content> queryMultiGroupNewsRead(int group_id){
+    public List<GroupNewsDTO.GroupNewsDTO_Content> queryMultiGroupNewsRead(int group_id) {
 //        db = getWritableDatabase();// 如果数据库不存在则会调用onCreate函数
         ArrayList<GroupNewsDTO.GroupNewsDTO_Content> messages = new ArrayList<GroupNewsDTO.GroupNewsDTO_Content>();
         String where = GROUPMESSAGE_GROUPID + " =? ";
-        String[] whereValue = { group_id + "" };
+        String[] whereValue = {group_id + ""};
         Cursor cursor = db.query(GROUPMESSAGE_TABLENAME, null, where, whereValue,
                 null, null, null);
         if (cursor.getCount() == 0) {
@@ -423,11 +539,11 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
     /**
      * 查询所有未读群消息
      */
-    public List<GroupNewsDTO.GroupNewsDTO_Content> queryMultiGroupNewsUnRead(int group_id){
+    public List<GroupNewsDTO.GroupNewsDTO_Content> queryMultiGroupNewsUnRead(int group_id) {
         ArrayList<GroupNewsDTO.GroupNewsDTO_Content> messages = new ArrayList<GroupNewsDTO.GroupNewsDTO_Content>();
         String where = GROUPMESSAGE_GROUPID + " =? and " + GROUPMESSAGE_ISREAD
                 + " =?";
-        String[] whereValue = { group_id + "", "0" };
+        String[] whereValue = {group_id + "", "0"};
         Cursor cursor = db.query(GROUPMESSAGE_TABLENAME, null, where,
                 whereValue, null, null, null);
         if (cursor.getCount() == 0) {
@@ -435,7 +551,7 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
             return messages;
         }
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             GroupNewsDTO.GroupNewsDTO_Content message = new GroupNewsDTO.GroupNewsDTO_Content();
             message.setChat_id(cursor.getInt(0));
             message.setLastTime(cursor.getString(1));
@@ -457,18 +573,11 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
     public int updataGroupNews(int group_id) {
         String where = GROUPMESSAGE_GROUPID + " =? and " + GROUPMESSAGE_ISREAD
                 + "=0";
-        String[] whereValue = { group_id + "" };
+        String[] whereValue = {group_id + ""};
         ContentValues cv = new ContentValues();
         cv.put(GROUPMESSAGE_ISREAD, "1");
         return db.update(GROUPMESSAGE_TABLENAME, cv, where, whereValue);
     }
-
-
-
-
-
-
-
 
 
     @Override

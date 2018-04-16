@@ -109,7 +109,6 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
 
     public void initPhotoData(String account) {
         String picname = "icon/" + account + "_thumbnail.jpg";
-//        String picname = "icon/" + account + ".jpg";
         String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + picname;
         Uri uri = Uri.parse(imageUrl);
         Picasso.with(mActivity).invalidate(uri);

@@ -28,7 +28,6 @@ public class AppConstants {
     public final static String STAR = "star";
     public final static String COMPLIMENT = "compliment";
 
-
     //缓存内容标识
     public final static String ENROLLSETTING = "enrollSetting";//报名设置缓存
     public final static String SELPLACEINFO = "selplaceInfo";//选择友约地点缓存
@@ -39,6 +38,8 @@ public class AppConstants {
     public final static String SIGNATURE = "signature";
     public final static String UPLOADPIC = "uploadpic";//上传图片
 
+    public final static String TELEPHONE = "telephone";
+
     public final static String GROUPNAME = "groupName";
 
     public final static String FRIEND_ID = "friend_id";
@@ -47,4 +48,7 @@ public class AppConstants {
 
 
     public final static String EXIT_APP = "exit_app";//退出所有应用
+
+    public final static String SAVE_CON = "saveCon";
+    public final static String SAVE_ID = "save_id";
 }

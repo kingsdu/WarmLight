@@ -29,18 +29,18 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2018/4/9.
  */
 
-public class DailyAskAddActivity extends Activity implements View.OnClickListener{
+public class DailyAskAddActivity extends Activity implements View.OnClickListener {
 
     @Bind(R.id.iv_back_me)
     ImageView ivBackMe;
-    @Bind(R.id.tv_topbar_title)
-    TextView tvTopbarTitle;
     @Bind(R.id.et_me_addinputtitle)
     EditText etMeAddinputtitle;
     @Bind(R.id.et_me_addinputcontent)
     EditText etMeAddinputcontent;
     @Bind(R.id.btn_dailyask_addrelease)
     Button btnDailyaskAddrelease;
+    @Bind(R.id.tv_topbar_title)
+    TextView tvTopbarTitle;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +50,7 @@ public class DailyAskAddActivity extends Activity implements View.OnClickListene
         ButterKnife.bind(this);
         ivBackMe.setVisibility(View.VISIBLE);
         tvTopbarTitle.setVisibility(View.VISIBLE);
+        tvTopbarTitle.setText("提问");
         ivBackMe.setOnClickListener(this);
         btnDailyaskAddrelease.setOnClickListener(this);
     }
@@ -57,7 +58,7 @@ public class DailyAskAddActivity extends Activity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.iv_back_me:
                 finish();
                 break;
@@ -68,44 +69,44 @@ public class DailyAskAddActivity extends Activity implements View.OnClickListene
     }
 
 
-
     /**
-    * 添加问题
-    * @params
-    * @author Du
-    * @Date 2018/4/9 14:27
-    **/
+     * 添加问题
+     *
+     * @params
+     * @author Du
+     * @Date 2018/4/9 14:27
+     **/
     private void addQuestion() {
         String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.CREATEQUESTION;
         String title = etMeAddinputtitle.getText().toString();
         String content = etMeAddinputcontent.getText().toString();
-        if(TextUtils.isEmpty(title)){
-            CommonUtils.showToastShort(DailyAskAddActivity.this,"请输入标题");
+        if (TextUtils.isEmpty(title)) {
+            CommonUtils.showToastShort(DailyAskAddActivity.this, "请输入标题");
             return;
         }
 
-        if(TextUtils.isEmpty(content)){
-            CommonUtils.showToastShort(DailyAskAddActivity.this,"请输入内容");
+        if (TextUtils.isEmpty(content)) {
+            CommonUtils.showToastShort(DailyAskAddActivity.this, "请输入内容");
             return;
         }
 
         RequestParams params = new RequestParams(url);
-        params.addParameter("title",title);
-        params.addParameter("content",content);
+        params.addParameter("title", title);
+        params.addParameter("content", content);
         params.addParameter("proposer", UserManage.getInstance().getUserInfo(DailyAskAddActivity.this).account);
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Gson gson = new Gson();
                 DailyDetailsAsk dailyDetailsAsk = gson.fromJson(result, DailyDetailsAsk.class);
-                if(dailyDetailsAsk.code == 201){
-                    CommonUtils.showToastShort(DailyAskAddActivity.this,"提问成功");
+                if (dailyDetailsAsk.code == 201) {
+                    CommonUtils.showToastShort(DailyAskAddActivity.this, "提问成功");
                 }
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                CommonUtils.showToastShort(DailyAskAddActivity.this,"提问失败");
+                CommonUtils.showToastShort(DailyAskAddActivity.this, "提问失败");
             }
 
             @Override

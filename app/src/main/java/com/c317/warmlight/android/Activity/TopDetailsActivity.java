@@ -175,6 +175,7 @@ public class TopDetailsActivity extends AppCompatActivity {
                     finishAfterTransition();
                 } else {
                     finish();
+                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 }
                 break;
         }

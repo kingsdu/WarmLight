@@ -1,5 +1,6 @@
 package com.c317.warmlight.android.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +32,7 @@ import java.util.List;
  *
  */
 
-public class SmallNewsController {
+public class SmallNewsController{
     private List<Object> mData;
     private Context mContext;
     private SmallNewsAdapter mAdapter;
@@ -59,12 +60,7 @@ public class SmallNewsController {
                         intent.putExtra("url",url);
                         intent.putExtra("article_id",article_id);
                         intent.putExtra("title",smallnews_detail.title);
-                        intent.putExtra("introduce",smallnews_detail.introduce);
-                        intent.putExtra("pubDate",sdf.format(smallnews_detail.pubDate));
                         intent.putExtra("pictureURL",smallnews_detail.pictureURL);
-                        intent.putExtra("readNum",smallnews_detail.readNum+"");
-                        intent.putExtra("agreeNum",smallnews_detail.agreeNum+"");
-                        intent.putExtra("source",smallnews_detail.source);
                         mContext.startActivity(intent);
                         //自增阅读数
                         addReadNum(article_id);
