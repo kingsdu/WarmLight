@@ -142,7 +142,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         if (TextUtils.isEmpty(getIntent().getStringExtra("picUrl"))) {
             picUrl = null;
         } else {
-            picUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYS + AppNetConfig.SEPARATOR+ getIntent().getStringExtra("picUrl");
+            picUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR+ getIntent().getStringExtra("picUrl");
         }
         account = UserManage.getInstance().getUserInfo(DateDetailActivity.this).account;
         ectractPutEra();
@@ -208,6 +208,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
             DateNews.DateNews_Detail dateNews_detail = new DateNews.DateNews_Detail();
             setDefaultData();
             dateNews_detail.activity_id = mActivityid;
+            mPicture = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYS + AppNetConfig.PARAMETER + "activity_id=" + mActivityid;
             dateNews_detail.picture = mPicture;
             dateNews_detail.agreeNum = Integer.valueOf(mAgreeNum);
             dateNews_detail.commentNum = Integer.valueOf(mCommentNum);

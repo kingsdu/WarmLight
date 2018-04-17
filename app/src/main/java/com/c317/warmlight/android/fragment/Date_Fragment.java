@@ -95,6 +95,7 @@ public class Date_Fragment extends BaseFragment implements ViewPager.OnPageChang
         return view;
     }
 
+
     @Override
     public void initData() {
         mDatePagers = new ArrayList<>();
