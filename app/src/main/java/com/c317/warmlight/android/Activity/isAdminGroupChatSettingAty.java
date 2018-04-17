@@ -16,8 +16,10 @@ import com.c317.warmlight.android.common.AppConstants;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.common.UserManage;
+import com.c317.warmlight.android.utils.CommonUtils;
 import com.c317.warmlight.android.utils.SharedPrefUtility;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import org.xutils.common.Callback;
 import org.xutils.http.HttpMethod;
@@ -26,6 +28,7 @@ import org.xutils.x;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Administrator on 2018/4/9.
@@ -46,9 +49,12 @@ public class isAdminGroupChatSettingAty extends Activity implements View.OnClick
     RelativeLayout rlGroupmemberGroupchat;
     @Bind(R.id.tv_groupmember_num)
     TextView tvGroupmemberNum;
+    @Bind(R.id.civ_personnalinfo_circleImageView)
+    CircleImageView civPersonnalinfoCircleImageView;
 
     private String account;
     private String mGroupName;
+    private String mPicture;
     private int mGroup_id;
     private static final int EDIT_GROUPNAME = 4;//编辑昵称
     private GroupMemberInfo groupmemberinfo;
@@ -60,7 +66,7 @@ public class isAdminGroupChatSettingAty extends Activity implements View.OnClick
         Application_my.getInstance().addActivity(this);
         setContentView(R.layout.groupchat_isadminsetting_aty);
         ButterKnife.bind(this);
-        SharedPrefUtility.removeParam(isAdminGroupChatSettingAty.this,AppConstants.GROUPNAME);
+        SharedPrefUtility.removeParam(isAdminGroupChatSettingAty.this, AppConstants.GROUPNAME);
         ectractPutEra();
         //顶部按钮初始化
         ivBackMe.setVisibility(View.VISIBLE);
@@ -80,6 +86,7 @@ public class isAdminGroupChatSettingAty extends Activity implements View.OnClick
     private void ectractPutEra() {
         mGroupName = getIntent().getStringExtra("groupName");
         mGroup_id = getIntent().getIntExtra("group_id", mGroup_id);
+        mPicture = getIntent().getStringExtra("picture");
     }
 
     private void getGroupMemberNum() {
@@ -93,7 +100,7 @@ public class isAdminGroupChatSettingAty extends Activity implements View.OnClick
                 Gson gson = new Gson();
                 groupmemberinfo = gson.fromJson(result, GroupMemberInfo.class);
                 Num = groupmemberinfo.data.size();
-                tvGroupmemberNum.setText(Num+"名群成员");
+                tvGroupmemberNum.setText(Num + "名群成员");
             }
 
             @Override
@@ -114,14 +121,26 @@ public class isAdminGroupChatSettingAty extends Activity implements View.OnClick
     }
 
     private void initData() {
+        initPhotoData();
         String groupName = (String) SharedPrefUtility.getParam(this, AppConstants.GROUPNAME, AppConstants.GROUPNAME);
-        if((groupName.equals(AppConstants.GROUPNAME)) ){
+        if ((groupName.equals(AppConstants.GROUPNAME))) {
             tvIsadminsetGroupchat1.setText(mGroupName);
-        }else{
+        } else {
             if (!(groupName.equals(AppConstants.GROUPNAME))) {
                 tvIsadminsetGroupchat1.setText(groupName);
             }
         }
+    }
+
+    private void initPhotoData() {
+        if(mPicture.equals("")){
+            Picasso.with(isAdminGroupChatSettingAty.this).load(R.drawable.nopic1).into(civPersonnalinfoCircleImageView);
+           }
+        else {
+            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + mPicture;
+            Picasso.with(isAdminGroupChatSettingAty.this).load(imageUrl).into(civPersonnalinfoCircleImageView);
+        }
+
     }
 
     @Override
@@ -159,7 +178,8 @@ public class isAdminGroupChatSettingAty extends Activity implements View.OnClick
                 Gson gson = new Gson();
                 Result resultInfo = gson.fromJson(result, Result.class);
                 if (resultInfo.code == 200) {
-                    Toast.makeText(isAdminGroupChatSettingAty.this, "删除成功", Toast.LENGTH_SHORT).show();
+                    CommonUtils.showToastShort(isAdminGroupChatSettingAty.this, "退出成功");
+
                 } else {
                     Toast.makeText(isAdminGroupChatSettingAty.this, resultInfo.desc, Toast.LENGTH_SHORT).show();
                 }

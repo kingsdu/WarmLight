@@ -12,10 +12,12 @@ import android.widget.Toast;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.bean.GroupMemberInfo;
 import com.c317.warmlight.android.bean.Result;
+import com.c317.warmlight.android.common.AppConstants;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.Application_my;
 import com.c317.warmlight.android.common.UserManage;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import org.xutils.common.Callback;
 import org.xutils.http.HttpMethod;
@@ -24,6 +26,7 @@ import org.xutils.x;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Administrator on 2018/4/9.
@@ -43,9 +46,12 @@ public class isnotAdminGroupChatSettingAty extends Activity implements View.OnCl
     TextView tvGroupmemberNum;
     @Bind(R.id.rl_groupmember_groupchat)
     RelativeLayout rlGroupmemberGroupchat;
+    @Bind(R.id.civ_personnalinfo_circleImageView)
+    CircleImageView civPersonnalinfoCircleImageView;
 
     private String account;
     private String mGroupName;
+    private String mPicture;
     private int mGroup_id;
     private GroupMemberInfo groupmemberinfo;
     private int Num;
@@ -57,6 +63,7 @@ public class isnotAdminGroupChatSettingAty extends Activity implements View.OnCl
         setContentView(R.layout.groupchat_isnotadminsetting_aty);
         ButterKnife.bind(this);
         ectractPutEra();
+        initPhotoData();
         //顶部按钮初始化
         ivBackMe.setVisibility(View.VISIBLE);
         tvTopbarTitle.setText("聊天设置");
@@ -72,6 +79,17 @@ public class isnotAdminGroupChatSettingAty extends Activity implements View.OnCl
     private void ectractPutEra() {
         mGroupName = getIntent().getStringExtra("groupName");
         mGroup_id = getIntent().getIntExtra("group_id", mGroup_id);
+        mPicture = getIntent().getStringExtra("picture");
+    }
+
+    private void initPhotoData() {
+        if(mPicture.equals("")){
+            Picasso.with(isnotAdminGroupChatSettingAty.this).load(R.drawable.nopic1).into(civPersonnalinfoCircleImageView);
+        }
+        else {
+            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + mPicture;
+            Picasso.with(isnotAdminGroupChatSettingAty.this).load(imageUrl).into(civPersonnalinfoCircleImageView);
+        }
     }
 
     private void getGroupMemberNum() {

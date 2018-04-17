@@ -22,9 +22,12 @@ import com.c317.warmlight.android.bean.AccountUsername;
 import com.c317.warmlight.android.bean.NewfriendInfo;
 import com.c317.warmlight.android.bean.Result;
 import com.c317.warmlight.android.bean.SinglechatGroup;
+import com.c317.warmlight.android.bean.UserInfo;
+import com.c317.warmlight.android.common.AppConstants;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.tabpager.MyMessageTabDetails;
+import com.c317.warmlight.android.utils.PrefUtils;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.squareup.picasso.NetworkPolicy;
@@ -55,6 +58,9 @@ public class SingleChat_Fragment extends Fragment implements
     private ArrayList<NewfriendInfo.NewfriendInfo_Content> truefrienddata = new ArrayList();
     public int group_id;
     public int Friend_id;
+//    public String username;
+private ArrayList<NewfriendInfo.NewfriendInfo_Content> truefriendusernamedata = new ArrayList();
+    public String friendusername;
 
 
     @Override
@@ -95,10 +101,11 @@ public class SingleChat_Fragment extends Fragment implements
                 for(int i=0;i<newfriendinfo.data.size();i++){
                     if(newfriendinfo.data.get(i).isFriend){
                         truefrienddata.add(newfriendinfo.data.get(i));
-                        getusername(newfriendinfo.data.get(i).account);
                     }
                 }
-
+                for(int i=0;i<truefrienddata.size();i++){
+                    getusername(truefrienddata.get(i).account);
+                }
                 SingleChatListAdapter singlechatlistAdapter = new SingleChatListAdapter();
 //                singlechatlistAdapter.notifyDataSetChanged();
                 lvMymessageChatlist.setAdapter(singlechatlistAdapter);
@@ -121,56 +128,17 @@ public class SingleChat_Fragment extends Fragment implements
         });
     }
 
-    public enum Username{;
-
-        private final String account;
-        private final String username;
-
-        public String getAccount() {
-            return account;
-        }
-        public String getUsername() {
-            return username;
-        }
-        Username(String account, String username) {
-            this.account = account;
-            this.username = username;
-        }
-
-        /**
-         * 根据key获取value
-         *
-         * @param key
-         *            : 键值key
-         * @return String
-         */
-        public static String getValueByKey(String key) {
-            Username[] enums = Username.values();
-            for (int i = 0; i < enums.length; i++) {
-//                if (enums[i].getKey().equals(key)) {
-//                    return enums[i].getValue();
-//                }
-            }
-            return "";
-        }
-    }
-
-    private void getusername(final String friendaccount){
-        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.MY + AppNetConfig.SEPARATOR + AppNetConfig.GETFRIENDNAME;
+    private void getusername(final String friendaccount) {
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.MY + AppNetConfig.SEPARATOR + AppNetConfig.GETUSERINFO;
         RequestParams params = new RequestParams(url);
-        params.addParameter("account", account);
+        params.addParameter(AppConstants.ACCOUNT, friendaccount);
         x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String result) {
                 Gson gson = new Gson();
-                accountusername = gson.fromJson(result, AccountUsername.class);
-//                    AprrovalStatus[] enums = AprrovalStatus.values();
-//                    for (int i = 0; i < enums.length; i++) {
-//                        if (enums[i].getKey().equals(friendaccount)) {
-//                            return enums[i].getValue();
-//                        }
-//                    }
+                AccountUsername accountusername = gson.fromJson(result, AccountUsername.class);
+
             }
 
             @Override
@@ -262,6 +230,7 @@ public class SingleChat_Fragment extends Fragment implements
                 holder = (ViewHolder) convertView.getTag();
             }
             final NewfriendInfo.NewfriendInfo_Content NewfriendInfo_Contents = truefrienddata.get(position);
+//            UserInfo.UserInfo_content userInfo_content = UserInfo;
             holder.tvaccount.setText(NewfriendInfo_Contents.account);
             String picname = "icon/" + NewfriendInfo_Contents.account + "_thumbnail.jpg";
             String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + picname;

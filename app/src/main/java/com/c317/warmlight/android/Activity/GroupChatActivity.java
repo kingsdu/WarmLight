@@ -120,6 +120,7 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
     private String mGroupName;
     private int mGroup_id;
     private String mFounder;
+    private String mPicture;
     private int group_id;
     private int mFriend_id;
     private int friend_id;
@@ -165,6 +166,7 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
         mGroup_id = getIntent().getIntExtra("group_id",group_id);
         mFriend_id = getIntent().getIntExtra("friend_id",friend_id);
         mFounder = getIntent().getStringExtra("founder");
+        mPicture = getIntent().getStringExtra("picture");
     }
 
     @Override
@@ -187,11 +189,13 @@ public class GroupChatActivity extends Activity implements View.OnClickListener 
                     Intent intent = new Intent(GroupChatActivity.this, isAdminGroupChatSettingAty.class);
                     intent.putExtra("groupName", mGroupName);
                     intent.putExtra("group_id", mGroup_id);
+                    intent.putExtra("picture", mPicture);
                     startActivity(intent);
                 }else {
                     Intent intent = new Intent(GroupChatActivity.this, isnotAdminGroupChatSettingAty.class);
                     intent.putExtra("groupName", mGroupName);
                     intent.putExtra("group_id", mGroup_id);
+                    intent.putExtra("picture", mPicture);
                     startActivity(intent);
                 }
 

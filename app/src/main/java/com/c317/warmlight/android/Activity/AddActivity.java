@@ -74,7 +74,6 @@ public class AddActivity extends Activity implements View.OnClickListener {
         String friendaccount = etMymessageFriendaccount.getText().toString();
         if (!TextUtils.isEmpty(friendaccount)) {
             requestAddFriend(UserManage.getInstance().getUserInfo(AddActivity.this).account, friendaccount);
-
         } else {
             CommonUtils.showToastShort(this, "输入用户名为空");
         }
