@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,7 +154,14 @@ public class GroupChat_Fragment extends Fragment implements
                 holder = (ViewHolder) convertView.getTag();
             }
             final GroupChatInfo.GroupChatInfo_Content GroupChatInfo_Contents = groupchatdata.get(position);
+            if(TextUtils.isEmpty(GroupChatInfo_Contents.picture)){
+                Picasso.with(getActivity()).load(R.drawable.nopic1).into(holder.ivPic);
+            }else{
+                String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + GroupChatInfo_Contents.picture;
+                Picasso.with(getActivity()).load(imageUrl).into(holder.ivPic);
+            }
             holder.tvgroupname.setText(GroupChatInfo_Contents.groupName);
+
 //            for(int i=0;i<truefrienddata.size();i++){
 //            String picname = "icon/" + NewfriendInfo_Contents.account + "_thumbnail.jpg";
 //            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + picname;
