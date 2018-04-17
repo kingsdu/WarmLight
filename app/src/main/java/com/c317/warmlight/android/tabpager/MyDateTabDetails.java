@@ -124,7 +124,7 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
                     Intent intent = new Intent(mActivity, DateDetailActivity.class);
                     DateNews.DateNews_Detail dateNews_detail = mDatadetail.get(position - 1);
                     intent.putExtra("activity_id", dateNews_detail.activity_id);
-                    intent.putExtra("picUrl", dateNews_detail.activity_id + ".jpg");
+                    intent.putExtra("picUrl", AppNetConfig.ACTIVITYS + AppNetConfig.SEPARATOR+dateNews_detail.activity_id + ".jpg");
                     intent.putExtra("title", dateNews_detail.title);
                     intent.putExtra("content", dateNews_detail.content);
                     intent.putExtra("readNum", dateNews_detail.readNum + "");
