@@ -1,5 +1,6 @@
 package com.c317.warmlight.android.tabpager;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -46,7 +47,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2018/3/21.
  */
-
+@SuppressLint("ValidFragment")
 public class MyMessageTabDetails extends BaseMenuDetailPager implements ViewPager.OnPageChangeListener {
 
 
@@ -68,6 +69,11 @@ public class MyMessageTabDetails extends BaseMenuDetailPager implements ViewPage
         account = UserManage.getInstance().getUserInfo(mActivity).account;
 
         return view;
+    }
+
+
+    public MyMessageTabDetails(){
+
     }
 
     public void initData() {

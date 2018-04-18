@@ -9,10 +9,11 @@ import java.util.ArrayList;
 public class Collect_Date_Info {
 
     public int code;
-    public ArrayList<Collect_Date_Details> data;
+    public ArrayList<Collect_Date_Detail> data;
 
-    public static class Collect_Date_Details{
+    public static class Collect_Date_Detail{
         public int save_id;
+        public String activity_id;
         public String startTime;
         public String endTime;
         public String coordinate;

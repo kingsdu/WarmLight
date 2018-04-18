@@ -422,9 +422,7 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
 
 
     public void releaseDate() {
-
         String param = (String) SharedPrefUtility.getParam(this, AppConstants.COORDINATE, AppConstants.COORDINATE);
-
         String enrollInfo = getEnrollInfo();
         CacheUtils.cleanCache(AddDateActivity.this, AppConstants.ENROLLSETTING);//清除页面缓存
         if (!TextUtils.isEmpty(getUserAccount())) {
@@ -437,9 +435,10 @@ public class AddDateActivity extends Activity implements View.OnClickListener {
                 newDateParams.proposer = getUserAccount();
                 newDateParams.coordinate=param;
                 String[] enrollInfos = enrollInfo.split("\\|");
-                if (enrollInfos.length == 2) {
-                    newDateParams.beginTime = enrollInfos[0];
-                    newDateParams.deadline = enrollInfos[1];
+                if (enrollInfos.length == 3) {
+                    newDateParams.telephone = enrollInfos[0];
+                    newDateParams.beginTime = enrollInfos[1];
+                    newDateParams.deadline = enrollInfos[2];
                     saveNewDateToServer(newDateParams, picFile);
 
                 }

@@ -1,5 +1,6 @@
 package com.c317.warmlight.android.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,7 +40,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2018/4/8.
  */
-
+@SuppressLint("ValidFragment")
 public class GroupChat_Fragment extends Fragment implements
         PullToRefreshBase.OnRefreshListener2<ListView> {
 
@@ -51,6 +52,10 @@ public class GroupChat_Fragment extends Fragment implements
     private String account;
     private GroupChatInfo groupchatinfo;
     private ArrayList<GroupChatInfo.GroupChatInfo_Content> groupchatdata = new ArrayList();
+
+    public GroupChat_Fragment(){
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

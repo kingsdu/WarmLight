@@ -51,4 +51,7 @@ public class AppConstants {
 
     public final static String SAVE_CON = "saveCon";
     public final static String SAVE_ID = "save_id";
+
+    public final static String TYPE = "type";
+    public final static String ACTIVITY_ID = "activity_id";
 }

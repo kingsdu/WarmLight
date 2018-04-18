@@ -39,6 +39,8 @@ public class AppNetConfig {
     //友约
     public static final String ACTIVITY = "getActivities";
 
+    public static final String GETACTIVITY = "getActivity";
+
     //友约列表
     public static final String ACTIVITYLIST = "getActivityList";
 

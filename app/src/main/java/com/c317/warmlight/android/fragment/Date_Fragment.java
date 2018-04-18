@@ -1,5 +1,6 @@
 package com.c317.warmlight.android.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2017/11/16.
  */
-
+@SuppressLint("ValidFragment")
 public class Date_Fragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
     @Bind(R.id.tv_topbar_title)

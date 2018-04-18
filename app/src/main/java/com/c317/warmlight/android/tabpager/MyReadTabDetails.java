@@ -1,5 +1,6 @@
 package com.c317.warmlight.android.tabpager;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -52,7 +53,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2018/3/18.
  */
-
+@SuppressLint("ValidFragment")
 public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.OnPageChangeListener {
 
     @Bind(R.id.pull_mydate_refresh)
@@ -68,6 +69,10 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     public MyReadTabDetails(Activity activity, int type) {
         super(activity);
         mType = type;
+    }
+
+    public MyReadTabDetails(){
+
     }
 
     @Override

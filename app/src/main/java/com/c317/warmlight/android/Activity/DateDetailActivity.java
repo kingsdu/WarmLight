@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.c317.warmlight.android.R;
+import com.c317.warmlight.android.bean.Collect_Date_Details;
+import com.c317.warmlight.android.bean.Collect_Date_Info;
 import com.c317.warmlight.android.bean.DateNews;
 import com.c317.warmlight.android.bean.DateNews_detalis;
 import com.c317.warmlight.android.bean.Result;
@@ -108,24 +110,12 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
     private Activity mActivity;
     private String picUrl;
     private String mActivityid;
-    private String url;
     private boolean iscollect;
-    private String account;
+    private String mAccount;
     private WarmLightDataBaseHelper dataBaseHelper;
-    private DateNews_detalis dateNews_detalis;
-    private String mPicture;
-    private String mTitle;
-    private String mContent;
-    private String mReadNum;
-    private String mAgreeNum;
-    private String mCommentNum;
-    private String mEndTime;
-    private String mStartTime;
-    private String mMemberNum;
-    private String mType;
-    private String mPlace;
-    public int group_id;
-    private String telephone;
+    private String mTelephone;
+    public int mGroup_id;
+    private int mSave_id;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -139,156 +129,121 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         ivAllComment.setVisibility(View.VISIBLE);
         ivAllComment.setOnClickListener(this);
         tvJoinIn.setOnClickListener(this);
-        if (TextUtils.isEmpty(getIntent().getStringExtra("picUrl"))) {
-            picUrl = null;
-        } else {
-            picUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR+ getIntent().getStringExtra("picUrl");
-        }
-        account = UserManage.getInstance().getUserInfo(DateDetailActivity.this).account;
-        ectractPutEra();
-        url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + "getActivity" + AppNetConfig.PARAMETER + "activity_id=" + mActivityid;
         dataBaseHelper = WarmLightDataBaseHelper.getDatebaseHelper(this);
-        iscollect = getIsCollect();
-        getDataFromServer();
+        mAccount = UserManage.getInstance().getUserInfo(DateDetailActivity.this).account;
+        initDate();
         ivBackMe.setOnClickListener(this);
         llConsult.setOnClickListener(this);
-
 
         tvJoinIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                join(UserManage.getInstance().getUserInfo(DateDetailActivity.this).account, group_id);
+                join(UserManage.getInstance().getUserInfo(DateDetailActivity.this).account, mGroup_id);
             }
         });
         llDataCollect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!iscollect) {
-                    dataBaseHelper.updateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME, mActivityid, WarmLightDataBaseHelper.DATE_ID, WarmLightDataBaseHelper.DATE_ISCOLLECT);
-                    tvMark.setText("已收藏");
-                    Toast.makeText(DateDetailActivity.this, "已收藏", Toast.LENGTH_SHORT).show();
-                    iscollect = true;
+                    addDateCollect();
                 } else {
-                    dataBaseHelper.unUpdateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME, mActivityid, WarmLightDataBaseHelper.DATE_ID, WarmLightDataBaseHelper.DATE_ISCOLLECT);
-                    tvMark.setText("收藏");
-                    Toast.makeText(DateDetailActivity.this, "取消收藏", Toast.LENGTH_SHORT).show();
-                    iscollect = false;
+                    unAddDateCollect();
                 }
             }
         });
     }
 
-    private void ectractPutEra() {
-        mActivityid = getIntent().getStringExtra("activity_id");
-        mPicture = getIntent().getStringExtra("picture");
-        mTitle = getIntent().getStringExtra("title");
-        mContent = getIntent().getStringExtra("content");
-        mReadNum = getIntent().getStringExtra("readNum");
-        mAgreeNum = getIntent().getStringExtra("agreeNum");
-        mCommentNum = getIntent().getStringExtra("commentNum");
-        mEndTime = getIntent().getStringExtra("endTime");
-        mStartTime = getIntent().getStringExtra("startTime");
-        mMemberNum = getIntent().getStringExtra("memberNum");
-        mType = getIntent().getStringExtra("type");
-        mPlace = getIntent().getStringExtra("place");
-        telephone = getIntent().getStringExtra("telephone");
+
+    private void initDate() {
+        ectractPutEra();
+        getCollectFromServer();
     }
 
-
-    /**
-     * 获取当前用户是否收藏的信息
-     *
-     * @params
-     * @author Du
-     * @Date 2018/3/13 22:22
-     **/
-    private boolean getIsCollect() {
-        String isCollect = dataBaseHelper.queryIsCollectDate(mActivityid);
-        if (TextUtils.isEmpty(isCollect)) {
-            DateNews.DateNews_Detail dateNews_detail = new DateNews.DateNews_Detail();
-            setDefaultData();
-            dateNews_detail.activity_id = mActivityid;
-            mPicture = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYS + AppNetConfig.PARAMETER + "activity_id=" + mActivityid;
-            dateNews_detail.picture = mPicture;
-            dateNews_detail.agreeNum = Integer.valueOf(mAgreeNum);
-            dateNews_detail.commentNum = Integer.valueOf(mCommentNum);
-            dateNews_detail.memberNum = Integer.valueOf(mMemberNum);
-            dateNews_detail.content = mContent;
-            dateNews_detail.title = mTitle;
-            dateNews_detail.type = Integer.valueOf(mType);
-            dateNews_detail.startTime = mStartTime;
-            dateNews_detail.endTime = mEndTime;
-            dateNews_detail.place = mPlace;
-            dateNews_detail.readNum = Integer.valueOf(mReadNum);
-            dateNews_detail.isCollect = 0;
-            dataBaseHelper.InsertCollectInfoDate(dateNews_detail);
-        } else {
-            if (isCollect.equals("1")) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
-
-
-    /**
-     * 将空值设置为默认的数据
-     *
-     * @params
-     * @author Du
-     * @Date 2018/3/20 21:58
-     **/
-    private void setDefaultData() {
-        if (TextUtils.isEmpty(mActivityid)) {
-            mActivityid = 0 + "";
-        }
-        if (TextUtils.isEmpty(mPicture)) {
-            mPicture = R.drawable.nopic1 + "";
-        }
-        if (TextUtils.isEmpty(mAgreeNum)) {
-            mAgreeNum = 0 + "";
-        }
-        if (TextUtils.isEmpty(mCommentNum)) {
-            mCommentNum = 0 + "";
-        }
-        if (TextUtils.isEmpty(mMemberNum)) {
-            mMemberNum = 0 + "";
-        }
-        if (TextUtils.isEmpty(mContent)) {
-            mContent = "content is null";
-        }
-        if (TextUtils.isEmpty(mTitle)) {
-            mTitle = "title is null";
-        }
-        if (TextUtils.isEmpty(mType)) {
-            mType = 0 + "";
-        }
-        if (TextUtils.isEmpty(mStartTime)) {
-            mStartTime = "1999-01-01";
-        }
-        if (TextUtils.isEmpty(mEndTime)) {
-            mEndTime = "1999-01-01";
-        }
-        if (TextUtils.isEmpty(mPlace)) {
-            mPlace = "mPlace is null";
-        }
-        if (TextUtils.isEmpty(mReadNum)) {
-            mReadNum = 0 + "";
-        }
-    }
-
-
-    private void getDataFromServer() {
+    private void getDateDetails() {
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.GETACTIVITY;
         RequestParams params = new RequestParams(url);
+        params.addParameter(AppConstants.ACTIVITY_ID,mActivityid);
         x.http().get(params, new Callback.CommonCallback<String>() {
+
             @Override
             public void onSuccess(String result) {
                 Gson gson = new Gson();
-                dateNews_detalis = gson.fromJson(result, DateNews_detalis.class);
-                setDataView(dateNews_detalis.data);
-                group_id = dateNews_detalis.data.group_id;
+                DateNews_detalis dateNews_detalis = gson.fromJson(result, DateNews_detalis.class);
+                if(dateNews_detalis.code == 200){
+                    mTelephone = dateNews_detalis.data.telephone;
+                    mGroup_id = dateNews_detalis.data.group_id;
+                    setDataView(dateNews_detalis.data);
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                CommonUtils.showToastShort(mActivity,"请求友约详情失败");
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+
+    private void getCollectFromServer() {
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
+        RequestParams params = new RequestParams(url);
+        params.addParameter(AppConstants.ACCOUNT, mAccount);
+        params.addParameter(AppConstants.TYPE, "a");
+        x.http().post(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                Collect_Date_Info collect_date_info = gson.fromJson(result, Collect_Date_Info.class);
+                if(collect_date_info.code == 400){
+                    iscollect = getIsCollect(collect_date_info,true);
+                    getDateDetails();
+                }else if (collect_date_info.code == 200) {
+                    iscollect = getIsCollect(collect_date_info,false);
+                    getDateDetails();
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                CommonUtils.showToastShort(mActivity,"获取网络收藏信息错误");
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+
+    private void unAddDateCollect() {
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
+        RequestParams params = new RequestParams(url);
+        params.addParameter(AppConstants.SAVE_ID, mSave_id);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                dataBaseHelper.unUpdateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME, mActivityid, WarmLightDataBaseHelper.DATE_ID, WarmLightDataBaseHelper.DATE_ISDEL);
+                tvMark.setText("收藏");
+                Toast.makeText(DateDetailActivity.this, "取消收藏", Toast.LENGTH_SHORT).show();
+                iscollect = false;
             }
 
             @Override
@@ -308,15 +263,83 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         });
     }
 
+    private void addDateCollect() {
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
+        RequestParams params = new RequestParams(url);
+        params.addParameter(AppConstants.SAVE_CON,"a"+mActivityid);
+        params.addParameter(AppConstants.ACCOUNT,UserManage.getInstance().getUserInfo(DateDetailActivity.this).account);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                Collect_Date_Details collect_date_details = gson.fromJson(result, Collect_Date_Details.class);
+                if (collect_date_details.code == 201) {
+                    dataBaseHelper.updateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME, mActivityid, WarmLightDataBaseHelper.DATE_ID, WarmLightDataBaseHelper.DATE_ISDEL);
+                    dataBaseHelper.InsertCollectInfoDate(collect_date_details);
+                    tvMark.setText("已收藏");
+                    CommonUtils.showToastShort(DateDetailActivity.this, "收藏成功");
+                    iscollect = true;
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                CommonUtils.showToastShort(DateDetailActivity.this, "收藏失败");
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+    private void ectractPutEra() {
+        mActivityid = getIntent().getStringExtra("activity_id");
+        mSave_id = getIntent().getIntExtra("save_id",0);
+    }
+
+
+    /**
+     * 获取当前用户是否收藏的信息
+     *
+     * @params
+     * @author Du
+     * @Date 2018/3/13 22:22
+     **/
+    private boolean getIsCollect(Collect_Date_Info collect_date_info,boolean flag) {
+        if(!flag){
+            for(int i=0;i<collect_date_info.data.size();i++){
+                if(mActivityid == collect_date_info.data.get(i).activity_id){
+                    mSave_id = collect_date_info.data.get(i).save_id;
+                    return true;
+                }
+            }
+        }
+        String isCollect = dataBaseHelper.queryIsCollectDate(mActivityid);
+        if (!TextUtils.isEmpty(isCollect)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     private void setDataView(DateNews_detalis.DateNews_content dateNewsContent) {
         String dataTime = "活动时间：" + dateNewsContent.startTime + " - " + dateNewsContent.endTime.substring(dateNewsContent.endTime.indexOf(" ") + 1, dateNewsContent.endTime.length());
         String joinTime = "报名时间：" + dateNewsContent.beginTime + " - " + dateNewsContent.deadline.substring(dateNewsContent.deadline.indexOf(" ") + 1, dateNewsContent.deadline.length());
         String joinPeople = "已报名：" + dateNewsContent.memberNum + "/" + dateNewsContent.memberTotalNum + "人";
-        if (TextUtils.isEmpty(picUrl)) {
+        if (TextUtils.isEmpty(dateNewsContent.picture)) {
             Picasso.with(mActivity).load(R.drawable.nopic1).into(ivDatePicture);
         } else {
-            Picasso.with(mActivity).load(picUrl).into(ivDatePicture);
+            String pic = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + dateNewsContent.picture;
+            Picasso.with(mActivity).load(pic).into(ivDatePicture);
         }
         tvDateTitle.setText(dateNewsContent.title);
         ivSign.setImageResource(R.drawable.sign);
@@ -386,10 +409,10 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
 
 
     private void callPhone() {
-        if (TextUtils.isEmpty(telephone)) {
+        if (TextUtils.isEmpty(mTelephone)) {
             CommonUtils.showToastShort(getApplicationContext(), "新建友约时未输入咨询电话");
         } else {
-            Uri uri = Uri.parse("tel:" + telephone);
+            Uri uri = Uri.parse("tel:" + mTelephone);
             Intent intent = new Intent(Intent.ACTION_CALL, uri);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

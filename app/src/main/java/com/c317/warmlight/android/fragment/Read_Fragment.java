@@ -1,5 +1,6 @@
 package com.c317.warmlight.android.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -72,7 +73,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2017/11/16.
  */
-
+@SuppressLint("ValidFragment")
 public class Read_Fragment extends BaseFragment implements PullToRefreshListener {
 
     @Bind(R.id.rv_mainListView)
@@ -107,6 +108,10 @@ public class Read_Fragment extends BaseFragment implements PullToRefreshListener
     private List<Object> mCardDatas = new ArrayList<>();//保存CardData,随机生成数据
     private List<String> urls;
 
+
+    public Read_Fragment(){
+
+    }
 
     @Override
     public View initView() {

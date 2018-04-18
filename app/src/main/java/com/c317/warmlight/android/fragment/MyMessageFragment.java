@@ -1,5 +1,6 @@
 package com.c317.warmlight.android.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -23,7 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2018/3/21.
  */
-
+@SuppressLint("ValidFragment")
 public class MyMessageFragment extends Fragment {
 
     @Bind(R.id.iv_back_me)
@@ -41,6 +42,10 @@ public class MyMessageFragment extends Fragment {
     private TabLayout.Tab one;
     private TabLayout.Tab two;
     View view;
+
+    public MyMessageFragment(){
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

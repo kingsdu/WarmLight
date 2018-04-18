@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -35,6 +37,7 @@ import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -82,7 +85,6 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
     //默认的动画时间
     private static final int TIME_ANIMATION = 300;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,12 +99,81 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
         mGestureDetector = new GestureDetector(this, new DetailGestureListener());
         wvNewsDetails.setBottomListener(this);
         wvNewsDetails.setScrollListener(this);
-
         ivNewsdetailsComment.setOnClickListener(this);
-
         dataBaseHelper = WarmLightDataBaseHelper.getDatebaseHelper(this);
+
         initData();
-        iscollect = queryIsCollect();
+
+        wvNewsDetails.loadUrl(mUrl);
+        wvNewsDetails.setWebViewClient(new WebViewClient() {
+            //开始加载网页
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                // TODO Auto-generated method stub
+                super.onPageStarted(view, url, favicon);
+            }
+
+            //加载结束
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                // TODO Auto-generated method stub
+                super.onPageFinished(view, url);
+            }
+
+            //所有url跳转会走此方法
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String request) {
+                view.loadUrl(request);
+                return true;
+            }
+        });
+
+        ivNewsdetailsBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        wvNewsDetails.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction()) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        lastY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float disY = event.getY() - lastY;
+                        //垂直方向滑动
+                        if (Math.abs(disY) > viewSlop) {
+                            //设置了TextView的点击事件之后，会导致这里的disY的数值出现跳号现象，最终导致的效果就是
+                            //下面的tool布局在手指往下滑动的时候，先显示一个，然后再隐藏，这是完全没必要的
+                            //是否向上滑动
+                            isUpSlide = disY < 0;
+                            //实现底部tools的显示与隐藏
+                            if (isUpSlide) {
+                                if (!isToolHide)
+                                    hideTool();
+                            } else {
+                                if (isToolHide)
+                                    showTool();
+                            }
+                        }
+                        lastY = event.getY();
+                        break;
+                }
+
+                mGestureDetector.onTouchEvent(event);
+
+                return false;
+            }
+        });
+    }
+
+    private void initState() {
         if (iscollect) {
             ivNewsdetailsCollect.setVisibility(View.VISIBLE);
         } else {
@@ -139,75 +210,6 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
                     ivNewsdetailsCollect.setVisibility(View.GONE);
                     iscollect = false;
                 }
-            }
-        });
-        wvNewsDetails.loadUrl(mUrl);
-
-        wvNewsDetails.setWebViewClient(new WebViewClient() {
-            //开始加载网页
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                // TODO Auto-generated method stub
-                super.onPageStarted(view, url, favicon);
-            }
-
-            //加载结束
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                // TODO Auto-generated method stub
-                super.onPageFinished(view, url);
-            }
-
-            //所有url跳转会走此方法
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String request) {
-                view.loadUrl(request);
-                return true;
-            }
-        });
-
-        ivNewsdetailsBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-
-        wvNewsDetails.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                switch (event.getAction()) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        lastY = event.getY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        float disY = event.getY() - lastY;
-                        //垂直方向滑动
-                        if (Math.abs(disY) > viewSlop) {
-                            //设置了TextView的点击事件之后，会导致这里的disY的数值出现跳号现象，最终导致的效果就是
-                            //下面的tool布局在手指往下滑动的时候，先显示一个，然后再隐藏，这是完全没必要的
-                            //是否向上滑动
-                            isUpSlide = disY < 0;
-                            //实现底部tools的显示与隐藏
-                            if (isUpSlide) {
-                                if (!isToolHide)
-                                    hideTool();
-                            } else {
-                                if (isToolHide)
-                                    showTool();
-                            }
-                        }
-                        lastY = event.getY();
-                        break;
-                }
-
-                mGestureDetector.onTouchEvent(event);
-
-                return false;
             }
         });
     }
@@ -255,10 +257,6 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
             }
         });
     }
-
-
-
-
 
 
     /**
@@ -342,17 +340,27 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
         if (mSaveID == 0) {
             mSaveID = dataBaseHelper.queryIsCollectSaveID(mArticleId + "");
         }
+        getCollectFromServer();
     }
 
 
     /**
      * 初始查询新闻是否被收藏
      *
+     * 1 网络上被收藏，则该条新闻显示被收藏状态
+     * 2 sqllite上被收藏，显示收藏状态
+     *
      * @params
      * @author Du
      * @Date 2018/3/14 16:50
      **/
-    private boolean queryIsCollect() {
+    private boolean queryIsCollect(ArrayList<Collect_Article_Info.Collect_Article_Details> collect_article_detailses) {
+        for(int i=0;i<collect_article_detailses.size();i++){
+            if(collect_article_detailses.get(i).article_id == mArticleId){
+                mSaveID = collect_article_detailses.get(i).save_id;
+                return true;
+            }
+        }
         String isCollect = dataBaseHelper.queryIsCollectRead(mArticleId+"");
         if (!TextUtils.isEmpty(isCollect)) {
             if (isCollect.equals("1")) {
@@ -364,6 +372,47 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
         return false;
     }
 
+
+    /**
+    * 从网络上获取收藏状态
+    * @params
+    * @author Du
+    * @Date 2018/4/17 15:31
+    **/
+    private void getCollectFromServer() {
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
+        RequestParams params = new RequestParams(url);
+        params.addParameter(AppConstants.ACCOUNT,UserManage.getInstance().getUserInfo(NewsDetailActivity.this).account);
+        params.addParameter(AppConstants.TYPE,"w");
+        x.http().get(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                Collect_Article_Info collect_article_info = gson.fromJson(result, Collect_Article_Info.class);
+                if(collect_article_info.code == 200){
+                    ArrayList<Collect_Article_Info.Collect_Article_Details> collect_article_detailses = collect_article_info.data;
+                    iscollect = queryIsCollect(collect_article_detailses);
+                    initState();
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
 
 
     @Override

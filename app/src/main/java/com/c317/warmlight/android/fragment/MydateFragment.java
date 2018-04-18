@@ -1,5 +1,6 @@
 package com.c317.warmlight.android.fragment;
 
+import android.annotation.SuppressLint;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -32,7 +33,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2018/3/13.
  */
-
+@SuppressLint("ValidFragment")
 public class MydateFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
     @Bind(R.id.iv_back_me)
@@ -57,6 +58,9 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
         mType = type;
     }
 
+    public MydateFragment(){
+
+    }
 
     @Override
     public View initView() {

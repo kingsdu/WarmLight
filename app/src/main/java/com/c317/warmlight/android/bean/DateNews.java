@@ -36,6 +36,7 @@ public class DateNews {
         public String coordinate;
         public int type;
         public int isCollect;
+        public int saveid;
         public double distance;
 
         public String getCoordinate() {

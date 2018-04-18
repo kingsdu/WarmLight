@@ -1,5 +1,6 @@
 package com.c317.warmlight.android.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -44,7 +45,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by Administrator on 2017/11/16.
  */
-
+@SuppressLint("ValidFragment")
 public class Me_Fragment extends BaseFragment implements View.OnClickListener {
 
     @Bind(R.id.tv_topbar_title)
@@ -70,6 +71,9 @@ public class Me_Fragment extends BaseFragment implements View.OnClickListener {
 
     private Bitmap bmp;
 
+    public Me_Fragment(){
+
+    }
 
     @Override
     public View initView() {

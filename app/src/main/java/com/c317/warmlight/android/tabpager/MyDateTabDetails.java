@@ -1,5 +1,6 @@
 package com.c317.warmlight.android.tabpager;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
@@ -16,9 +17,13 @@ import android.widget.Toast;
 import com.c317.warmlight.android.Activity.DateDetailActivity;
 import com.c317.warmlight.android.R;
 import com.c317.warmlight.android.base.BaseMenuDetailPager;
+import com.c317.warmlight.android.bean.Collect_Date_Details;
+import com.c317.warmlight.android.bean.Collect_Date_Info;
 import com.c317.warmlight.android.bean.DateNews;
+import com.c317.warmlight.android.common.AppConstants;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.UserManage;
+import com.c317.warmlight.android.utils.CommonUtils;
 import com.c317.warmlight.android.utils.WarmLightDataBaseHelper;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -38,7 +43,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2018/3/12.
  */
-
+@SuppressLint("ValidFragment")
 public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.OnPageChangeListener {
 
     @Bind(R.id.pull_mydate_refresh)
@@ -60,6 +65,9 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
         mUrl = url;
     }
 
+    public MyDateTabDetails(){
+
+    }
 
     @Override
     public View initView() {
@@ -114,31 +122,54 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
             });
         } else {
             //如果是收藏友约
-            String isCollect = 1 + "";
-            dataBaseHelper = WarmLightDataBaseHelper.getDatebaseHelper(mActivity);
-            mDatadetail = dataBaseHelper.queryMultiIsCollectDate(isCollect);
-            pullMydateRefresh.setAdapter(new MyCollectAdapter());
-            pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(mActivity, DateDetailActivity.class);
-                    DateNews.DateNews_Detail dateNews_detail = mDatadetail.get(position - 1);
-                    intent.putExtra("activity_id", dateNews_detail.activity_id);
-                    intent.putExtra("picUrl", AppNetConfig.ACTIVITYS + AppNetConfig.SEPARATOR+dateNews_detail.activity_id + ".jpg");
-                    intent.putExtra("title", dateNews_detail.title);
-                    intent.putExtra("content", dateNews_detail.content);
-                    intent.putExtra("readNum", dateNews_detail.readNum + "");
-                    intent.putExtra("agreeNum", dateNews_detail.agreeNum + "");
-                    intent.putExtra("commentNum", dateNews_detail.commentNum + "");
-                    intent.putExtra("endTime", dateNews_detail.endTime);
-                    intent.putExtra("startTime", dateNews_detail.startTime);
-                    intent.putExtra("memberNum", dateNews_detail.memberNum + "");
-                    intent.putExtra("type", dateNews_detail.type + "");
-                    intent.putExtra("place", dateNews_detail.place);
-                    mActivity.startActivity(intent);
-                }
-            });
+            getCollectDataFromServer();
         }
+    }
+
+
+
+
+    private void getCollectDataFromServer() {
+        String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
+        RequestParams params = new RequestParams(url);
+        params.addParameter(AppConstants.ACCOUNT,UserManage.getInstance().getUserInfo(mActivity).account);
+        params.addParameter(AppConstants.TYPE,"a");
+        x.http().get(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                final Collect_Date_Info collect_date_info = gson.fromJson(result, Collect_Date_Info.class);
+                if(collect_date_info.code == 200){
+                    pullMydateRefresh.setAdapter(new MyCollectAdapter(collect_date_info));
+                    pullMydateRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Intent intent = new Intent(mActivity, DateDetailActivity.class);
+                            Collect_Date_Info.Collect_Date_Detail collect_date_details = collect_date_info.data.get(position - 1);
+                            intent.putExtra("activity_id", collect_date_details.activity_id);
+                            intent.putExtra("save_id", collect_date_details.save_id);
+                            mActivity.startActivity(intent);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                CommonUtils.showToastShort(mActivity,"获取友约收藏数据失败");
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
 
@@ -358,14 +389,19 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
 
     private class MyCollectAdapter extends BaseAdapter {
 
+        private Collect_Date_Info collect_date_info;
+
+        public MyCollectAdapter(Collect_Date_Info collect_date_info){
+            this.collect_date_info = collect_date_info;
+        }
         @Override
         public int getCount() {
-            return mDatadetail.size();
+            return collect_date_info.data.size();
         }
 
         @Override
-        public Object getItem(int position) {
-            return mDatadetail.get(position);
+        public Collect_Date_Info.Collect_Date_Detail getItem(int position) {
+            return collect_date_info.data.get(position);
         }
 
         @Override
@@ -392,14 +428,14 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            final DateNews.DateNews_Detail DateNews_Details = (DateNews.DateNews_Detail) getItem(position);
-            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYS + AppNetConfig.SEPARATOR + DateNews_Details.activity_id + ".jpg";
+            Collect_Date_Info.Collect_Date_Detail item = getItem(position);
+            String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + AppNetConfig.ACTIVITYS + AppNetConfig.SEPARATOR + item.activity_id + ".jpg";
             Picasso.with(mActivity).load(imageUrl).into(holder.ivPic);
-            holder.tvTitle.setText(DateNews_Details.title);
-            holder.tvStartTime.setText(DateNews_Details.startTime);
-            holder.tvPlace.setText(DateNews_Details.place);
-            holder.tvMember.setText(String.valueOf(DateNews_Details.memberNum));
-            holder.tvStartTime.setText(DateNews_Details.startTime);
+            holder.tvTitle.setText(item.title);
+            holder.tvStartTime.setText(item.startTime);
+            holder.tvPlace.setText(item.place);
+            holder.tvMember.setText(0+"");
+            holder.tvStartTime.setText(item.startTime);
             holder.ivTime.setImageResource(R.drawable.time);
             holder.ivLocate.setImageResource(R.drawable.locate);
             holder.ivJoinPeople.setImageResource(R.drawable.join_people);

@@ -1,5 +1,6 @@
 package com.c317.warmlight.android.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -46,7 +47,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2018/4/8.
  */
-
+@SuppressLint("ValidFragment")
 public class SingleChat_Fragment extends Fragment implements
         PullToRefreshBase.OnRefreshListener2<ListView> {
     @Bind(R.id.lv_mymessage_chatlist)
@@ -62,6 +63,9 @@ public class SingleChat_Fragment extends Fragment implements
 private ArrayList<NewfriendInfo.NewfriendInfo_Content> truefriendusernamedata = new ArrayList();
     public String friendusername;
 
+    public SingleChat_Fragment(){
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

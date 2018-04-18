@@ -18,6 +18,9 @@ public abstract class BaseMenuDetailPager extends Fragment {
     public int UPPAGESIZE = 0;//上拉加载更多
     public int PAGE = 1;
 
+    public BaseMenuDetailPager(){
+
+    }
 
     public BaseMenuDetailPager(Activity activity){
         mActivity = activity;
