@@ -238,6 +238,7 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     }
 
 
+
     private class MyReadCollectAdapter extends BaseAdapter {
 
         private Collect_Article_Info collect_article_info;
@@ -327,6 +328,7 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     }
 
 
+
     static class ViewHolder {
         public ImageView ivPic;
         public TextView tvTitle;
@@ -334,29 +336,3 @@ public class MyReadTabDetails extends BaseMenuDetailPager implements ViewPager.O
     }
 
 }
-
-
-
-//    /**
-//     * 比较时间
-//     *
-//     * @params
-//     * @author Du
-//     * @Date 2018/4/13 9:39
-//     **/
-//    private boolean compareLastTime(String lastTime) {
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        List<Collect_Article_Info.Collect_Article_Details> collect_article_detailses = dataBaseHelper.queryMultiIsCollectRead();
-//        String dateLastTime = collect_article_detailses.get(0).lastTime;
-//        try {
-//            Date parse = sdf.parse(dateLastTime);//sqllite数据库时间
-//            Date dateparse = sdf.parse(lastTime);//后台数据库当前时间
-//            if (parse.getTime() < dateparse.getTime()) {
-//                //有新的数据，需要更新
-//                return true;
-//            }
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }

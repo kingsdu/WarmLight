@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -146,6 +147,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
             public void onClick(View v) {
                 if (!iscollect) {
                     addDateCollect();
+//                    unAddDateCollect();
                 } else {
                     unAddDateCollect();
                 }
@@ -162,14 +164,14 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
     private void getDateDetails() {
         String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.GETACTIVITY;
         RequestParams params = new RequestParams(url);
-        params.addParameter(AppConstants.ACTIVITY_ID,mActivityid);
+        params.addParameter(AppConstants.ACTIVITY_ID, mActivityid);
         x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String result) {
                 Gson gson = new Gson();
                 DateNews_detalis dateNews_detalis = gson.fromJson(result, DateNews_detalis.class);
-                if(dateNews_detalis.code == 200){
+                if (dateNews_detalis.code == 200) {
                     mTelephone = dateNews_detalis.data.telephone;
                     mGroup_id = dateNews_detalis.data.group_id;
                     setDataView(dateNews_detalis.data);
@@ -178,7 +180,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                CommonUtils.showToastShort(mActivity,"请求友约详情失败");
+                CommonUtils.showToastShort(mActivity, "请求友约详情失败");
             }
 
             @Override
@@ -199,24 +201,25 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         RequestParams params = new RequestParams(url);
         params.addParameter(AppConstants.ACCOUNT, mAccount);
         params.addParameter(AppConstants.TYPE, "a");
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String result) {
                 Gson gson = new Gson();
                 Collect_Date_Info collect_date_info = gson.fromJson(result, Collect_Date_Info.class);
-                if(collect_date_info.code == 400){
-                    iscollect = getIsCollect(collect_date_info,true);
+                if (collect_date_info.code == 400) {
+                    iscollect = getIsCollect(collect_date_info, true);
                     getDateDetails();
-                }else if (collect_date_info.code == 200) {
-                    iscollect = getIsCollect(collect_date_info,false);
+                } else if (collect_date_info.code == 200) {
+                    iscollect = getIsCollect(collect_date_info, false);
                     getDateDetails();
                 }
+
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                CommonUtils.showToastShort(mActivity,"获取网络收藏信息错误");
+                CommonUtils.showToastShort(mActivity, "获取网络收藏信息错误");
             }
 
             @Override
@@ -233,22 +236,31 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
 
 
     private void unAddDateCollect() {
+        if(mSave_id == 0){
+            mSave_id = Integer.valueOf(dataBaseHelper.queryIsCollectDate_SaveID(mActivityid));
+        }
         String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
         RequestParams params = new RequestParams(url);
         params.addParameter(AppConstants.SAVE_ID, mSave_id);
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        x.http().request(HttpMethod.DELETE, params, new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String result) {
-                dataBaseHelper.unUpdateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME, mActivityid, WarmLightDataBaseHelper.DATE_ID, WarmLightDataBaseHelper.DATE_ISDEL);
-                tvMark.setText("收藏");
-                Toast.makeText(DateDetailActivity.this, "取消收藏", Toast.LENGTH_SHORT).show();
-                iscollect = false;
+                Gson gson = new Gson();
+                Result result_collect = gson.fromJson(result, Result.class);
+                if(result_collect.code == 400){
+                    Toast.makeText(DateDetailActivity.this, "SaveTable matching query does not exist", Toast.LENGTH_SHORT).show();
+                }else{
+                    dataBaseHelper.unUpdateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME, mActivityid, WarmLightDataBaseHelper.DATE_ID, WarmLightDataBaseHelper.DATE_ISDEL);
+                    tvMark.setText("收藏");
+                    Toast.makeText(DateDetailActivity.this, "取消收藏", Toast.LENGTH_SHORT).show();
+                    iscollect = false;
+                }
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-
+                Toast.makeText(DateDetailActivity.this, "取消收藏失败", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -266,8 +278,8 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
     private void addDateCollect() {
         String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
         RequestParams params = new RequestParams(url);
-        params.addParameter(AppConstants.SAVE_CON,"a"+mActivityid);
-        params.addParameter(AppConstants.ACCOUNT,UserManage.getInstance().getUserInfo(DateDetailActivity.this).account);
+        params.addParameter(AppConstants.SAVE_CON, "a"+mActivityid);
+        params.addParameter(AppConstants.ACCOUNT, UserManage.getInstance().getUserInfo(DateDetailActivity.this).account);
         x.http().post(params, new Callback.CommonCallback<String>() {
 
             @Override
@@ -275,8 +287,9 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
                 Gson gson = new Gson();
                 Collect_Date_Details collect_date_details = gson.fromJson(result, Collect_Date_Details.class);
                 if (collect_date_details.code == 201) {
-                    dataBaseHelper.updateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME, mActivityid, WarmLightDataBaseHelper.DATE_ID, WarmLightDataBaseHelper.DATE_ISDEL);
                     dataBaseHelper.InsertCollectInfoDate(collect_date_details);
+                    dataBaseHelper.updateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME, mActivityid, WarmLightDataBaseHelper.DATE_ID, WarmLightDataBaseHelper.DATE_ISDEL);
+                    String s = dataBaseHelper.queryIsCollectDate_isDel(mActivityid);
                     tvMark.setText("已收藏");
                     CommonUtils.showToastShort(DateDetailActivity.this, "收藏成功");
                     iscollect = true;
@@ -302,7 +315,10 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
 
     private void ectractPutEra() {
         mActivityid = getIntent().getStringExtra("activity_id");
-        mSave_id = getIntent().getIntExtra("save_id",0);
+        mSave_id = getIntent().getIntExtra("save_id", 0);
+        if(mSave_id == 0){
+            mSave_id = Integer.valueOf(dataBaseHelper.queryIsCollectDate_SaveID(mActivityid));
+        }
     }
 
 
@@ -313,19 +329,19 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
      * @author Du
      * @Date 2018/3/13 22:22
      **/
-    private boolean getIsCollect(Collect_Date_Info collect_date_info,boolean flag) {
-        if(!flag){
-            for(int i=0;i<collect_date_info.data.size();i++){
-                if(mActivityid == collect_date_info.data.get(i).activity_id){
+    private boolean getIsCollect(Collect_Date_Info collect_date_info, boolean flag) {
+        if (!flag) {
+            for (int i = 0; i < collect_date_info.data.size(); i++) {
+                if (mActivityid == collect_date_info.data.get(i).activity_id) {
                     mSave_id = collect_date_info.data.get(i).save_id;
                     return true;
                 }
             }
         }
-        String isCollect = dataBaseHelper.queryIsCollectDate(mActivityid);
-        if (!TextUtils.isEmpty(isCollect)) {
+        String isCollect = dataBaseHelper.queryIsCollectDate_isDel(mActivityid);
+        if(!isCollect.equals("0")){
             return true;
-        } else {
+        }else{
             return false;
         }
     }

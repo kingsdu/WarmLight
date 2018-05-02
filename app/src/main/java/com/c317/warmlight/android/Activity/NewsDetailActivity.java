@@ -141,7 +141,6 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
             public boolean onTouch(View v, MotionEvent event) {
 
                 switch (event.getAction()) {
-
                     case MotionEvent.ACTION_DOWN:
                         lastY = event.getY();
                         break;
@@ -224,7 +223,7 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
      **/
     private void unCollect() {
         if(mSaveID == 0){
-            mSaveID = dataBaseHelper.queryIsCollectSaveID(mArticleId+"");
+            mSaveID = dataBaseHelper.queryIsCollectSaveID_READ(mArticleId+"");
         }
         String url = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.READ + AppNetConfig.SEPARATOR + AppNetConfig.ABOUTSAVE;
         RequestParams params = new RequestParams(url);
@@ -338,7 +337,7 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
         }
         mSaveID = getIntent().getIntExtra("save_id", 0);
         if (mSaveID == 0) {
-            mSaveID = dataBaseHelper.queryIsCollectSaveID(mArticleId + "");
+            mSaveID = dataBaseHelper.queryIsCollectSaveID_READ(mArticleId + "");
         }
         getCollectFromServer();
     }

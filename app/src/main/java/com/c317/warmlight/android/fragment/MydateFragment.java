@@ -18,6 +18,7 @@ import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.common.UserManage;
 import com.c317.warmlight.android.tabpager.MyDateTabDetails;
 import com.c317.warmlight.android.tabpager.MyReadTabDetails;
+import com.c317.warmlight.android.utils.CommonUtils;
 import com.google.gson.Gson;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -140,7 +141,7 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-
+                CommonUtils.showToastShort(mActivity,"获取收藏数据失败");
             }
 
             @Override

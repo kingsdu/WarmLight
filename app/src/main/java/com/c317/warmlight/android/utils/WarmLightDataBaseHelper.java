@@ -156,7 +156,7 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
             cv.put(DATE_STARTTIME, collect_date_details.data.startTime);
             cv.put(DATE_ENDTIME, collect_date_details.data.endTime);
             if(collect_date_details.data.isDel == false){
-                cv.put(READ_ISDEL, 0);
+                cv.put(DATE_ISDEL,"0");
             }
             cv.put(DATE_LASTTIME, collect_date_details.data.endTime);
             cv.put(DATE_SAVE_ID, collect_date_details.data.save_id);
@@ -178,7 +178,7 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
             cv.put(READ_SAVE_ID, collect_article_item.save_id);
             cv.put(READ_PICTUREURL, collect_article_item.pictureURL);
             if(collect_article_item.isDelete == false){
-                cv.put(READ_ISDEL, 0);
+                cv.put(READ_ISDEL,"0");
             }
             cv.put(READ_LASTTIME, collect_article_item.lastTime);
             cv.put(READ_TITLE, collect_article_item.title);
@@ -259,7 +259,7 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
      * @author Du
      * @Date 2018/3/13 22:15
      **/
-    public int queryIsCollectSaveID(String id) {
+    public int queryIsCollectSaveID_READ(String id) {
         int isCollect = 0;
         String where = READ_ID + " = ? ";
         String[] whereValue = {id};
@@ -285,7 +285,7 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
      * @author Du
      * @Date 2018/3/13 22:15
      **/
-    public String queryIsCollectDate(String id) {
+    public String queryIsCollectDate_SaveID(String id) {
         String isCollect = null;
         String where = DATE_ID + " = ? ";
         String[] whereValue = {id + ""};
@@ -301,6 +301,34 @@ public class WarmLightDataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return isCollect;
     }
+
+
+    /**
+     * 根据tableName、id、dateName,查询是否收藏  -- 友约
+     *
+     * @params tableName：数据库名称  id：id值、idName：id名称
+     * @author Du
+     * @Date 2018/3/13 22:15
+     **/
+    public String queryIsCollectDate_isDel(String id) {
+        String isCollect = null;
+        String where = DATE_ID + " = ? ";
+        String[] whereValue = {id + ""};
+        Cursor cursor = db.query(DATE_TABLENAME, null, where, whereValue,
+                null, null, null);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+        }
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            isCollect = cursor.getString(7);
+        }
+        cursor.close();
+        return isCollect;
+    }
+
+
+
 
 
 

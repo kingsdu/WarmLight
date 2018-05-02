@@ -159,13 +159,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     Gson gson = new Gson();
                     Result retrunRes = gson.fromJson(result, Result.class);
                     if (retrunRes.code == 201) {
-                        initData();
                         CommonUtils.showToastShort(CommentActivity.this, "评论成功");
                     }
                     etReadInput.setText("");
                     if(isActive){
                         showInputLan(false);
                     }
+                    initData();
                 }
 
                 @Override
@@ -218,14 +218,12 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view;
-
             if (convertView != null) {
                 view = convertView;
             } else {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.comment_item_view, null, false);//填充ListView
             }
-
             if (view instanceof CommentItemView) {
                 //评论具体各部分填充数据
                 Comment.CommentItem item = getItem(position);
@@ -240,9 +238,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         private void cacheView(int position, CommentItemView view) {
             Iterator<Map.Entry<Integer, CommentItemView>> entries = mCachedViews.entrySet().iterator();
-
             while (entries.hasNext()) {
-
                 Map.Entry<Integer, CommentItemView> entry = entries.next();
                 if (entry.getValue() == view && entry.getKey() != position) {
                     mCachedViews.remove(entry.getKey());
@@ -278,7 +274,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     if (!TextUtils.isEmpty(comment)) {
                         //评论信息写入后台
                         String insertUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.DATE + AppNetConfig.SEPARATOR + AppNetConfig.ADDOTHERCOMMENT;
-                        RequestParams params = new RequestParams(insertUrl);
+                        RequestParams  params = new RequestParams(insertUrl);
                         params.addParameter("comParentID", commentItem.data.get(position).commentID);
                         params.addParameter("comFor", commentItem.data.get(position).commentID);
                         params.addParameter("userID", UserManage.getInstance().getUserInfo(CommentActivity.this).user_id);
@@ -298,6 +294,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                 if(isActive){
                                     showInputLan(false);
                                 }
+                                initData();
                             }
 
                             @Override

@@ -48,14 +48,11 @@ public class NewsWebView extends WebView {
     }
 
     public void setScrollListener(onScrollListener scrollListener) {
-
         this.scrollListener = scrollListener;
-
     }
 
 
     public interface onScrollListener {
-
         public void onScrollChanged(int l, int t, int oldl, int oldt);
 
     }
