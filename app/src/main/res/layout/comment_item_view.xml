@@ -7,8 +7,10 @@
 
     <ImageView
         android:id="@+id/lv_comment_portrait"
-        android:layout_width="48dip"
-        android:layout_height="48dip"
+        android:paddingTop="5dp"
+        android:layout_width="30dip"
+        android:layout_height="38dip"
+        android:scaleType="fitXY"
         android:src="@drawable/musi02" />
 
     <View

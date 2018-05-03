@@ -164,7 +164,6 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
                         lastY = event.getY();
                         break;
                 }
-
                 mGestureDetector.onTouchEvent(event);
 
                 return false;

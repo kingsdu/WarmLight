@@ -23,6 +23,7 @@ import com.c317.warmlight.android.bean.SonComment;
 import com.c317.warmlight.android.common.AppNetConfig;
 import com.c317.warmlight.android.utils.CommonUtils;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -40,21 +41,15 @@ public class CommentItemView extends LinearLayout implements View.OnClickListene
 
     private int mPosition;
     private Comment.CommentItem mData;
-
-
     private PopupWindow mMorePopupWindow;
     private int mShowMorePopupWindowWidth;
     private int mShowMorePopupWindowHeight;
-
-
     private ImageView commentporait;
     private TextView commentnickname;
     private TextView commenttime;
     private TextView commnetcontent;
     private ImageButton commentbutton;
     private LinearLayout commentlayout;
-
-
     private OnCommentListener mCommentListener;
 
     public CommentItemView(Context context) {
@@ -100,14 +95,14 @@ public class CommentItemView extends LinearLayout implements View.OnClickListene
         commentnickname.setText(data.userName);
         commnetcontent.setText(data.comContent);
         commenttime.setText(data.comTime);
-
+        String picname = "icon/" + data.account + "_thumbnail.jpg";
+        String imageUrl = AppNetConfig.BASEURL + AppNetConfig.SEPARATOR + AppNetConfig.PICTURE + AppNetConfig.SEPARATOR + picname;
+        Picasso.with(getContext()).load(imageUrl).into(commentporait);
         updateComment(mData.commentID);
-
         commentbutton.setOnClickListener(this);
     }
 
     private void updateComment(int comID) {
-        commentlayout.removeAllViews();
         if (mData.userName != null) {
             commentlayout.setVisibility(View.VISIBLE);
             //取二级评论数据
@@ -121,6 +116,7 @@ public class CommentItemView extends LinearLayout implements View.OnClickListene
                     Gson gson = new Gson();
                     SonComment sonCommentItem = gson.fromJson(result, SonComment.class);
                     if (sonCommentItem.code == 200) {
+                        commentlayout.removeAllViews();
                         for(int i=0;i<sonCommentItem.data.size();i++){
                             View view;
                             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -178,7 +174,6 @@ public class CommentItemView extends LinearLayout implements View.OnClickListene
                 }
                 break;
             case R.id.tv_comment_like:
-                //点赞
                 break;
         }
     }

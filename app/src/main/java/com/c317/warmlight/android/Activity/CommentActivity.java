@@ -156,11 +156,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                 @Override
                 public void onSuccess(String result) {
-                    Gson gson = new Gson();
-                    Result retrunRes = gson.fromJson(result, Result.class);
-                    if (retrunRes.code == 201) {
-                        CommonUtils.showToastShort(CommentActivity.this, "评论成功");
-                    }
+//                    Gson gson = new Gson();
+//                    Result retrunRes = gson.fromJson(result, Result.class);
+//                    if (retrunRes.code == 201) {
+//
+//                    }
                     etReadInput.setText("");
                     if(isActive){
                         showInputLan(false);
@@ -284,12 +284,12 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                             @Override
                             public void onSuccess(String result) {
-                                Gson gson = new Gson();
-                                Result retrunRes = gson.fromJson(result, Result.class);
-                                if (retrunRes.code == 201) {
-                                    btnReadSubmit.setOnClickListener(CommentActivity.this);
-                                    CommonUtils.showToastShort(CommentActivity.this, "评论成功");
-                                }
+//                                Gson gson = new Gson();
+//                                Result retrunRes = gson.fromJson(result, Result.class);
+//                                if (retrunRes.code == 201) {
+//                                    btnReadSubmit.setOnClickListener(CommentActivity.this);
+//                                    CommonUtils.showToastShort(CommentActivity.this, "评论成功");
+//                                }
                                 et.setText("");
                                 if(isActive){
                                     showInputLan(false);

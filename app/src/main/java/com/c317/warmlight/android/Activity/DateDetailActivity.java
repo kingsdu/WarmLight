@@ -289,7 +289,6 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
                 if (collect_date_details.code == 201) {
                     dataBaseHelper.InsertCollectInfoDate(collect_date_details);
                     dataBaseHelper.updateCollectState(WarmLightDataBaseHelper.DATE_TABLENAME, mActivityid, WarmLightDataBaseHelper.DATE_ID, WarmLightDataBaseHelper.DATE_ISDEL);
-                    String s = dataBaseHelper.queryIsCollectDate_isDel(mActivityid);
                     tvMark.setText("已收藏");
                     CommonUtils.showToastShort(DateDetailActivity.this, "收藏成功");
                     iscollect = true;
@@ -444,8 +443,8 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
             @Override
             public void onSuccess(String result) {
                 //成功
-                Gson gson = new Gson();
-                Result resultInfo = gson.fromJson(result, Result.class);
+//                Gson gson = new Gson();
+//                Result resultInfo = gson.fromJson(result, Result.class);
                 Toast.makeText(DateDetailActivity.this, "报名成功，请关注“我的消息”中的“群聊", Toast.LENGTH_SHORT).show();
             }
 

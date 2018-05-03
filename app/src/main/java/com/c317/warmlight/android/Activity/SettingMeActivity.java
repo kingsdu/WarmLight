@@ -50,7 +50,6 @@ public class SettingMeActivity extends Activity implements View.OnClickListener 
         //监听设置
         ivBackMe.setOnClickListener(this);
         rlFeedbackMe.setOnClickListener(this);
-//        rlWipecacheMe.setOnClickListener(this);
         rlExitMe.setOnClickListener(this);
     }
 
