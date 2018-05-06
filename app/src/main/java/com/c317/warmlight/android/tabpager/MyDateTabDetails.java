@@ -31,6 +31,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.picasso.Picasso;
 
 import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -134,7 +135,7 @@ public class MyDateTabDetails extends BaseMenuDetailPager implements ViewPager.O
         RequestParams params = new RequestParams(url);
         params.addParameter(AppConstants.ACCOUNT,UserManage.getInstance().getUserInfo(mActivity).account);
         params.addParameter(AppConstants.TYPE,"a");
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        x.http().request(HttpMethod.GET, params, new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String result) {

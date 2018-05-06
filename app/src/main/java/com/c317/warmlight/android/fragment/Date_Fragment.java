@@ -61,10 +61,9 @@ public class Date_Fragment extends BaseFragment implements ViewPager.OnPageChang
     ViewPager vpMyViewpager;
     @Bind(R.id.tp_my_indicator)
     TabPageIndicator tpMyIndicator;
-    private String[] tabInfoDateType = {"全部友约","知识分享", "书籍交流", "学术论坛", "社团活动", "其他"};
+    private String[] tabInfoDateType = {"全部友约","知识分享","书籍交流","学术论坛","社团活动","其他"};
 
     private ArrayList<DateTabDetails> mDatePagers;//友约页面
-
 
     @Override
     public View initView() {
@@ -72,7 +71,7 @@ public class Date_Fragment extends BaseFragment implements ViewPager.OnPageChang
         final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.Theme_PageIndicatorDefaults);
         LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
         View view = localInflater.inflate(R.layout.fragment_date,null);
-        ButterKnife.bind(this, view);
+        ButterKnife.bind(this,view);
         ivAddDate.setVisibility(View.VISIBLE);
         ivLocateDate.setVisibility(View.VISIBLE);
         tvTopbarTitle.setText("友约");

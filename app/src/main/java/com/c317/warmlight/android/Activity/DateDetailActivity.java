@@ -147,7 +147,6 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
             public void onClick(View v) {
                 if (!iscollect) {
                     addDateCollect();
-//                    unAddDateCollect();
                 } else {
                     unAddDateCollect();
                 }
@@ -211,8 +210,13 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
                     iscollect = getIsCollect(collect_date_info, true);
                     getDateDetails();
                 } else if (collect_date_info.code == 200) {
-                    iscollect = getIsCollect(collect_date_info, false);
-                    getDateDetails();
+                    if(collect_date_info.data.isEmpty()){
+                        iscollect = getIsCollect(collect_date_info, true);
+                        getDateDetails();
+                    }else{
+                        iscollect = getIsCollect(collect_date_info, false);
+                        getDateDetails();
+                    }
                 }
 
             }
@@ -316,7 +320,9 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
         mActivityid = getIntent().getStringExtra("activity_id");
         mSave_id = getIntent().getIntExtra("save_id", 0);
         if(mSave_id == 0){
-            mSave_id = Integer.valueOf(dataBaseHelper.queryIsCollectDate_SaveID(mActivityid));
+            if(!TextUtils.isEmpty(dataBaseHelper.queryIsCollectDate_SaveID(mActivityid))){
+                mSave_id = Integer.valueOf(dataBaseHelper.queryIsCollectDate_SaveID(mActivityid));
+            }
         }
     }
 
@@ -338,7 +344,7 @@ public class DateDetailActivity extends Activity implements View.OnClickListener
             }
         }
         String isCollect = dataBaseHelper.queryIsCollectDate_isDel(mActivityid);
-        if(!isCollect.equals("0")){
+        if(!TextUtils.isEmpty(isCollect)){
             return true;
         }else{
             return false;

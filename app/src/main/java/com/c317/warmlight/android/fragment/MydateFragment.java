@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.viewpagerindicator.TabPageIndicator;
 
 import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -128,8 +129,7 @@ public class MydateFragment extends BaseFragment implements ViewPager.OnPageChan
         RequestParams params = new RequestParams(url);
         params.addParameter("account", UserManage.getInstance().getUserInfo(mActivity).account);
         params.addParameter("type", "w");
-        x.http().get(params, new Callback.CommonCallback<String>() {
-
+        x.http().request(HttpMethod.GET, params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Gson gson = new Gson();

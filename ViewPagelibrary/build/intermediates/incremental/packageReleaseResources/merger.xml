@@ -106,8 +106,7 @@
         <item name="android:textAppearance">@style/TextAppearance.TabPageIndicator</item>
         <item name="android:textSize">12sp</item>
         <item name="android:maxLines">1</item>
-    </style><style name="Widget">
-    </style><style name="Theme.PageIndicatorDefaults" parent="android:Theme">
+    </style><style name="Widget"/><style name="Theme.PageIndicatorDefaults" parent="android:Theme">
         <item name="vpiIconPageIndicatorStyle">@style/Widget.IconPageIndicator</item>
         <item name="vpiTabPageIndicatorStyle">@style/Widget.TabPageIndicator</item>
     </style><style name="TextAppearance.TabPageIndicator" parent="Widget">
